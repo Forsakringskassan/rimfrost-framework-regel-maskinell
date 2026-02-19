@@ -2,28 +2,23 @@ package se.fk.rimfrost.framework.regel.maskinell.logic;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import se.fk.rimfrost.framework.kundbehovsflode.adapter.KundbehovsflodeAdapter;
 import se.fk.rimfrost.framework.kundbehovsflode.adapter.dto.ImmutableKundbehovsflodeRequest;
 import se.fk.rimfrost.framework.regel.Utfall;
-import se.fk.rimfrost.framework.regel.integration.config.RegelConfigProviderYaml;
-import se.fk.rimfrost.framework.regel.integration.kafka.RegelKafkaProducer;
 import se.fk.rimfrost.framework.regel.logic.RegelRequestHandlerBase;
-import se.fk.rimfrost.framework.regel.logic.config.RegelConfig;
+import se.fk.rimfrost.framework.regel.logic.RegelServiceInterface;
 import se.fk.rimfrost.framework.regel.logic.dto.Beslutsutfall;
 import se.fk.rimfrost.framework.regel.logic.dto.FSSAinformation;
 import se.fk.rimfrost.framework.regel.logic.dto.RegelDataRequest;
 import se.fk.rimfrost.framework.regel.logic.dto.UppgiftStatus;
 import se.fk.rimfrost.framework.regel.logic.entity.*;
 import se.fk.rimfrost.framework.regel.presentation.kafka.RegelRequestHandlerInterface;
-
 import java.time.OffsetDateTime;
 
 @SuppressWarnings("unused")
 public abstract class RegelMaskinellRequestHandlerBase extends RegelRequestHandlerBase implements RegelRequestHandlerInterface
 {
+   @Inject
+   private RegelServiceInterface regelService;
 
    /*
     * Note: The name of the @PostConstruct method should if
