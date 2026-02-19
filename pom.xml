@@ -63,6 +63,11 @@
       <artifactId>rimfrost-framework-kundbehovsflode-adapter</artifactId>
       <version>0.0.4</version>
     </dependency>
+    <dependency>
+      <groupId>se.fk.rimfrost.framework.regel</groupId>
+      <artifactId>rimfrost-framework-regel</artifactId>
+      <version>0.2.3</version>
+    </dependency>
   </dependencies>
 
   <repositories>
