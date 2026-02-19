@@ -13,10 +13,14 @@ import se.fk.rimfrost.framework.regel.logic.dto.UppgiftStatus;
 import se.fk.rimfrost.framework.regel.logic.entity.*;
 import se.fk.rimfrost.framework.regel.presentation.kafka.RegelRequestHandlerInterface;
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 @SuppressWarnings("unused")
 public abstract class RegelMaskinellRequestHandlerBase extends RegelRequestHandlerBase implements RegelRequestHandlerInterface
 {
+   @Inject
+   private RegelServiceInterface regelService;
+
    @Inject
    private RegelServiceInterface regelService;
 
@@ -45,6 +49,7 @@ public abstract class RegelMaskinellRequestHandlerBase extends RegelRequestHandl
 
       var regelData = ImmutableRegelData.builder()
             .kundbehovsflodeId(request.kundbehovsflodeId())
+              .uppgiftId(UUID.fromString("f1376c9e-8890-4ca9-89b6-74d2d0281670")) // TODO hur definieras detta?
             .skapadTs(OffsetDateTime.now())
             .planeradTs(OffsetDateTime.now())
             .uppgiftStatus(UppgiftStatus.AVSLUTAD)
