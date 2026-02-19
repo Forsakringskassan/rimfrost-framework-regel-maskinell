@@ -1,18 +1,12 @@
 package se.fk.rimfrost.framework.regel.maskinell.logic;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import se.fk.rimfrost.framework.kundbehovsflode.adapter.dto.ImmutableKundbehovsflodeRequest;
-import se.fk.rimfrost.framework.regel.Utfall;
 import se.fk.rimfrost.framework.regel.logic.RegelRequestHandlerBase;
-import se.fk.rimfrost.framework.regel.logic.dto.Beslutsutfall;
-import se.fk.rimfrost.framework.regel.logic.dto.FSSAinformation;
 import se.fk.rimfrost.framework.regel.logic.dto.RegelDataRequest;
-import se.fk.rimfrost.framework.regel.logic.dto.UppgiftStatus;
 import se.fk.rimfrost.framework.regel.logic.entity.*;
 import se.fk.rimfrost.framework.regel.presentation.kafka.RegelRequestHandlerInterface;
-import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @SuppressWarnings("unused")
@@ -20,7 +14,7 @@ import java.util.UUID;
 public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implements RegelRequestHandlerInterface
 {
    @Inject
-   private RegelMaskinellServiceInterface regelService;
+   private RegelMaskinellService regelService;
 
    @Inject
    private RegelMaskinellMapper maskinellMapper;

@@ -1,0 +1,52 @@
+{
+  "request": {
+    "method": "PUT",
+    "urlPathPattern": "/kundbehovsflode/.*"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "uppgift": {
+        "id": "e9b4110e-0bd6-4444-9a64-390e4de94f59",
+        "version": "1.0",
+        "skapadTs": "2025-12-17T11:11:08.384937493Z",
+        "utfordTs": "2025-12-17T11:11:08.384970949Z",
+        "planeradTs": null,
+        "utforarId": "6f26358f-5ac5-4bf0-b04b-376a88923628",
+        "kundbehovsflodeId": "5367f6b8-cc4a-11f0-8de9-199901011234",
+        "uppgiftStatus": "AVSLUTAD",
+        "FSSAinformation": "HANDLAGGNING_PAGAR",
+        "uppgiftspecifikation": {
+          "id": "89a3becd-727e-4681-be95-bdbb796461ec",
+          "version": "1.0",
+          "namn": "TEST Uppgiftsspecifikation namn",
+          "uppgiftbeskrivning": "TEST Uppgiftsspecifikation uppgiftbeskrivning",
+          "verksamhetslogik": "A",
+          "roll": "ANSVARIG_HANDLAGGARE",
+          "applikationsId": "framework-regel-maskinell",
+          "applikationsVersion": "1.0",
+          "regel": {
+            "id": "79a3becd-727e-4681-be95-bdbb796461ec",
+            "version": "1.1",
+            "lagrum": {
+              "id": "78a3becd-727e-4681-be95-bdbb796461ec",
+              "version": "1.0",
+              "giltigFrom": "2025-12-17T11:11:08.384937493Z",
+              "giltigTom": "2026-12-17T11:11:08.384937493Z",
+              "forfattning": "Test författning",
+              "kapitel": "Test kapitel",
+              "paragraf": "Test paragraf",
+              "stycke": "Test stycke",
+              "punkt": "Test punkt"
+            }
+          },
+          "uppgiftsGui": "rtf-manuell/482a43b7-c985-4f65-ae41-fb75de3a6a6f"
+        },
+        "underlag": []
+      }
+    }
+  }
+}
