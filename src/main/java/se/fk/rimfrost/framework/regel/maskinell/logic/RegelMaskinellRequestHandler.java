@@ -1,6 +1,7 @@
 package se.fk.rimfrost.framework.regel.maskinell.logic;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import se.fk.rimfrost.framework.kundbehovsflode.adapter.dto.ImmutableKundbehovsflodeRequest;
 import se.fk.rimfrost.framework.regel.Utfall;
@@ -15,10 +16,14 @@ import se.fk.rimfrost.framework.regel.presentation.kafka.RegelRequestHandlerInte
 import java.time.OffsetDateTime;
 
 @SuppressWarnings("unused")
-public abstract class RegelMaskinellRequestHandlerBase extends RegelRequestHandlerBase implements RegelRequestHandlerInterface
+@ApplicationScoped
+public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implements RegelRequestHandlerInterface
 {
    @Inject
-   private RegelServiceInterface regelService;
+   private RegelMaskinellServiceInterface regelService;
+
+   @Inject
+   private RegelMaskinellMapper maskinellMapper;
 
    /*
     * Note: The name of the @PostConstruct method should if
@@ -36,30 +41,14 @@ public abstract class RegelMaskinellRequestHandlerBase extends RegelRequestHandl
    @Override
    public void handleRegelRequest(RegelDataRequest request)
    {
+      var cloudevent = createCloudEvent(request);
+
       var kundbehovsResponse = kundbehovsflodeAdapter.getKundbehovsflodeInfo(
             ImmutableKundbehovsflodeRequest.builder().kundbehovsflodeId(request.kundbehovsflodeId()).build());
 
-      var processRegelResponse = regelService.processRegel(kundbehovsResponse);
+      var result = regelService.processRegel(regelMapper.toProcessRegelRequest(kundbehovsResponse));
 
-      var cloudevent = createCloudEvent(request);
-
-      var regelData = ImmutableRegelData.builder()
-            .kundbehovsflodeId(request.kundbehovsflodeId())
-            .skapadTs(OffsetDateTime.now())
-            .planeradTs(OffsetDateTime.now())
-            .uppgiftStatus(UppgiftStatus.AVSLUTAD)
-            .fssaInformation(FSSAinformation.HANDLAGGNING_PAGAR)
-            .ersattningar(processRegelResponse.ersattningar())
-            .underlag(processRegelResponse.underlag())
-            .build();
-
-      updateKundbehovsFlode(regelData);
-      sendResponse(regelData, cloudevent, decideUtfall(regelData));
+      updateKundbehovsFlode(request.kundbehovsflodeId(), maskinellMapper.toRegelResult(result));
+      sendResponse(request.kundbehovsflodeId(), cloudevent, result.utfall());
    }
-
-   private Utfall decideUtfall(RegelData regelData)
-   {
-      return regelData.ersattningar().stream().allMatch(e -> e.beslutsutfall() == Beslutsutfall.JA) ? Utfall.JA : Utfall.NEJ;
-   }
-
 }
