@@ -2,6 +2,12 @@
 
 Changelog of rimfrost-framework-regel-maskinell.
 
+## 0.0.2 (2026-02-20)
+
+### Bug Fixes
+
+-  lib workflows ([5612e](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/5612ed2f03aaebb) Nils Elveros)  
+
 ## 0.0.1 (2026-02-20)
 
 ### Features
