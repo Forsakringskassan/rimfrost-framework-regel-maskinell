@@ -2,6 +2,12 @@
 
 Changelog of rimfrost-framework-regel-maskinell.
 
+## 0.0.4 (2026-02-23)
+
+### Bug Fixes
+
+-  remove dependency that isn't needed ([c599b](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/c599b5c89016fc9) Nils Elveros)  
+
 ## 0.0.3 (2026-02-20)
 
 ### Bug Fixes
