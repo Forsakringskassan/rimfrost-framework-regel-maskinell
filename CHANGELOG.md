@@ -2,6 +2,12 @@
 
 Changelog of rimfrost-framework-regel-maskinell.
 
+## 0.0.7 (2026-02-24)
+
+### Bug Fixes
+
+-  lägger till test av framework ([ce76a](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/ce76a8c0debf5b4) Ulf Slunga)  
+
 ## 0.0.6 (2026-02-24)
 
 ### Bug Fixes
