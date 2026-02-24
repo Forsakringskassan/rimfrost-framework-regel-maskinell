@@ -14,7 +14,7 @@ import java.util.UUID;
 public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implements RegelRequestHandlerInterface
 {
    @Inject
-   private RegelMaskinellService regelService;
+   private RegelMaskinellServiceInterface regelService;
 
    @Inject
    private RegelMaskinellMapper maskinellMapper;

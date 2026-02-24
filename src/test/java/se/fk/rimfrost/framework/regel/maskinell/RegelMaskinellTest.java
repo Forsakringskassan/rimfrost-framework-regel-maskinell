@@ -2,19 +2,27 @@ package se.fk.rimfrost.framework.regel.maskinell;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.tomakehurst.wiremock.http.RequestMethod;
+import io.quarkus.test.InjectMock;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.mockito.Mockito;
 import se.fk.rimfrost.framework.regel.RegelResponseMessagePayload;
+import se.fk.rimfrost.framework.regel.Utfall;
 import se.fk.rimfrost.framework.regel.logic.dto.ImmutableRegelDataRequest;
 import se.fk.rimfrost.framework.regel.logic.dto.RegelDataRequest;
 import se.fk.rimfrost.framework.regel.maskinell.logic.RegelMaskinellServiceInterface;
+import se.fk.rimfrost.framework.regel.maskinell.logic.dto.ImmutableRegelMaskinellResult;
+import se.fk.rimfrost.framework.regel.presentation.kafka.RegelRequestHandlerInterface;
 import se.fk.rimfrost.framework.regel.test.RegelTest;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PutKundbehovsflodeRequest;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.UppgiftStatus;
+
+import java.util.ArrayList;
 import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
@@ -26,11 +34,11 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 public class RegelMaskinellTest extends RegelTest
 {
 
-   @Inject
+   @InjectMock
    RegelMaskinellServiceInterface regelService;
 
    @Inject
-   RegelMaskinellTestRequestHandler regelMaskinellRequestHandler;
+   RegelRequestHandlerInterface regelMaskinellRequestHandler;
 
    private RegelDataRequest testRegelDataRequest(String kundbehovsflodeId)
    {
@@ -52,15 +60,23 @@ public class RegelMaskinellTest extends RegelTest
    @ParameterizedTest
    @CsvSource(
    {
-         "5367f6b8-cc4a-11f0-8de9-199901011234, 19990101-1234, Ja"
-   // "5367f6b8-cc4a-11f0-8de9-199901013333, 19990101-3333, Utredning",
-   // "5367f6b8-cc4a-11f0-8de9-199901012222, 19990101-2222, Ja",
-   //"5367f6b8-cc4a-11f0-8de9-199901014444, 19990101-4444, Nej"
+         "5367f6b8-cc4a-11f0-8de9-199901011234, Ja"
+   // "5367f6b8-cc4a-11f0-8de9-199901013333,  Utredning",
+   // "5367f6b8-cc4a-11f0-8de9-199901012222,  Ja",
+   //"5367f6b8-cc4a-11f0-8de9-199901014444,  Nej"
    })
    void TestRegelMaskinell(String kundbehovsflodeId,
-         String persnr,
          String expectedUtfall)
    {
+      //
+      // Setup mocking of processRegel
+      //
+      Mockito.when(regelService.processRegel(Mockito.any())).thenReturn(
+            ImmutableRegelMaskinellResult.builder()
+                  .ersattningar(new ArrayList<>())
+                  .underlag(new ArrayList<>())
+                  .utfall(Utfall.JA)
+                  .build());
       //
       // Trigger request to start workflow
       //

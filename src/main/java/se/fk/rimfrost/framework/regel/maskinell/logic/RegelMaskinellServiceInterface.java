@@ -5,5 +5,5 @@ import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellResult;
 
 public interface RegelMaskinellServiceInterface
 {
-   RegelMaskinellResult processRegel(RegelMaskinellRequest regelResult);
+   RegelMaskinellResult processRegel(RegelMaskinellRequest regelMaskinellRequest);
 }
