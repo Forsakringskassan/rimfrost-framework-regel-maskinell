@@ -10,7 +10,6 @@ import se.fk.rimfrost.framework.regel.presentation.kafka.RegelRequestHandlerInte
 import java.util.UUID;
 
 @SuppressWarnings("unused")
-@ApplicationScoped
 public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implements RegelRequestHandlerInterface
 {
    @Inject
