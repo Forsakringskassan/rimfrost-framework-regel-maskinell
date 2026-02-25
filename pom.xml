@@ -27,6 +27,7 @@
     <violations.maxViolations>0</violations.maxViolations>
     <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
     <version.org.kie.kogito>999-SNAPSHOT</version.org.kie.kogito>
+    <quarkus.build.skip>true</quarkus.build.skip>
   </properties>
 
   <dependencies>
@@ -102,12 +103,12 @@
     <dependency>
       <groupId>se.fk.rimfrost.framework.regel</groupId>
       <artifactId>rimfrost-framework-regel</artifactId>
-      <version>0.3.8</version>
+      <version>0.3.9</version>
     </dependency>
     <dependency>
       <groupId>se.fk.rimfrost.framework.regel</groupId>
       <artifactId>rimfrost-framework-regel-test-base</artifactId>
-      <version>0.3.8</version>
+      <version>0.3.9</version>
     </dependency>
   </dependencies>
 
