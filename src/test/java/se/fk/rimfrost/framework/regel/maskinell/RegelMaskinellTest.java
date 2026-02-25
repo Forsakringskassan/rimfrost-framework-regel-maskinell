@@ -24,11 +24,9 @@ import se.fk.rimfrost.framework.regel.presentation.kafka.RegelRequestHandlerInte
 import se.fk.rimfrost.framework.regel.test.RegelTest;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PutKundbehovsflodeRequest;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.UppgiftStatus;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 

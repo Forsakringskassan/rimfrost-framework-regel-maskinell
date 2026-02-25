@@ -1,13 +1,14 @@
-package se.fk.rimfrost.framework.regel.maskinell.logic;
+package se.fk.rimfrost.framework.regel.maskinell;
 
 import io.quarkus.arc.DefaultBean;
 import jakarta.enterprise.context.ApplicationScoped;
+import se.fk.rimfrost.framework.regel.maskinell.logic.RegelMaskinellServiceInterface;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellRequest;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellResult;
 
 @ApplicationScoped
 @DefaultBean
-public class DefaultRegelMaskinellService implements RegelMaskinellServiceInterface
+public class RegelMaskinellTestService implements RegelMaskinellServiceInterface
 {
 
    //
