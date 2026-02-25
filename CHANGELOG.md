@@ -2,6 +2,12 @@
 
 Changelog of rimfrost-framework-regel-maskinell.
 
+## 0.0.9 (2026-02-25)
+
+### Bug Fixes
+
+-  framework 0.3.9 samt flyttar defafult service till /test ([1f24d](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/1f24d8094511877) Ulf Slunga)  
+
 ## 0.0.8 (2026-02-25)
 
 ### Bug Fixes
