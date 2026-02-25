@@ -11,8 +11,13 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mockito;
 import se.fk.rimfrost.framework.regel.RegelResponseMessagePayload;
 import se.fk.rimfrost.framework.regel.Utfall;
+import se.fk.rimfrost.framework.regel.logic.dto.Beslutsutfall;
 import se.fk.rimfrost.framework.regel.logic.dto.ImmutableRegelDataRequest;
 import se.fk.rimfrost.framework.regel.logic.dto.RegelDataRequest;
+import se.fk.rimfrost.framework.regel.logic.entity.ErsattningData;
+import se.fk.rimfrost.framework.regel.logic.entity.ImmutableErsattningData;
+import se.fk.rimfrost.framework.regel.logic.entity.ImmutableUnderlag;
+import se.fk.rimfrost.framework.regel.logic.entity.Underlag;
 import se.fk.rimfrost.framework.regel.maskinell.logic.RegelMaskinellServiceInterface;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.ImmutableRegelMaskinellResult;
 import se.fk.rimfrost.framework.regel.presentation.kafka.RegelRequestHandlerInterface;
@@ -21,6 +26,7 @@ import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PutKundbehovsf
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.UppgiftStatus;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,6 +46,10 @@ public class RegelMaskinellTest extends RegelTest
    @Inject
    RegelRequestHandlerInterface regelMaskinellRequestHandler;
 
+   //
+   // test data
+   //
+
    private RegelDataRequest testRegelDataRequest(String kundbehovsflodeId)
    {
       return ImmutableRegelDataRequest
@@ -57,25 +67,65 @@ public class RegelMaskinellTest extends RegelTest
             .build();
    }
 
+   private ArrayList<Underlag> getTestUnderlag()
+   {
+      return new ArrayList<>(List.of(
+            ImmutableUnderlag.builder()
+                  .typ("TEST_UNDERLAG_TYP_1")
+                  .version("1.0")
+                  .data("TEST_UNDERLAG_DATA_1")
+                  .build(),
+            ImmutableUnderlag.builder()
+                  .typ("TEST_UNDERLAG_TYP_2")
+                  .version("2.0")
+                  .data("TEST_UNDERLAG_DATA_2")
+                  .build()));
+   }
+
+   private ArrayList<ErsattningData> getTestErsattningar(Beslutsutfall beslutsutfall)
+   {
+      return new ArrayList<>(List.of(
+            ImmutableErsattningData.builder()
+                  .id(UUID.fromString("11111111-1111-1111-1111-111111111111"))
+                  .beslutsutfall(beslutsutfall)
+                  .avslagsanledning("TEST avslagsanledning 1")
+                  .build(),
+            ImmutableErsattningData.builder()
+                  .id(UUID.fromString("22222222-2222-2222-2222-222222222222"))
+                  .beslutsutfall(beslutsutfall)
+                  .avslagsanledning("TEST avslagsanledning 2")
+                  .build()));
+   }
+
    @ParameterizedTest
    @CsvSource(
    {
-         "5367f6b8-cc4a-11f0-8de9-199901011234, Ja"
-   // "5367f6b8-cc4a-11f0-8de9-199901013333,  Utredning",
-   // "5367f6b8-cc4a-11f0-8de9-199901012222,  Ja",
-   //"5367f6b8-cc4a-11f0-8de9-199901014444,  Nej"
+         "5367f6b8-cc4a-11f0-8de9-199901011234, Ja, JA, Ja",
+         "5367f6b8-cc4a-11f0-8de9-199901013333,  Utredning, NEJ, Utredning",
+         "5367f6b8-cc4a-11f0-8de9-199901012222,  Nej, NEJ, Nej"
    })
-   void TestRegelMaskinell(String kundbehovsflodeId,
-         String expectedUtfall)
+   void TestRegelMaskinell(
+         String kundbehovsflodeId,
+         String expectedUtfall,
+         String processRegelBeslutsutfall,
+         String processRegelUtfall)
    {
+      //
+      // Clear out any previous requests
+      //
+      wiremockServer.resetRequests();
+      inMemoryConnector.sink(regelResponsesChannel).clear();
       //
       // Setup mocking of processRegel
       //
+      var testErsattningar = getTestErsattningar(Beslutsutfall.valueOf(processRegelBeslutsutfall));
+      ArrayList<Underlag> testUnderlag = getTestUnderlag();
+      Utfall testUtfall = Utfall.fromValue(processRegelUtfall);
       Mockito.when(regelService.processRegel(Mockito.any())).thenReturn(
             ImmutableRegelMaskinellResult.builder()
-                  .ersattningar(new ArrayList<>())
-                  .underlag(new ArrayList<>())
-                  .utfall(Utfall.JA)
+                  .ersattningar(testErsattningar)
+                  .underlag(testUnderlag)
+                  .utfall(testUtfall)
                   .build());
       //
       // Trigger request to start workflow
@@ -109,13 +159,25 @@ public class RegelMaskinellTest extends RegelTest
       {
          throw new RuntimeException(e);
       }
+
       assertEquals(UppgiftStatus.AVSLUTAD, sentPutKundbehovsflodeRequest.getUppgift().getUppgiftStatus());
+
       assertEquals("TEST Uppgift specifikation namn",
             sentPutKundbehovsflodeRequest.getUppgift().getUppgiftspecifikation().getNamn());
+
       assertEquals("TEST Uppgift specifikation uppgiftbeskrivning",
             sentPutKundbehovsflodeRequest.getUppgift().getUppgiftspecifikation().getUppgiftbeskrivning());
+
       var sentUnderlag = sentPutKundbehovsflodeRequest.getUppgift().getUnderlag();
-      assertEquals(0, sentUnderlag.size());
+      assertEquals(2, sentUnderlag.size());
+      //noinspection SequencedCollectionMethodCanBeUsed
+      assertEquals(testUnderlag.get(0).typ(), sentUnderlag.get(0).getTyp());
+      assertEquals(testUnderlag.get(0).version(), sentUnderlag.get(0).getVersion());
+      assertEquals(testUnderlag.get(0).data(), sentUnderlag.get(0).getData());
+      assertEquals(testUnderlag.get(1).typ(), sentUnderlag.get(1).getTyp());
+      assertEquals(testUnderlag.get(1).version(), sentUnderlag.get(1).getVersion());
+      assertEquals(testUnderlag.get(1).data(), sentUnderlag.get(1).getData());
+
       assertEquals(kundbehovsflodeId, sentPutKundbehovsflodeRequest.getUppgift().getKundbehovsflodeId().toString());
 
       //
