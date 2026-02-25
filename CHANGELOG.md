@@ -2,6 +2,23 @@
 
 Changelog of rimfrost-framework-regel-maskinell.
 
+## 0.0.8 (2026-02-25)
+
+### Bug Fixes
+
+-  lägger till testfall för Utredning och Nej ([8d215](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/8d215c5c91eafa5) Ulf Slunga)  
+-  modifierar default implementation av service och mockar regelService i testet ([dd966](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/dd966225634c6e6) Ulf Slunga)  
+-  använder rimfrost-framework-regel 0.3.8 ([a6309](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/a6309a69cbaa135) Ulf Slunga)  
+-  skapar applicationscoped test service så att basklassen RegelMaskinellService ej behöver vara applicationscoped ([dabe9](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/dabe96e4f02d687) Ulf Slunga)  
+
+### Other changes
+
+**spotless apply**
+
+
+[99f14](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/99f1454bd8d05d7) Ulf Slunga *2026-02-24 15:00:08*
+
+
 ## 0.0.7 (2026-02-24)
 
 ### Bug Fixes
