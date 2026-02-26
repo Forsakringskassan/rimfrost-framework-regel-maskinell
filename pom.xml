@@ -103,12 +103,12 @@
     <dependency>
       <groupId>se.fk.rimfrost.framework.regel</groupId>
       <artifactId>rimfrost-framework-regel</artifactId>
-      <version>0.3.9</version>
+      <version>0.3.10</version>
     </dependency>
     <dependency>
       <groupId>se.fk.rimfrost.framework.regel</groupId>
       <artifactId>rimfrost-framework-regel-test-base</artifactId>
-      <version>0.3.9</version>
+      <version>0.3.10</version>
     </dependency>
   </dependencies>
 
