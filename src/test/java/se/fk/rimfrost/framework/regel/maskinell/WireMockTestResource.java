@@ -13,8 +13,8 @@ public class WireMockTestResource extends AbstractWireMockTestResource
 
       Map<String, String> properties = new HashMap<>();
 
-      properties.put("quarkus.rest-client.kundbehovsflode.url", getWireMockServer().baseUrl());
-      properties.put("kundbehovsflode.api.base-url", getWireMockServer().baseUrl());
+      properties.put("quarkus.rest-client.handlaggning.url", getWireMockServer().baseUrl());
+      properties.put("handlaggning.api.base-url", getWireMockServer().baseUrl());
 
       return properties;
    }

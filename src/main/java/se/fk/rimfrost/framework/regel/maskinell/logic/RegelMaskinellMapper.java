@@ -5,7 +5,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import se.fk.rimfrost.framework.kundbehovsflode.adapter.dto.KundbehovsflodeResponse;
+import se.fk.rimfrost.framework.handlaggning.adapter.dto.HandlaggningResponse;
 import se.fk.rimfrost.framework.regel.logic.dto.FSSAinformation;
 import se.fk.rimfrost.framework.regel.logic.dto.UppgiftStatus;
 import se.fk.rimfrost.framework.regel.logic.entity.ImmutableRegelResult;
@@ -40,14 +40,14 @@ public class RegelMaskinellMapper
             .build();
    }
 
-   public RegelMaskinellRequest toRegelMaskinellRequest(KundbehovsflodeResponse kundbehovsflodeResponse)
+   public RegelMaskinellRequest toRegelMaskinellRequest(HandlaggningResponse handlaggningResponse)
    {
       return ImmutableRegelMaskinellRequest.builder()
-            .kundbehovsflodeId(kundbehovsflodeResponse.kundbehovsflodeId())
-            .personnummer(kundbehovsflodeResponse.personnummer())
-            .formanstyp(kundbehovsflodeResponse.formanstyp())
+            .handlaggningId(handlaggningResponse.handlaggningId())
+            .personnummer(handlaggningResponse.personnummer())
+            .formanstyp(handlaggningResponse.formanstyp())
             .ersattning(
-                  kundbehovsflodeResponse.ersattning()
+                  handlaggningResponse.ersattning()
                         .stream()
                         .map(e -> ImmutableErsattning.builder()
                               .ersattningsId(e.ersattningsId())

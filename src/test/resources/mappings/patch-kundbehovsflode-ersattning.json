@@ -1,7 +1,7 @@
 {
   "request": {
     "method": "PATCH",
-    "urlPattern": "/kundbehovsflode/([a-f0-9\\-]+)/ersattning"
+    "urlPattern": "/handlaggning/([a-f0-9\\-]+)/ersattning"
   },
   "response": {
     "status": 200,
@@ -9,32 +9,32 @@
       "Content-Type": "application/json"
     },
     "jsonBody": {
-      "kundbehovsflode": {
+      "handlaggning": {
         "id": "5367f6b8-cc4a-11f0-8de9-199901011234",
         "processinstansId": "11111111-2222-3333-4444-555555555555",
         "version": "1.0.0",
-        "kundbehov": {
+        "yrkande": {
           "id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
-          "formanstyp": "TEST Kundbehov förmånstyp",
+          "formanstyp": "TEST Yrkande förmånstyp",
           "version": "1.0",
-          "kundbehovsdatum": "2025-01-01T00:00:00Z",
-          "kundbehovsstatus": "PLANERAT",
+          "yrkandedatum": "2025-01-01T00:00:00Z",
+          "yrkandestatus": "PLANERAT",
           "period": {
             "start": "2025-01-01T00:00:00Z",
             "slut": "2025-12-31T23:59:59Z"
           },
           "avsikt": "NY",
-          "kundbehovsroll": [],
+          "yrkanderoll": [],
           "ersattning": []
         },
         "skapadTS": "2025-01-01T12:00:00Z",
         "avslutadTS": null,
-        "kundbehovsspecifikation": {
+        "handlaggningspecifikation": {
           "id": "11111111-2222-3333-4444-555555555555",
           "version": "1.0",
-          "bpmn": "TEST Kundbehovsspecifikation bpmn",
-          "namn": "TEST Kundbehovsspecifikation namn",
-          "beskrivning": "TEST Kundbehovsspecifikation beskrivning",
+          "bpmn": "TEST Handlaggningspecifikation bpmn",
+          "namn": "TEST Handlaggningspecifikation namn",
+          "beskrivning": "TEST Handlaggningspecifikation beskrivning",
           "uppgiftspecifikation": []
         }
       }
