@@ -12,7 +12,7 @@ import jakarta.annotation.Nullable;
 public interface RegelMaskinellRequest
 {
 
-   UUID kundbehovsflodeId();
+   UUID handlaggningId();
 
    String personnummer();
 

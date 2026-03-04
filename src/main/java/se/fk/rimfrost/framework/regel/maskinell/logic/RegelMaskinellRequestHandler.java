@@ -2,7 +2,7 @@ package se.fk.rimfrost.framework.regel.maskinell.logic;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import se.fk.rimfrost.framework.kundbehovsflode.adapter.dto.ImmutableKundbehovsflodeRequest;
+import se.fk.rimfrost.framework.handlaggning.adapter.dto.ImmutableHandlaggningRequest;
 import se.fk.rimfrost.framework.regel.logic.RegelRequestHandlerBase;
 import se.fk.rimfrost.framework.regel.logic.dto.RegelDataRequest;
 import se.fk.rimfrost.framework.regel.logic.entity.*;
@@ -24,19 +24,19 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
    {
       var cloudevent = createCloudEvent(request);
 
-      var kundbehovsResponse = kundbehovsflodeAdapter.getKundbehovsflodeInfo(
-            ImmutableKundbehovsflodeRequest.builder().kundbehovsflodeId(request.kundbehovsflodeId()).build());
+      var handlaggningResponse = handlaggningAdapter.getHandlaggningInfo(
+            ImmutableHandlaggningRequest.builder().handlaggningId(request.handlaggningId()).build());
 
-      var result = regelService.processRegel(maskinellMapper.toRegelMaskinellRequest(kundbehovsResponse));
+      var result = regelService.processRegel(maskinellMapper.toRegelMaskinellRequest(handlaggningResponse));
 
-      updateKundbehovsFlode(request.kundbehovsflodeId(), maskinellMapper.toRegelResult(result));
-      sendResponse(request.kundbehovsflodeId(), cloudevent, result.utfall());
+      updateHandlaggning(request.handlaggningId(), maskinellMapper.toRegelResult(result));
+      sendResponse(request.handlaggningId(), cloudevent, result.utfall());
    }
 
-   private void updateKundbehovsFlode(UUID kundbehovsflodeId, RegelResult regelResult)
+   private void updateHandlaggning(UUID handlaggningId, RegelResult regelResult)
    {
-      patchKundbehovsflode(kundbehovsflodeId, regelResult.ersattningar());
-      putKundbehovsflode(kundbehovsflodeId, regelResult.uppgiftData(), regelResult.underlag());
+      patchHandlaggning(handlaggningId, regelResult.ersattningar());
+      putHandlaggning(handlaggningId, regelResult.uppgiftData(), regelResult.underlag());
    }
 
 }

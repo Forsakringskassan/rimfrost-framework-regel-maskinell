@@ -22,7 +22,7 @@ import se.fk.rimfrost.framework.regel.maskinell.logic.RegelMaskinellServiceInter
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.ImmutableRegelMaskinellResult;
 import se.fk.rimfrost.framework.regel.presentation.kafka.RegelRequestHandlerInterface;
 import se.fk.rimfrost.framework.regel.test.RegelTest;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PutKundbehovsflodeRequest;
+import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PutHandlaggningRequest;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.UppgiftStatus;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,12 +48,12 @@ public class RegelMaskinellTest extends RegelTest
    // test data
    //
 
-   private RegelDataRequest testRegelDataRequest(String kundbehovsflodeId)
+   private RegelDataRequest testRegelDataRequest(String handlaggningId)
    {
       return ImmutableRegelDataRequest
             .builder()
             .id(UUID.fromString("99994567-89ab-4cde-9012-3456789abcde"))
-            .kundbehovsflodeId(UUID.fromString(kundbehovsflodeId))
+            .handlaggningId(UUID.fromString(handlaggningId))
             .kogitorootprocid("123456")
             .kogitorootprociid(UUID.fromString("77774567-89ab-4cde-9012-3456789abcde"))
             .kogitoparentprociid(UUID.fromString("88884567-89ab-4cde-9012-3456789abcde"))
@@ -103,7 +103,7 @@ public class RegelMaskinellTest extends RegelTest
          "5367f6b8-cc4a-11f0-8de9-199901012222,  Nej, NEJ, Nej"
    })
    void TestRegelMaskinell(
-         String kundbehovsflodeId,
+         String handlaggningId,
          String expectedUtfall,
          String processRegelBeslutsutfall,
          String processRegelUtfall)
@@ -128,45 +128,45 @@ public class RegelMaskinellTest extends RegelTest
       //
       // Trigger request to start workflow
       //
-      var regelDataRequest = testRegelDataRequest(kundbehovsflodeId);
+      var regelDataRequest = testRegelDataRequest(handlaggningId);
       regelMaskinellRequestHandler.handleRegelRequest(regelDataRequest);
 
       //
-      // Verify number of kundbehovsflöde requests
+      // Verify number of handläggning requests
       //
-      var kundbehovsflodeRequests = waitForWireMockRequest(wiremockServer,
-            kundbehovsflodeEndpoint + kundbehovsflodeId, 2);
-      assertEquals(2, kundbehovsflodeRequests.size());
-      assertEquals(1, kundbehovsflodeRequests.stream().filter(r -> r.getMethod().equals(RequestMethod.GET)).count());
-      assertEquals(1, kundbehovsflodeRequests.stream().filter(r -> r.getMethod().equals(RequestMethod.PUT)).count());
+      var handlaggningRequests = waitForWireMockRequest(wiremockServer,
+            handlaggningEndpoint + handlaggningId, 2);
+      assertEquals(2, handlaggningRequests.size());
+      assertEquals(1, handlaggningRequests.stream().filter(r -> r.getMethod().equals(RequestMethod.GET)).count());
+      assertEquals(1, handlaggningRequests.stream().filter(r -> r.getMethod().equals(RequestMethod.PUT)).count());
 
       //
-      // verify content of kundbehovsflöde PUT
+      // verify content of handläggning PUT
       //
-      var putRequest = kundbehovsflodeRequests
+      var putRequest = handlaggningRequests
             .stream()
             .filter(r -> r.getMethod().equals(RequestMethod.PUT))
             .findFirst()
             .orElseThrow();
-      PutKundbehovsflodeRequest sentPutKundbehovsflodeRequest;
+      PutHandlaggningRequest sentPutHandlaggningRequest;
       try
       {
-         sentPutKundbehovsflodeRequest = mapper.readValue(putRequest.getBodyAsString(), PutKundbehovsflodeRequest.class);
+         sentPutHandlaggningRequest = mapper.readValue(putRequest.getBodyAsString(), PutHandlaggningRequest.class);
       }
       catch (JsonProcessingException e)
       {
          throw new RuntimeException(e);
       }
 
-      assertEquals(UppgiftStatus.AVSLUTAD, sentPutKundbehovsflodeRequest.getUppgift().getUppgiftStatus());
+      assertEquals(UppgiftStatus.AVSLUTAD, sentPutHandlaggningRequest.getUppgift().getUppgiftStatus());
 
       assertEquals("TEST Uppgift specifikation namn",
-            sentPutKundbehovsflodeRequest.getUppgift().getUppgiftspecifikation().getNamn());
+            sentPutHandlaggningRequest.getUppgift().getUppgiftspecifikation().getNamn());
 
       assertEquals("TEST Uppgift specifikation uppgiftbeskrivning",
-            sentPutKundbehovsflodeRequest.getUppgift().getUppgiftspecifikation().getUppgiftbeskrivning());
+            sentPutHandlaggningRequest.getUppgift().getUppgiftspecifikation().getUppgiftbeskrivning());
 
-      var sentUnderlag = sentPutKundbehovsflodeRequest.getUppgift().getUnderlag();
+      var sentUnderlag = sentPutHandlaggningRequest.getUppgift().getUnderlag();
       assertEquals(2, sentUnderlag.size());
       //noinspection SequencedCollectionMethodCanBeUsed
       assertEquals(testUnderlag.get(0).typ(), sentUnderlag.get(0).getTyp());
@@ -176,7 +176,7 @@ public class RegelMaskinellTest extends RegelTest
       assertEquals(testUnderlag.get(1).version(), sentUnderlag.get(1).getVersion());
       assertEquals(testUnderlag.get(1).data(), sentUnderlag.get(1).getData());
 
-      assertEquals(kundbehovsflodeId, sentPutKundbehovsflodeRequest.getUppgift().getKundbehovsflodeId().toString());
+      assertEquals(handlaggningId, sentPutHandlaggningRequest.getUppgift().getHandlaggningId().toString());
 
       //
       // Verify rule response
@@ -188,7 +188,7 @@ public class RegelMaskinellTest extends RegelTest
       assertInstanceOf(RegelResponseMessagePayload.class, message);
 
       var regelResponseMessagePayload = (RegelResponseMessagePayload) message;
-      assertEquals(kundbehovsflodeId, regelResponseMessagePayload.getData().getKundbehovsflodeId());
+      assertEquals(handlaggningId, regelResponseMessagePayload.getData().getHandlaggningId());
       assertEquals(expectedUtfall, regelResponseMessagePayload.getData().getUtfall().getValue());
    }
 
