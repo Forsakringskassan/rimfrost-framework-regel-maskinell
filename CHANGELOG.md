@@ -2,6 +2,12 @@
 
 Changelog of rimfrost-framework-regel-maskinell.
 
+## 0.0.11 (2026-03-04)
+
+### Bug Fixes
+
+-  Rename kundbehovsflode to handlaggning ([784fe](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/784fe643758f9ca) Lars Persson)  
+
 ## 0.0.10 (2026-02-26)
 
 ### Bug Fixes
