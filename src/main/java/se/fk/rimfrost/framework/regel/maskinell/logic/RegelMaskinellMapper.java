@@ -40,10 +40,11 @@ public class RegelMaskinellMapper
             .build();
    }
 
-   public RegelMaskinellRequest toRegelMaskinellRequest(HandlaggningResponse handlaggningResponse)
+   public RegelMaskinellRequest toRegelMaskinellRequest(HandlaggningResponse handlaggningResponse, UUID aktivitetId)
    {
       return ImmutableRegelMaskinellRequest.builder()
             .handlaggningId(handlaggningResponse.handlaggningId())
+            .aktivitetId(aktivitetId)
             .personnummer(handlaggningResponse.personnummer())
             .formanstyp(handlaggningResponse.formanstyp())
             .ersattning(

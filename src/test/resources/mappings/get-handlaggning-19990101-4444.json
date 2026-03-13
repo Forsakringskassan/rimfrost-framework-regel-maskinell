@@ -31,7 +31,10 @@
                 "fornamn": "Loke",
                 "efternamn": "Tass"
               },
-              "roll": "AGARE",
+              "roll": {
+                "id": "e6e2957a-31c5-4325-9a8f-6b0123eccad9",
+                "namn": "AGARE"
+              },
               "yrkande": true
             }
           ],
@@ -41,7 +44,10 @@
               "belopp": 40000,
               "berakningsgrund": "LON",
               "beloppstyp": "INKOMSTBASERAD",
-              "ersattningstyp": "HUNDBIDRAG",
+              "ersattningstyp": {
+                "id": "999218e7-5476-46df-b0db-8b51f86e893c",
+                "namn": "HUNDBIDRAG"
+              },
               "periodisering": "DAG",
               "omfattning": 100,
               "beslutsutfall": "FU",

@@ -14,6 +14,8 @@ public interface RegelMaskinellRequest
 
    UUID handlaggningId();
 
+   UUID aktivitetId();
+
    String personnummer();
 
    String formanstyp();
