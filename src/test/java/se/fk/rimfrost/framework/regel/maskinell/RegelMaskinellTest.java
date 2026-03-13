@@ -54,6 +54,7 @@ public class RegelMaskinellTest extends RegelTest
             .builder()
             .id(UUID.fromString("99994567-89ab-4cde-9012-3456789abcde"))
             .handlaggningId(UUID.fromString(handlaggningId))
+            .aktivitetId(UUID.fromString("0644fc72-f18b-4552-ba37-80df1ee6629c"))
             .kogitorootprocid("123456")
             .kogitorootprociid(UUID.fromString("77774567-89ab-4cde-9012-3456789abcde"))
             .kogitoparentprociid(UUID.fromString("88884567-89ab-4cde-9012-3456789abcde"))

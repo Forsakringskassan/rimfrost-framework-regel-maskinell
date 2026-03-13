@@ -25,7 +25,10 @@
           "namn": "TEST Uppgiftsspecifikation namn",
           "uppgiftbeskrivning": "TEST Uppgiftsspecifikation uppgiftbeskrivning",
           "verksamhetslogik": "A",
-          "roll": "ANSVARIG_HANDLAGGARE",
+          "roll": {
+            "id": "1e67deb5-e1ff-4a58-af5c-f89e9f075e22",
+            "namn": "ANSVARIG_HANDLAGGARE"
+          },
           "applikationsId": "framework-regel-maskinell",
           "applikationsVersion": "1.0",
           "regel": {

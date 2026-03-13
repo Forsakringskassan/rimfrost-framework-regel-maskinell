@@ -88,12 +88,12 @@
     <dependency>
       <groupId>se.fk.rimfrost.framework.regel</groupId>
       <artifactId>rimfrost-framework-regel</artifactId>
-      <version>0.3.11</version>
+      <version>0.3.14</version>
     </dependency>
     <dependency>
       <groupId>se.fk.rimfrost.framework.regel</groupId>
       <artifactId>rimfrost-framework-regel-test-base</artifactId>
-      <version>0.3.11</version>
+      <version>0.3.14</version>
     </dependency>
   </dependencies>
 

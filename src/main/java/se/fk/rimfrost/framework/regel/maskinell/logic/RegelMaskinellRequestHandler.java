@@ -27,7 +27,8 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
       var handlaggningResponse = handlaggningAdapter.getHandlaggningInfo(
             ImmutableHandlaggningRequest.builder().handlaggningId(request.handlaggningId()).build());
 
-      var result = regelService.processRegel(maskinellMapper.toRegelMaskinellRequest(handlaggningResponse));
+      var result = regelService
+            .processRegel(maskinellMapper.toRegelMaskinellRequest(handlaggningResponse, request.aktivitetId()));
 
       updateHandlaggning(request.handlaggningId(), maskinellMapper.toRegelResult(result));
       sendResponse(request.handlaggningId(), cloudevent, result.utfall());
