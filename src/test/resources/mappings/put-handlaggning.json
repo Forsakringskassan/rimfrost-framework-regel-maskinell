@@ -1,7 +1,17 @@
 {
   "request": {
     "method": "PUT",
-    "urlPathPattern": "/handlaggning/.*"
+    "urlPathPattern": "/handlaggning/.*",
+    "headers": {
+      "Content-Type": {
+        "contains": "application/json"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "matchesJsonPath": "$.handlaggning.id"
+      }
+    ]
   },
   "response": {
     "status": 200,
@@ -9,46 +19,63 @@
       "Content-Type": "application/json"
     },
     "jsonBody": {
-      "uppgift": {
-        "id": "e9b4110e-0bd6-4444-9a64-390e4de94f59",
-        "version": "1.0",
-        "skapadTs": "2025-12-17T11:11:08.384937493Z",
-        "utfordTs": "2025-12-17T11:11:08.384970949Z",
-        "planeradTs": null,
-        "utforarId": "6f26358f-5ac5-4bf0-b04b-376a88923628",
-        "handlaggningId": "5367f6b8-cc4a-11f0-8de9-199901011234",
-        "uppgiftStatus": "AVSLUTAD",
-        "FSSAinformation": "HANDLAGGNING_PAGAR",
-        "uppgiftspecifikation": {
-          "id": "89a3becd-727e-4681-be95-bdbb796461ec",
-          "version": "1.0",
-          "namn": "TEST Uppgiftsspecifikation namn",
-          "uppgiftbeskrivning": "TEST Uppgiftsspecifikation uppgiftbeskrivning",
-          "verksamhetslogik": "A",
-          "roll": {
-            "id": "1e67deb5-e1ff-4a58-af5c-f89e9f075e22",
-            "namn": "ANSVARIG_HANDLAGGARE"
-          },
-          "applikationsId": "framework-regel-maskinell",
-          "applikationsVersion": "1.0",
-          "regel": {
-            "id": "79a3becd-727e-4681-be95-bdbb796461ec",
-            "version": "1.1",
-            "lagrum": {
-              "id": "78a3becd-727e-4681-be95-bdbb796461ec",
-              "version": "1.0",
-              "giltigFrom": "2025-12-17T11:11:08.384937493Z",
-              "giltigTom": "2026-12-17T11:11:08.384937493Z",
-              "forfattning": "Test författning",
-              "kapitel": "Test kapitel",
-              "paragraf": "Test paragraf",
-              "stycke": "Test stycke",
-              "punkt": "Test punkt"
+      "handlaggning": {
+        "id": "11111111-1111-1111-1111-111111111111",
+        "version": 2,
+        "yrkande": {
+          "id": "22222222-2222-2222-2222-222222222222",
+          "version": 1,
+          "erbjudandeId": "33333333-3333-3333-3333-333333333333",
+          "yrkandedatum": "2025-01-01T10:00:00Z",
+          "yrkandestatus": "YRKAT",
+          "yrkandeFrom": "2025-01-01T00:00:00Z",
+          "yrkandeTom": "2025-01-02T00:00:00Z",
+          "avsikt": "NY",
+          "individYrkandeRoller": [
+            {
+              "individId": "44444444-4444-4444-4444-444444444444",
+              "yrkandeRollId": "55555555-5555-5555-5555-555555555555"
             }
-          },
-          "uppgiftsGui": "rtf-manuell/482a43b7-c985-4f65-ae41-fb75de3a6a6f"
+          ],
+          "produceradeResultat": [
+            {
+              "id": "66666666-6666-6666-6666-666666666666",
+              "version": 2,
+              "from": "2025-01-01T00:00:00Z",
+              "tom": "2025-01-02T00:00:00Z",
+              "yrkandestatus": "YRKAT",
+              "avslagsanledning": null,
+              "typ": "ERSATTNING",
+              "data": "{}"
+            }
+          ]
         },
-        "underlag": []
+        "processinstansId": "77777777-7777-7777-7777-777777777777",
+        "skapadTS": "2025-01-01T09:00:00Z",
+        "avslutadTS": "2025-01-02T12:00:00Z",
+        "handlaggningspecifikationId": "88888888-8888-8888-8888-888888888888",
+        "underlag": [
+          {
+            "typ": "TEST_UNDERLAG",
+            "version": 1,
+            "data": "{}"
+          }
+        ],
+        "uppgift": {
+          "id": "99999999-9999-9999-9999-999999999999",
+          "version": 1,
+          "skapadTs": "2025-01-01T08:00:00Z",
+          "utfordTs": null,
+          "planeradTs": "2025-01-02T08:00:00Z",
+          "utforarId": null,
+          "aktivitetId": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+          "uppgiftspecifikation": {
+            "id": "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb",
+            "version": 1
+          },
+          "uppgiftStatus": "TILLDELAD",
+          "FSSAinformation": "HANDLAGGNING_PAGAR"
+        }
       }
     }
   }

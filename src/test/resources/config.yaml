@@ -1,11 +1,11 @@
 uppgift:
-  version: 1.0
+  version: 1
   path: /regel/framework-maskinell-test
   aktivitet: "TEST Uppgift aktivitet"
 
 specifikation:
   id: a42ffaed-2f20-47e8-8499-f2f79ae2f45f
-  version: 1.0
+  version: 1
   namn: "TEST Uppgift specifikation namn"
   uppgiftbeskrivning: "TEST Uppgift specifikation uppgiftbeskrivning"
   verksamhetslogik: C
@@ -15,13 +15,13 @@ specifikation:
 
 regel:
   id: a11f3429-3a6b-4389-ba1c-c2747b0fb45b
-  version: 1.0
+  version: 1
   namn: "TEST Regel namn"
   beskrivning: "TEST Regel beskrivning"
 
 lagrum:
   id: f0c927a9-b995-4a12-b4fd-4bcbf4281b44
-  version: 1.0
+  version: 1
   giltigFom: 2010-02-11
   forfattning: "TEST Lagrum författning"
   kapitel: 3

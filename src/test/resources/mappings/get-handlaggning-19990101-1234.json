@@ -10,70 +10,40 @@
     },
     "jsonBody": {
       "handlaggning": {
-        "id": "5367f6b8-cc4a-11f0-8de9-199901011234",
+        "id": "11111111-1111-1111-1111-111111111234",
+        "version": 1,
         "yrkande": {
-          "id": "81234d56-7890-4abc-1234-56789abcdef0",
-          "formanstyp": "TEST Yrkande förmånstyp",
-          "version": "1.0",
+          "id": "22222222-2222-2222-2222-222222221234",
+          "version": 1,
+          "erbjudandeId": "33333333-3333-3333-3333-333333331234",
           "yrkandedatum": "2026-01-22T13:30:11.155427+01:00",
-          "yrkandestatus": "FASTSTALLT",
-          "period": {
-            "start": "2025-01-10T16:15:50Z",
-            "slut": "2025-01-10T16:15:50Z"
-          },
+          "yrkandestatus": "YRKAT",
+          "yrkandeFrom": "2025-01-01T00:00:00Z",
+          "yrkandeTom": "2025-01-02T00:00:00Z",
           "avsikt": "NY",
-          "andringsorsak": "",
-          "yrkanderoll": [
+          "individYrkandeRoller": [
             {
-              "id": "91234567-89ab-4cde-9012-3456789abcde",
-              "individ": {
-                "id": "19990101-1234",
-                "fornamn": "Lisa",
-                "efternamn": "Tass"
-              },
-              "roll": {
-                "id": "e6e2957a-31c5-4325-9a8f-6b0123eccad9",
-                "namn": "AGARE"
-              },
-              "yrkande": true
+              "individId": "44444444-4444-4444-4444-444444441234",
+              "yrkandeRollId": "55555555-5555-5555-5555-555555551234"
             }
           ],
-          "ersattning": [
+          "produceradeResultat": [
             {
-              "id": "0c38142c-3423-4f90-8963-b966d6f0c726",
-              "belopp": 40000,
-              "berakningsgrund": "LON",
-              "beloppstyp": "INKOMSTBASERAD",
-              "ersattningstyp": {
-                "id": "999218e7-5476-46df-b0db-8b51f86e893c",
-                "namn": "HUNDBIDRAG"
-              },
-              "periodisering": "DAG",
-              "omfattning": 100,
-              "beslutsutfall": "FU",
-              "avslagsanledning": "",
-              "produceratResultat": {
-                "id": "bc6e5150-29be-4758-a2ee-e241f1d7ccf7",
-                "version": "1.0",
-                "from": "2025-01-10T16:15:50Z",
-                "tom": "2025-01-10T16:15:50Z",
-                "status": "PLANERAT"
-              }
+              "id": "66666666-6666-6666-6666-666666661234",
+              "version": 1,
+              "from": "2025-01-01T00:00:00Z",
+              "tom": "2025-01-02T00:00:00Z",
+              "yrkandestatus": "YRKAT",
+              "avslagsanledning": null,
+              "typ": "ERSATTNING",
+              "data": "{}"
             }
           ]
         },
-        "processinstansId": "e7f3c5a2-1234-4abc-9876-56789abcdef0",
-        "version": "1.0",
+        "processinstansId": "77777777-7777-7777-7777-777777771234",
         "skapadTS": "2026-01-22T13:31:00.8742683+01:00",
         "avslutadTS": null,
-        "handlaggningspecifikation": {
-          "id": "71234567-89ab-4cde-9012-3456789abcde",
-          "version": "1.0",
-          "bpmn": "TEST Handlaggningsspecifikation bpmn",
-          "namn": "TEST Handlaggningsspecifikation namn",
-          "beskrivning": "TEST Handlaggningsspecifikation beskrivning",
-          "uppgiftspecifikation": []
-        }
+        "handlaggningspecifikationId": "88888888-8888-8888-8888-888888881234"
       }
     }
   }

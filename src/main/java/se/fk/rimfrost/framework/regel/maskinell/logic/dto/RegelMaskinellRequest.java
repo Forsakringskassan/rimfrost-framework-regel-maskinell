@@ -16,31 +16,4 @@ public interface RegelMaskinellRequest
 
    UUID aktivitetId();
 
-   String personnummer();
-
-   String formanstyp();
-
-   List<Ersattning> ersattning();
-
-   @Value.Immutable
-   interface Ersattning
-   {
-
-      UUID ersattningsId();
-
-      String ersattningsTyp();
-
-      int omfattningsProcent();
-
-      int belopp();
-
-      int berakningsgrund();
-
-      @Nullable
-      String beslutsutfall();
-
-      LocalDate franOchMed();
-
-      LocalDate tillOchMed();
-   }
 }
