@@ -52,7 +52,7 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
             .underlag(result.underlag()) // TODO kan tas bort ?? är bara en del av uppdatering av handläggningen ??
             .uppgiftSpecifikation(uppgiftSpecifikation)
             .build();
-      var handlaggning = maskinellMapper.toHandlaggning(handlaggningRead, result.underlag(), uppgift);
+      var handlaggning = maskinellMapper.toHandlaggning(handlaggningRead, result.underlag(), uppgift, request.kogitoprocinstanceid());
       handlaggningAdapter.updateHandlaggning(handlaggning);
 
       // Avsluta regel

@@ -19,13 +19,16 @@ public class RegelMaskinellMapper
             .build();
    }
 
-   public Handlaggning toHandlaggning(HandlaggningRead handlaggningRead, List<Underlag> underlag, Uppgift uppgift)
+   public Handlaggning toHandlaggning(HandlaggningRead handlaggningRead,
+                                      List<Underlag> underlag,
+                                      Uppgift uppgift,
+                                      UUID processinstanceId)
    {
       return ImmutableHandlaggning.builder()
             .id(handlaggningRead.id())
             .version(handlaggningRead.version())
             .yrkande(handlaggningRead.yrkande())
-            .processInstansId(handlaggningRead.processInstansId())
+            .processInstansId(processinstanceId)
             .skapadTS(handlaggningRead.skapadTS())
             .avslutadTS(handlaggningRead.avslutadTS())
             .handlaggningspecifikationId(handlaggningRead.handlaggningspecifikationId())
