@@ -20,9 +20,9 @@ public class RegelMaskinellMapper
    }
 
    public Handlaggning toHandlaggning(HandlaggningRead handlaggningRead,
-                                      List<Underlag> underlag,
-                                      Uppgift uppgift,
-                                      UUID processinstanceId)
+         List<Underlag> underlag,
+         Uppgift uppgift,
+         UUID processinstanceId)
    {
       return ImmutableHandlaggning.builder()
             .id(handlaggningRead.id())
