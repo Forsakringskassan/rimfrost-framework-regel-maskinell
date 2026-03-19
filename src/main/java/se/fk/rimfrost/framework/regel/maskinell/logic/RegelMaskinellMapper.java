@@ -1,66 +1,39 @@
 package se.fk.rimfrost.framework.regel.maskinell.logic;
 
-import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
-
 import jakarta.enterprise.context.ApplicationScoped;
-import se.fk.rimfrost.framework.handlaggning.adapter.dto.HandlaggningResponse;
-import se.fk.rimfrost.framework.regel.logic.dto.FSSAinformation;
-import se.fk.rimfrost.framework.regel.logic.dto.UppgiftStatus;
-import se.fk.rimfrost.framework.regel.logic.entity.ImmutableRegelResult;
-import se.fk.rimfrost.framework.regel.logic.entity.ImmutableUppgiftData;
-import se.fk.rimfrost.framework.regel.logic.entity.RegelResult;
-import se.fk.rimfrost.framework.regel.maskinell.logic.dto.ImmutableErsattning;
+import se.fk.rimfrost.framework.handlaggning.model.*;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.ImmutableRegelMaskinellRequest;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellRequest;
-import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellResult;
 
 @ApplicationScoped
 public class RegelMaskinellMapper
 {
 
-   public RegelResult toRegelResult(RegelMaskinellResult result)
+   public RegelMaskinellRequest toRegelMaskinellRequest(UUID handlaggningId, UUID aktivitetId)
    {
-
-      var uppgiftData = ImmutableUppgiftData.builder()
-            .uppgiftId(UUID.randomUUID())
-            .skapadTs(OffsetDateTime.now())
-            .planeradTs(OffsetDateTime.now())
-            .utfordTs(OffsetDateTime.now())
-            .uppgiftStatus(UppgiftStatus.AVSLUTAD)
-            .fssaInformation(FSSAinformation.HANDLAGGNING_PAGAR)
-            .build();
-
-      return ImmutableRegelResult.builder()
-            .uppgiftData(uppgiftData)
-            .addAllErsattningar(result.ersattningar())
-            .addAllUnderlag(result.underlag())
-            .utfall(result.utfall())
+      return ImmutableRegelMaskinellRequest.builder()
+            .handlaggningId(handlaggningId)
+            .aktivitetId(aktivitetId)
             .build();
    }
 
-   public RegelMaskinellRequest toRegelMaskinellRequest(HandlaggningResponse handlaggningResponse, UUID aktivitetId)
+   public Handlaggning toHandlaggning(HandlaggningRead handlaggningRead,
+         List<Underlag> underlag,
+         Uppgift uppgift,
+         UUID processinstanceId)
    {
-      return ImmutableRegelMaskinellRequest.builder()
-            .handlaggningId(handlaggningResponse.handlaggningId())
-            .aktivitetId(aktivitetId)
-            .personnummer(handlaggningResponse.personnummer())
-            .formanstyp(handlaggningResponse.formanstyp())
-            .ersattning(
-                  handlaggningResponse.ersattning()
-                        .stream()
-                        .map(e -> ImmutableErsattning.builder()
-                              .ersattningsId(e.ersattningsId())
-                              .ersattningsTyp(e.ersattningsTyp())
-                              .omfattningsProcent(e.omfattningsProcent())
-                              .belopp(e.belopp())
-                              .berakningsgrund(e.berakningsgrund())
-                              .beslutsutfall(e.beslutsutfall())
-                              .franOchMed(e.franOchMed())
-                              .tillOchMed(e.tillOchMed())
-                              .build())
-                        .collect(Collectors.toList()))
+      return ImmutableHandlaggning.builder()
+            .id(handlaggningRead.id())
+            .version(handlaggningRead.version())
+            .yrkande(handlaggningRead.yrkande())
+            .processInstansId(processinstanceId)
+            .skapadTS(handlaggningRead.skapadTS())
+            .avslutadTS(handlaggningRead.avslutadTS())
+            .handlaggningspecifikationId(handlaggningRead.handlaggningspecifikationId())
+            .underlag(underlag)
+            .uppgift(uppgift)
             .build();
    }
 }
