@@ -2,6 +2,18 @@
 
 Changelog of rimfrost-framework-regel-maskinell.
 
+## 0.0.12 (2026-03-19)
+
+### Bug Fixes
+
+-  spotless apply ([daff6](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/daff64e58b644f3) Ulf Slunga)  
+-  använder processinstanceId från regel request ([d73fa](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/d73fa7e17079584) Ulf Slunga)  
+-  uppdateringar mot datamodell och förändrade apis ([6d55e](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/6d55e26abf20a68) Ulf Slunga)  
+-  Add aktivitetId to RegelMaskinellRequest ([28076](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/2807694239cb1f1) Lars Persson)  
+-  README ([61732](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/6173243bc128ee3) Ulf Slunga)  
+-  cleanup av application properties och wiremock resources ([f8401](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/f8401d02f319131) Ulf Slunga)  
+-  Rename mapping files to handlaggning ([d9d9d](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/d9d9d1c1bc80741) Lars Persson)  
+
 ## 0.0.11 (2026-03-04)
 
 ### Bug Fixes
