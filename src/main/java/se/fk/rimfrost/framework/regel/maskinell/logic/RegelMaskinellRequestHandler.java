@@ -41,8 +41,7 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
       // Exekvera regellogik
       var uppgiftStarted = OffsetDateTime.now();
       var uppgiftId = UUID.randomUUID();
-      var regelMaskinellRequest = maskinellMapper.toRegelMaskinellRequest(request.handlaggningId(), request.aktivitetId(),
-            handlaggningRead.yrkande());
+      var regelMaskinellRequest = maskinellMapper.toRegelMaskinellRequest(handlaggningRead.yrkande());
 
       // Uppdatera handläggningsinformation
       var result = regelService.processRegel(regelMaskinellRequest);

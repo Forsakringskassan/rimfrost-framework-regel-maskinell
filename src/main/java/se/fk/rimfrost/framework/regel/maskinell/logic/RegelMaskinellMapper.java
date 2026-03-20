@@ -12,11 +12,9 @@ import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellRequest;
 public class RegelMaskinellMapper
 {
 
-   public RegelMaskinellRequest toRegelMaskinellRequest(UUID handlaggningId, UUID aktivitetId, Yrkande yrkande)
+   public RegelMaskinellRequest toRegelMaskinellRequest(Yrkande yrkande)
    {
       return ImmutableRegelMaskinellRequest.builder()
-            .handlaggningId(handlaggningId)
-            .aktivitetId(aktivitetId)
             .yrkande(yrkande)
             .build();
    }
