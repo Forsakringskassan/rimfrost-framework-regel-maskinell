@@ -45,16 +45,11 @@ public class RegelMaskinellMapper
    private Yrkande addProduceradeResultat(Yrkande yrkande, List<ProduceratResultat> uppdateradeResultat)
    {
       return ImmutableYrkande.builder()
-            .id(yrkande.id())
-            .version(yrkande.version())
-            .erbjudandeId(yrkande.erbjudandeId())
-            .yrkandeDatum(yrkande.yrkandeDatum())
-            .yrkandeStatus(yrkande.yrkandeStatus())
-            .yrkandeFrom(yrkande.yrkandeFrom())
-            .yrkandeTom(yrkande.yrkandeTom())
-            .avsikt(yrkande.avsikt())
-            .individYrkandeRoller(yrkande.individYrkandeRoller())
-            .produceradeResultat(mergeProduceradeResultat(uppdateradeResultat, yrkande.produceradeResultat()))
+            .from(yrkande)
+            .produceradeResultat(
+                  mergeProduceradeResultat(
+                        uppdateradeResultat,
+                        yrkande.produceradeResultat()))
             .build();
    }
 
