@@ -2,6 +2,13 @@
 
 Changelog of rimfrost-framework-regel-maskinell.
 
+## 0.0.13 (2026-03-20)
+
+### Bug Fixes
+
+-  använd builder from för yrkande i addProduceradeResultat ([22fec](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/22fec81cb51cc7c) Ulf Slunga)  
+-  merge av producerade resultat i uppdaterad handläggning ([bb22a](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/bb22af8cdc5fe34) Ulf Slunga)  
+
 ## 0.0.12 (2026-03-19)
 
 ### Bug Fixes
