@@ -264,11 +264,14 @@ public class RegelMaskinellTest extends RegelTest
             sentPutHandlaggningRequest.getHandlaggning().getUppgift().getUppgiftspecifikation().getId().toString());
 
       var sentProduceradeResultat = sentPutHandlaggningRequest.getHandlaggning().getYrkande().getProduceradeResultat();
-      assertEquals(2, sentProduceradeResultat.size());
+      assertEquals(3, sentProduceradeResultat.size());
       assertEquals(sentProduceradeResultat.get(0).getId(), UUID.fromString("66666666-6666-6666-6666-666666661234"));
       assertEquals(sentProduceradeResultat.get(0).getYrkandestatus(),
             se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Yrkandestatus.UNDER_UTREDNING);
       assertEquals(sentProduceradeResultat.get(1).getId(), UUID.fromString("d89ca33f-eeeb-48fa-850f-7b9d9b07cc87"));
+      assertEquals(sentProduceradeResultat.get(1).getYrkandestatus(),
+            se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Yrkandestatus.YRKAT);
+      assertEquals(sentProduceradeResultat.get(2).getId(), UUID.fromString("66666666-6666-6666-6666-666666662222"));
       assertEquals(sentProduceradeResultat.get(1).getYrkandestatus(),
             se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Yrkandestatus.YRKAT);
 
