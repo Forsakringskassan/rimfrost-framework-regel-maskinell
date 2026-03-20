@@ -6,11 +6,13 @@ import io.quarkus.test.InjectMock;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
+
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mockito;
-import se.fk.rimfrost.framework.handlaggning.model.ImmutableUnderlag;
-import se.fk.rimfrost.framework.handlaggning.model.Underlag;
+
+import se.fk.rimfrost.framework.handlaggning.model.*;
 import se.fk.rimfrost.framework.regel.RegelResponseMessagePayload;
 import se.fk.rimfrost.framework.regel.Utfall;
 import se.fk.rimfrost.framework.regel.logic.dto.ImmutableRegelDataRequest;
@@ -22,6 +24,7 @@ import se.fk.rimfrost.framework.regel.test.RegelTest;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PutHandlaggningRequest;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.UppgiftStatus;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -76,6 +79,29 @@ public class RegelMaskinellTest extends RegelTest
                   .typ("TEST_UNDERLAG_TYP_2")
                   .version(2)
                   .data("TEST_UNDERLAG_DATA_2")
+                  .build()));
+   }
+
+   private ArrayList<ProduceratResultat> getTestProduceradeResultat()
+   {
+      return new ArrayList<>(List.of(
+            ImmutableProduceratResultat.builder()
+                  .id(UUID.fromString("66666666-6666-6666-6666-666666661234"))
+                  .typ("TEST_PRODUCERAT_RESULTAT_TYP_1")
+                  .version(1)
+                  .resultatFrom(OffsetDateTime.now())
+                  .resultatTom(OffsetDateTime.now())
+                  .yrkandeStatus(Yrkandestatus.UNDER_UTREDNING)
+                  .data("TEST_PRODUCERAT_RESULTAT_TYP_1")
+                  .build(),
+            ImmutableProduceratResultat.builder()
+                  .id(UUID.fromString("d89ca33f-eeeb-48fa-850f-7b9d9b07cc87"))
+                  .typ("TEST_PRODUCERAT_RESULTAT_TYP_2")
+                  .version(1)
+                  .resultatFrom(OffsetDateTime.now())
+                  .resultatTom(OffsetDateTime.now())
+                  .yrkandeStatus(Yrkandestatus.YRKAT)
+                  .data("TEST_PRODUCERAT_RESULTAT_TYP_2")
                   .build()));
    }
 
@@ -175,4 +201,76 @@ public class RegelMaskinellTest extends RegelTest
       assertEquals(expectedUtfall, regelResponseMessagePayload.getData().getUtfall().getValue());
    }
 
+   @ParameterizedTest
+   @CsvSource(
+   {
+         "11111111-1111-1111-1111-111111111234"
+   })
+   void TestRegelMaskinell_should_merge_producerade_resultat(String handlaggningId)
+   {
+      // Clear out any previous requests
+      //
+      wiremockServer.resetRequests();
+      inMemoryConnector.sink(regelResponsesChannel).clear();
+
+      //
+      // Setup mocking of processRegel
+      //
+      ArrayList<Underlag> testUnderlag = getTestUnderlag();
+      var produceradeResultat = getTestProduceradeResultat();
+      Mockito.when(regelService.processRegel(Mockito.any())).thenReturn(
+            ImmutableRegelMaskinellResult.builder()
+                  .underlag(testUnderlag)
+                  .produceradeResultat(produceradeResultat)
+                  .utfall(Utfall.UTREDNING)
+                  .build());
+      //
+      // Trigger request to start workflow
+      //
+
+      var regelDataRequest = testRegelDataRequest(handlaggningId);
+      regelMaskinellRequestHandler.handleRegelRequest(regelDataRequest);
+
+      //
+      // Verify number of handläggning requests
+      //
+      var handlaggningRequests = waitForWireMockRequest(wiremockServer,
+            handlaggningEndpoint + handlaggningId, 2);
+      assertEquals(2, handlaggningRequests.size());
+      assertEquals(1, handlaggningRequests.stream().filter(r -> r.getMethod().equals(RequestMethod.GET)).count());
+      assertEquals(1, handlaggningRequests.stream().filter(r -> r.getMethod().equals(RequestMethod.PUT)).count());
+
+      //
+      // verify content of handläggning PUT
+      //
+      var putRequest = handlaggningRequests
+            .stream()
+            .filter(r -> r.getMethod().equals(RequestMethod.PUT))
+            .findFirst()
+            .orElseThrow();
+      PutHandlaggningRequest sentPutHandlaggningRequest;
+      try
+      {
+         sentPutHandlaggningRequest = mapper.readValue(putRequest.getBodyAsString(), PutHandlaggningRequest.class);
+      }
+      catch (JsonProcessingException e)
+      {
+         throw new RuntimeException(e);
+      }
+
+      assertEquals(UppgiftStatus.AVSLUTAD, sentPutHandlaggningRequest.getHandlaggning().getUppgift().getUppgiftStatus());
+
+      assertEquals("a42ffaed-2f20-47e8-8499-f2f79ae2f45f",
+            sentPutHandlaggningRequest.getHandlaggning().getUppgift().getUppgiftspecifikation().getId().toString());
+
+      var sentProduceradeResultat = sentPutHandlaggningRequest.getHandlaggning().getYrkande().getProduceradeResultat();
+      assertEquals(2, sentProduceradeResultat.size());
+      assertEquals(sentProduceradeResultat.get(0).getId(), UUID.fromString("66666666-6666-6666-6666-666666661234"));
+      assertEquals(sentProduceradeResultat.get(0).getYrkandestatus(),
+            se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Yrkandestatus.UNDER_UTREDNING);
+      assertEquals(sentProduceradeResultat.get(1).getId(), UUID.fromString("d89ca33f-eeeb-48fa-850f-7b9d9b07cc87"));
+      assertEquals(sentProduceradeResultat.get(1).getYrkandestatus(),
+            se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Yrkandestatus.YRKAT);
+
+   }
 }
