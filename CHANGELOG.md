@@ -2,6 +2,14 @@
 
 Changelog of rimfrost-framework-regel-maskinell.
 
+## 0.0.14 (2026-03-20)
+
+### Bug Fixes
+
+-  only send yrkande to regel implementation ([b7949](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/b7949e31a116a95) Nils Elveros)  
+-  Fix tests ([3a64b](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/3a64bdd6e3f562a) Nils Elveros)  
+-  send yrkande in regelRequest and remove logic from mapper ([64e62](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/64e62881fa4a9b6) Nils Elveros)  
+
 ## 0.0.13 (2026-03-20)
 
 ### Bug Fixes
