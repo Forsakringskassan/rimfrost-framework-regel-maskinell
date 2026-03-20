@@ -10,6 +10,7 @@ import se.fk.rimfrost.framework.regel.logic.RegelRequestHandlerBase;
 import se.fk.rimfrost.framework.regel.logic.dto.RegelDataRequest;
 import se.fk.rimfrost.framework.regel.logic.entity.*;
 import se.fk.rimfrost.framework.regel.presentation.kafka.RegelRequestHandlerInterface;
+
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
@@ -52,7 +53,11 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
             .underlag(result.underlag()) // TODO kan tas bort ?? är bara en del av uppdatering av handläggningen ??
             .uppgiftSpecifikation(uppgiftSpecifikation)
             .build();
-      var handlaggning = maskinellMapper.toHandlaggning(handlaggningRead, result.underlag(), uppgift,
+      var handlaggning = maskinellMapper.toHandlaggning(
+            handlaggningRead,
+            result.underlag(),
+            result.produceradeResultat(),
+            uppgift,
             request.kogitoprocinstanceid());
       handlaggningAdapter.updateHandlaggning(handlaggning);
 
