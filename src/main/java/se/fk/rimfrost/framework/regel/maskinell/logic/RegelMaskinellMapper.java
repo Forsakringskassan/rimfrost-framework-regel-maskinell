@@ -2,7 +2,6 @@ package se.fk.rimfrost.framework.regel.maskinell.logic;
 
 import java.util.List;
 import java.util.UUID;
-
 import jakarta.enterprise.context.ApplicationScoped;
 import se.fk.rimfrost.framework.handlaggning.model.*;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.ImmutableRegelMaskinellRequest;
@@ -19,20 +18,20 @@ public class RegelMaskinellMapper
             .build();
    }
 
-   public Handlaggning toHandlaggning(HandlaggningRead handlaggningRead,
+   public HandlaggningUpdate toHandlaggningUpdate(Handlaggning handlaggning,
          List<Underlag> underlag,
          Yrkande yrkande,
          Uppgift uppgift,
          UUID processinstanceId)
    {
-      return ImmutableHandlaggning.builder()
-            .id(handlaggningRead.id())
-            .version(handlaggningRead.version())
+      return ImmutableHandlaggningUpdate.builder()
+            .id(handlaggning.id())
+            .version(handlaggning.version())
             .yrkande(yrkande)
             .processInstansId(processinstanceId)
-            .skapadTS(handlaggningRead.skapadTS())
-            .avslutadTS(handlaggningRead.avslutadTS())
-            .handlaggningspecifikationId(handlaggningRead.handlaggningspecifikationId())
+            .skapadTS(handlaggning.skapadTS())
+            .avslutadTS(handlaggning.avslutadTS())
+            .handlaggningspecifikationId(handlaggning.handlaggningspecifikationId())
             .underlag(underlag)
             .uppgift(uppgift)
             .build();

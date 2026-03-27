@@ -36,12 +36,12 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
    {
       // Hämta handläggningsinformation
       var cloudevent = createCloudEvent(request);
-      var handlaggningRead = handlaggningAdapter.readHandlaggning(request.handlaggningId());
+      var handlaggning = handlaggningAdapter.readHandlaggning(request.handlaggningId());
 
       // Exekvera regellogik
       var uppgiftStarted = OffsetDateTime.now();
       var uppgiftId = UUID.randomUUID();
-      var regelMaskinellRequest = maskinellMapper.toRegelMaskinellRequest(handlaggningRead.yrkande());
+      var regelMaskinellRequest = maskinellMapper.toRegelMaskinellRequest(handlaggning.yrkande());
 
       // Uppdatera handläggningsinformation
       var result = regelService.processRegel(regelMaskinellRequest);
@@ -62,15 +62,15 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
             .uppgiftSpecifikation(uppgiftSpecifikation)
             .build();
 
-      var updatedYrkande = createYrkandeWithUpdatedProduceradeResultat(handlaggningRead.yrkande(), result.produceradeResultat());
+      var updatedYrkande = createYrkandeWithUpdatedProduceradeResultat(handlaggning.yrkande(), result.produceradeResultat());
 
-      var handlaggning = maskinellMapper.toHandlaggning(
-            handlaggningRead,
+      var handlaggningUpdate = maskinellMapper.toHandlaggningUpdate(
+            handlaggning,
             result.underlag(),
             updatedYrkande,
             uppgift,
             request.kogitoprocinstanceid());
-      handlaggningAdapter.updateHandlaggning(handlaggning);
+      handlaggningAdapter.updateHandlaggning(handlaggningUpdate);
 
       // Avsluta regel
       sendResponse(request.handlaggningId(), cloudevent, result.utfall());
