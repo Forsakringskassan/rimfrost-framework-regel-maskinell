@@ -2,6 +2,12 @@
 
 Changelog of rimfrost-framework-regel-maskinell.
 
+## 0.0.15 (2026-03-27)
+
+### Bug Fixes
+
+-  renaming Handlaggning HandlaggningUpdate samt refactoring av tester ([47293](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/4729307dc5b0001) Ulf Slunga)  
+
 ## 0.0.14 (2026-03-20)
 
 ### Bug Fixes
