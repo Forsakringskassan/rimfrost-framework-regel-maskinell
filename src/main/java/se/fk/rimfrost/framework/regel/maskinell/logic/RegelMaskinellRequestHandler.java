@@ -10,6 +10,7 @@ import se.fk.rimfrost.framework.handlaggning.model.ProduceratResultat;
 import se.fk.rimfrost.framework.handlaggning.model.UppgiftStatus;
 import se.fk.rimfrost.framework.handlaggning.model.Yrkande;
 import se.fk.rimfrost.framework.regel.logic.RegelRequestHandlerBase;
+import se.fk.rimfrost.framework.regel.logic.RegelUtils;
 import se.fk.rimfrost.framework.regel.logic.dto.RegelDataRequest;
 import se.fk.rimfrost.framework.regel.logic.entity.*;
 import se.fk.rimfrost.framework.regel.presentation.kafka.RegelRequestHandlerInterface;
@@ -58,11 +59,11 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
             .uppgiftStatus(UppgiftStatus.AVSLUTAD)
             .aktivitetId(request.aktivitetId())
             .fSSAinformation(FSSAinformation.HANDLAGGNING_PAGAR) // TODO något annat!!!
-            .underlag(result.underlag())
             .uppgiftSpecifikation(uppgiftSpecifikation)
             .build();
 
-      var updatedYrkande = createYrkandeWithUpdatedProduceradeResultat(handlaggning.yrkande(), result.produceradeResultat());
+      var updatedYrkande = RegelUtils.createYrkandeWithUpdatedProduceradeResultat(handlaggning.yrkande(),
+            result.produceradeResultat());
 
       var handlaggningUpdate = maskinellMapper.toHandlaggningUpdate(
             handlaggning,
@@ -75,29 +76,4 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
       // Avsluta regel
       sendResponse(request.handlaggningId(), cloudevent, result.utfall());
    }
-
-   private Yrkande createYrkandeWithUpdatedProduceradeResultat(Yrkande yrkande, List<ProduceratResultat> uppdateradeResultat)
-   {
-      return ImmutableYrkande.builder()
-            .from(yrkande)
-            .produceradeResultat(
-                  mergeProduceradeResultat(
-                        uppdateradeResultat,
-                        yrkande.produceradeResultat()))
-            .build();
-   }
-
-   private List<ProduceratResultat> mergeProduceradeResultat(List<ProduceratResultat> uppdateradeResultat,
-         List<ProduceratResultat> tidigareResultat)
-   {
-      Set<UUID> idsInUppdateradeResultat = uppdateradeResultat.stream()
-            .map(ProduceratResultat::id)
-            .collect(Collectors.toSet());
-      List<ProduceratResultat> result = new ArrayList<>(uppdateradeResultat);
-      tidigareResultat.stream()
-            .filter(a -> !idsInUppdateradeResultat.contains(a.id()))
-            .forEach(result::add);
-      return result;
-   }
-
 }
