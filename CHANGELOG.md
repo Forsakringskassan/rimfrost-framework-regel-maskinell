@@ -2,6 +2,21 @@
 
 Changelog of rimfrost-framework-regel-maskinell.
 
+## 0.0.18 (2026-04-01)
+
+### Bug Fixes
+
+-  spotless apply ([5c8b6](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/5c8b66078ed8e40) Ulf Slunga)  
+-  modifierad för att regeln förväntas uppdatera HandlaggningUpdate inkl producerade resultat ([a82dc](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/a82dc6663efe8ba) Ulf Slunga)  
+
+### Other changes
+
+**wip**
+
+
+[c2028](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/c20280ee9674308) Ulf Slunga *2026-04-01 11:36:10*
+
+
 ## 0.0.17 (2026-04-01)
 
 ### Bug Fixes
