@@ -135,7 +135,7 @@ public abstract class AbstractRegelMaskinellTest extends RegelTest
       var handlaggningUpdate = getLastPutHandlaggningUpdate(handlaggningId);
       assertEquals(se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Yrkandestatus.YRKAT,
             handlaggningUpdate.getYrkande().getYrkandestatus());
-      assertEquals(se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.UppgiftStatus.AVSLUTAD,
+      assertEquals(se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.UppgiftStatus.PLANERAD,
             handlaggningUpdate.getUppgift().getUppgiftStatus());
       assertEquals("a42ffaed-2f20-47e8-8499-f2f79ae2f45f",
             handlaggningUpdate.getUppgift().getUppgiftspecifikation().getId().toString());
