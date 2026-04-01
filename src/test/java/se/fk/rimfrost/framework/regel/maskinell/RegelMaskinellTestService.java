@@ -36,7 +36,7 @@ public class RegelMaskinellTestService implements RegelMaskinellServiceInterface
             .skapadTS(regelMaskinellRequest.handlaggning().skapadTS())
             .handlaggningspecifikationId(regelMaskinellRequest.handlaggning().handlaggningspecifikationId())
             .underlag(createUnderlagListForTest())
-            .uppgift(createUppgiftForTest())
+            .uppgift(regelMaskinellRequest.uppgift())
             .build();
 
       return ImmutableRegelMaskinellResult.builder()

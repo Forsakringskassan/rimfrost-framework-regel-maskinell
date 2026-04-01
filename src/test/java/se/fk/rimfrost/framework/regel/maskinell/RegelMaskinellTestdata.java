@@ -98,34 +98,4 @@ public class RegelMaskinellTestdata
             .build();
    }
 
-   public static Uppgift createUppgiftForTest()
-   {
-      var uppgiftSpecifikation = ImmutableUppgiftSpecifikation.builder()
-            .id(UUID.randomUUID())
-            .version(1)
-            .build();
-      return ImmutableUppgift.builder()
-            .id(UUID.randomUUID())
-            .version(1)
-            .skapadTs(OffsetDateTime.now())
-            .uppgiftStatus(UppgiftStatus.PLANERAD)
-            .aktivitetId(UUID.randomUUID())
-            .fSSAinformation(FSSAinformation.HANDLAGGNING_PAGAR)
-            .uppgiftSpecifikation(uppgiftSpecifikation)
-            .build();
-   }
-
-   public static HandlaggningUpdate createHandlaggningUpdateForTest(String handlaggningId)
-   {
-      return ImmutableHandlaggningUpdate.builder()
-            .id(UUID.fromString(handlaggningId))
-            .version(1)
-            .yrkande(createYrkandeForTest())
-            .processInstansId(UUID.randomUUID())
-            .skapadTS(OffsetDateTime.now())
-            .handlaggningspecifikationId(UUID.randomUUID())
-            .underlag(createUnderlagListForTest())
-            .uppgift(createUppgiftForTest())
-            .build();
-   }
 }
