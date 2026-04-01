@@ -2,6 +2,13 @@
 
 Changelog of rimfrost-framework-regel-maskinell.
 
+## 0.0.16 (2026-04-01)
+
+### Bug Fixes
+
+-  bump framework-version ([f514f](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/f514f6c3cee9dd9) Nils Elveros)  
+-  Bump rimfrost-framework-regel version ([a3a0c](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/a3a0c5e5e84bac4) Lars Persson)  
+
 ## 0.0.15 (2026-03-27)
 
 ### Bug Fixes
