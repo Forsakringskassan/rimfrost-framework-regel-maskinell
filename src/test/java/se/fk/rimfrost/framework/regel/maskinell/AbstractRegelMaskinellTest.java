@@ -24,6 +24,7 @@ import static se.fk.rimfrost.framework.regel.maskinell.RegelMaskinellTestdata.cr
 })
 public abstract class AbstractRegelMaskinellTest extends RegelTest
 {
+    UUID handlaggningId = UUID.fromString("11111111-1111-1111-1111-111111111234");
 
    @Inject
    RegelMaskinellServiceInterface regelMaskinellService;
@@ -97,7 +98,7 @@ public abstract class AbstractRegelMaskinellTest extends RegelTest
    {
       var handlaggningUpdate = getLastPutHandlaggningUpdate(handlaggningId);
       var sentProduceradeResultat = handlaggningUpdate.getYrkande().getProduceradeResultat();
-      Assertions.assertEquals(2, sentProduceradeResultat.size());
+      Assertions.assertEquals(1, sentProduceradeResultat.size());
       Assertions.assertEquals(sentProduceradeResultat.get(0).getId(), UUID.fromString("66666666-6666-6666-6666-666666661234"));
       Assertions.assertEquals(sentProduceradeResultat.get(0).getYrkandestatus(),
             se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Yrkandestatus.UNDER_UTREDNING);
