@@ -2,6 +2,14 @@
 
 Changelog of rimfrost-framework-regel-maskinell.
 
+## 0.0.19 (2026-04-01)
+
+### Bug Fixes
+
+-  more test fixes ([6dce0](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/6dce0a988a8c97e) Nils Elveros)  
+-  fix test ([d6f25](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/d6f25234e365911) Nils Elveros)  
+-  add uppgift to regelrequest ([68fcc](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/68fcc0589571f2b) Nils Elveros)  
+
 ## 0.0.18 (2026-04-01)
 
 ### Bug Fixes
