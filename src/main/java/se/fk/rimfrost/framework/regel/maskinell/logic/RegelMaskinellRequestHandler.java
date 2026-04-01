@@ -58,11 +58,11 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
       var updatedYrkande = RegelUtils.createYrkandeWithUpdatedProduceradeResultat(handlaggning.yrkande(),
             regelResult.handlaggningUpdate().yrkande().produceradeResultat());
 
-        var handlaggningUpdate = ImmutableHandlaggningUpdate.builder().from(regelResult.handlaggningUpdate())
-                .yrkande(updatedYrkande)
-                .uppgift(uppgift)
-                .build();
-        handlaggningAdapter.updateHandlaggning(handlaggningUpdate);
+      var handlaggningUpdate = ImmutableHandlaggningUpdate.builder().from(regelResult.handlaggningUpdate())
+            .yrkande(updatedYrkande)
+            .uppgift(uppgift)
+            .build();
+      handlaggningAdapter.updateHandlaggning(handlaggningUpdate);
 
       // Avsluta regel
       sendResponse(request.handlaggningId(), cloudevent, regelResult.utfall());
