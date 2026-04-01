@@ -3,6 +3,7 @@ package se.fk.rimfrost.framework.regel.maskinell;
 import se.fk.rimfrost.framework.handlaggning.model.*;
 import se.fk.rimfrost.framework.regel.logic.dto.ImmutableRegelDataRequest;
 import se.fk.rimfrost.framework.regel.logic.dto.RegelDataRequest;
+
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -93,6 +94,7 @@ public class RegelMaskinellTestdata
             .yrkandeTom(OffsetDateTime.now())
             .avsikt("TestAvsikt")
             .individYrkandeRoller(createIndividYrkandeRollerForTest())
+            .produceradeResultat(createProduceradeResultatForTest())
             .build();
    }
 

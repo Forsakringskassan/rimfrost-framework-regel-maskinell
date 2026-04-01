@@ -24,7 +24,7 @@ import static se.fk.rimfrost.framework.regel.maskinell.RegelMaskinellTestdata.cr
 })
 public abstract class AbstractRegelMaskinellTest extends RegelTest
 {
-    UUID handlaggningId = UUID.fromString("11111111-1111-1111-1111-111111111234");
+   UUID handlaggningId = UUID.fromString("11111111-1111-1111-1111-111111111234");
 
    @Inject
    RegelMaskinellServiceInterface regelMaskinellService;
@@ -82,6 +82,11 @@ public abstract class AbstractRegelMaskinellTest extends RegelTest
    // Handläggning
    //
 
+   protected Handlaggning getWiremockHandlaggning(UUID handlaggningId)
+   {
+      return handlaggningAdapter.readHandlaggning(handlaggningId);
+   }
+
    protected void verifyGetHandlaggningProduced(String handlaggningId)
    {
       var requests = waitForWireMockRequest(wiremockServer, handlaggningEndpoint + handlaggningId, 1);
@@ -98,12 +103,15 @@ public abstract class AbstractRegelMaskinellTest extends RegelTest
    {
       var handlaggningUpdate = getLastPutHandlaggningUpdate(handlaggningId);
       var sentProduceradeResultat = handlaggningUpdate.getYrkande().getProduceradeResultat();
-      Assertions.assertEquals(1, sentProduceradeResultat.size());
+      Assertions.assertEquals(3, sentProduceradeResultat.size());
       Assertions.assertEquals(sentProduceradeResultat.get(0).getId(), UUID.fromString("66666666-6666-6666-6666-666666661234"));
       Assertions.assertEquals(sentProduceradeResultat.get(0).getYrkandestatus(),
             se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Yrkandestatus.UNDER_UTREDNING);
       Assertions.assertEquals(sentProduceradeResultat.get(1).getId(), UUID.fromString("d89ca33f-eeeb-48fa-850f-7b9d9b07cc87"));
       Assertions.assertEquals(sentProduceradeResultat.get(1).getYrkandestatus(),
+            se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Yrkandestatus.YRKAT);
+      Assertions.assertEquals(sentProduceradeResultat.get(2).getId(), UUID.fromString("66666666-6666-6666-6666-666667771234"));
+      Assertions.assertEquals(sentProduceradeResultat.get(2).getYrkandestatus(),
             se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Yrkandestatus.YRKAT);
    }
 

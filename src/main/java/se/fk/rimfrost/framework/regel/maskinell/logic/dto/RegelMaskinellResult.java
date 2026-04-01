@@ -6,12 +6,13 @@ import se.fk.rimfrost.framework.handlaggning.model.HandlaggningUpdate;
 import se.fk.rimfrost.framework.regel.Utfall;
 
 @Value.Immutable
-public interface RegelMaskinellResult {
+public interface RegelMaskinellResult
+{
 
-    @NotNull
-    HandlaggningUpdate handlaggningUpdate();
+   @NotNull
+   HandlaggningUpdate handlaggningUpdate();
 
-    @NotNull
-    Utfall utfall();
+   @NotNull
+   Utfall utfall();
 
 }

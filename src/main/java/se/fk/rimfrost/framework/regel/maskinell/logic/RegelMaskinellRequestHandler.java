@@ -8,7 +8,6 @@ import se.fk.rimfrost.framework.regel.logic.RegelUtils;
 import se.fk.rimfrost.framework.regel.logic.dto.RegelDataRequest;
 import se.fk.rimfrost.framework.regel.logic.entity.*;
 import se.fk.rimfrost.framework.regel.presentation.kafka.RegelRequestHandlerInterface;
-
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,39 +17,41 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
 @ApplicationScoped
-public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implements RegelRequestHandlerInterface {
-    @Inject
-    private RegelMaskinellServiceInterface regelService;
+public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implements RegelRequestHandlerInterface
+{
+   @Inject
+   private RegelMaskinellServiceInterface regelService;
 
-    @Inject
-    private RegelMaskinellMapper maskinellMapper;
+   @Inject
+   private RegelMaskinellMapper maskinellMapper;
 
-    @Override
-    public void handleRegelRequest(RegelDataRequest request) {
-        // Hämta handläggningsinformation
-        var cloudevent = createCloudEvent(request);
-        var handlaggning = handlaggningAdapter.readHandlaggning(request.handlaggningId());
+   @Override
+   public void handleRegelRequest(RegelDataRequest request)
+   {
+      // Hämta handläggningsinformation
+      var cloudevent = createCloudEvent(request);
+      var handlaggning = handlaggningAdapter.readHandlaggning(request.handlaggningId());
 
-        // Exekvera regellogik
-        var uppgiftStarted = OffsetDateTime.now();
-        var uppgiftId = UUID.randomUUID();
-        var regelMaskinellRequest = maskinellMapper.toRegelMaskinellRequest(handlaggning);
+      // Exekvera regellogik
+      var uppgiftStarted = OffsetDateTime.now();
+      var uppgiftId = UUID.randomUUID();
+      var regelMaskinellRequest = maskinellMapper.toRegelMaskinellRequest(handlaggning);
 
-        // Uppdatera handläggningsinformation
-        var regelResult = regelService.processRegel(regelMaskinellRequest);
-        var uppgiftSpecifikation = ImmutableUppgiftSpecifikation.builder()
-                .id(regelConfig.getSpecifikation().getId())
-                .version(regelConfig.getSpecifikation().getVersion())
-                .build();
+      // Uppdatera handläggningsinformation
+      var regelResult = regelService.processRegel(regelMaskinellRequest);
+      var uppgiftSpecifikation = ImmutableUppgiftSpecifikation.builder()
+            .id(regelConfig.getSpecifikation().getId())
+            .version(regelConfig.getSpecifikation().getVersion())
+            .build();
 
       var uppgift = ImmutableUppgift.builder()
             .id(uppgiftId)
-            .version(1) // TODO behöver denna någonsin bumpas ??
+            .version(1)
             .skapadTs(uppgiftStarted)
             .utfordTs(OffsetDateTime.now())
             .uppgiftStatus(UppgiftStatus.AVSLUTAD)
             .aktivitetId(request.aktivitetId())
-            .fSSAinformation(FSSAinformation.HANDLAGGNING_PAGAR) // TODO något annat!!!
+            .fSSAinformation(FSSAinformation.HANDLAGGNING_PAGAR)
             .uppgiftSpecifikation(uppgiftSpecifikation)
             .build();
 

@@ -37,6 +37,16 @@
               "avslagsanledning": null,
               "typ": "ERSATTNING",
               "data": "{}"
+            },
+            {
+              "id": "66666666-6666-6666-6666-666667771234",
+              "version": 1,
+              "from": "2025-01-02T00:00:00Z",
+              "tom": "2025-01-03T00:00:00Z",
+              "yrkandestatus": "YRKAT",
+              "avslagsanledning": null,
+              "typ": "ERSATTNING",
+              "data": "{}"
             }
           ]
         },
