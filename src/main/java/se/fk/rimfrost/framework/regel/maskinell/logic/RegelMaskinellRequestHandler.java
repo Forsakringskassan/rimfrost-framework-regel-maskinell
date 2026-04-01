@@ -32,37 +32,26 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
       var cloudevent = createCloudEvent(request);
       var handlaggning = handlaggningAdapter.readHandlaggning(request.handlaggningId());
 
-      // Exekvera regellogik
-      var uppgiftStarted = OffsetDateTime.now();
-      var uppgiftId = UUID.randomUUID();
-      var regelMaskinellRequest = maskinellMapper.toRegelMaskinellRequest(handlaggning);
-
-      // Uppdatera handläggningsinformation
-      var regelResult = regelService.processRegel(regelMaskinellRequest);
       var uppgiftSpecifikation = ImmutableUppgiftSpecifikation.builder()
             .id(regelConfig.getSpecifikation().getId())
             .version(regelConfig.getSpecifikation().getVersion())
             .build();
 
       var uppgift = ImmutableUppgift.builder()
-            .id(uppgiftId)
+            .id(UUID.randomUUID())
             .version(1)
-            .skapadTs(uppgiftStarted)
-            .utfordTs(OffsetDateTime.now())
-            .uppgiftStatus(UppgiftStatus.AVSLUTAD)
+            .skapadTs(OffsetDateTime.now())
+            .uppgiftStatus(UppgiftStatus.TILLDELAD)
             .aktivitetId(request.aktivitetId())
             .fSSAinformation(FSSAinformation.HANDLAGGNING_PAGAR)
             .uppgiftSpecifikation(uppgiftSpecifikation)
             .build();
 
-      var updatedYrkande = RegelUtils.createYrkandeWithUpdatedProduceradeResultat(handlaggning.yrkande(),
-            regelResult.handlaggningUpdate().yrkande().produceradeResultat());
+      // Uppdatera handläggningsinformation
+      var regelMaskinellRequest = maskinellMapper.toRegelMaskinellRequest(handlaggning, uppgift);
+      var regelResult = regelService.processRegel(regelMaskinellRequest);
 
-      var handlaggningUpdate = ImmutableHandlaggningUpdate.builder().from(regelResult.handlaggningUpdate())
-            .yrkande(updatedYrkande)
-            .uppgift(uppgift)
-            .build();
-      handlaggningAdapter.updateHandlaggning(handlaggningUpdate);
+      handlaggningAdapter.updateHandlaggning(regelResult.handlaggningUpdate());
 
       // Avsluta regel
       sendResponse(request.handlaggningId(), cloudevent, regelResult.utfall());
