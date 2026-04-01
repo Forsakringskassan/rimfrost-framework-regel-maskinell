@@ -109,7 +109,6 @@ public class RegelMaskinellTestdata
             .uppgiftStatus(UppgiftStatus.PLANERAD)
             .aktivitetId(UUID.randomUUID())
             .fSSAinformation(FSSAinformation.HANDLAGGNING_PAGAR)
-            .underlag(createUnderlagListForTest())
             .uppgiftSpecifikation(uppgiftSpecifikation)
             .build();
    }
