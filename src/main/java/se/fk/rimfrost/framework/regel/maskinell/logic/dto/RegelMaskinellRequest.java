@@ -5,6 +5,8 @@ import org.immutables.value.Value;
 import se.fk.rimfrost.framework.handlaggning.model.Handlaggning;
 import se.fk.rimfrost.framework.handlaggning.model.Uppgift;
 
+import java.util.UUID;
+
 @Value.Immutable
 public interface RegelMaskinellRequest
 {
@@ -15,4 +17,6 @@ public interface RegelMaskinellRequest
    @NotNull
    Uppgift uppgift();
 
+   @NotNull
+   UUID processInstansId();
 }

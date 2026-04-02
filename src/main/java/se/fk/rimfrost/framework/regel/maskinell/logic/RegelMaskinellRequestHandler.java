@@ -43,7 +43,7 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
             .build();
 
       // Uppdatera handläggningsinformation
-      var regelMaskinellRequest = maskinellMapper.toRegelMaskinellRequest(handlaggning, uppgift);
+      var regelMaskinellRequest = maskinellMapper.toRegelMaskinellRequest(handlaggning, uppgift, request.kogitoprocinstanceid());
       var regelResult = regelService.processRegel(regelMaskinellRequest);
 
       handlaggningAdapter.updateHandlaggning(regelResult.handlaggningUpdate());
