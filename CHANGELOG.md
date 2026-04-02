@@ -2,6 +2,12 @@
 
 Changelog of rimfrost-framework-regel-maskinell.
 
+## 0.0.20 (2026-04-02)
+
+### Bug Fixes
+
+-  framework regel 0.3.29 ([21a28](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/21a2887cc235f6f) Ulf Slunga)  
+
 ## 0.0.19 (2026-04-01)
 
 ### Bug Fixes
