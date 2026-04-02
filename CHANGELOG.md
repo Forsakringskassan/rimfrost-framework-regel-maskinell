@@ -2,6 +2,12 @@
 
 Changelog of rimfrost-framework-regel-maskinell.
 
+## 0.0.22 (2026-04-02)
+
+### Bug Fixes
+
+-  Add processInstansId to RegelMaskinellRequest ([34930](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/349307107e53684) Lars Persson)  
+
 ## 0.0.21 (2026-04-02)
 
 ### Bug Fixes
