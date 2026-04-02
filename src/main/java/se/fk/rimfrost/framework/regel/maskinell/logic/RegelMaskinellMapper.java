@@ -11,11 +11,12 @@ import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellRequest;
 public class RegelMaskinellMapper
 {
 
-   public RegelMaskinellRequest toRegelMaskinellRequest(Handlaggning handlaggning, Uppgift uppgift)
+   public RegelMaskinellRequest toRegelMaskinellRequest(Handlaggning handlaggning, Uppgift uppgift, UUID processInstansId)
    {
       return ImmutableRegelMaskinellRequest.builder()
             .handlaggning(handlaggning)
             .uppgift(uppgift)
+            .processInstansId(processInstansId)
             .build();
    }
 
