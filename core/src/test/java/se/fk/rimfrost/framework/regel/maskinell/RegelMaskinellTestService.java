@@ -8,8 +8,11 @@ import se.fk.rimfrost.framework.regel.maskinell.logic.RegelMaskinellServiceInter
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.ImmutableRegelMaskinellResult;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellRequest;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellResult;
+
+import java.util.Objects;
+
 import static se.fk.rimfrost.framework.regel.logic.RegelUtils.createYrkandeWithUpdatedProduceradeResultat;
-import static se.fk.rimfrost.framework.regel.maskinell.RegelMaskinellTestdata.*;
+import static se.fk.rimfrost.framework.regel.maskinell.RegelMaskinellTestData.*;
 
 @ApplicationScoped
 @DefaultBean
@@ -18,6 +21,7 @@ public class RegelMaskinellTestService implements RegelMaskinellServiceInterface
 
    public static Utfall utfall = Utfall.JA;
 
+   @SuppressWarnings("unused")
    public static String handlaggningId = "11111111-1111-1111-1111-111111111234";
 
    @Override
@@ -32,7 +36,7 @@ public class RegelMaskinellTestService implements RegelMaskinellServiceInterface
             .id(regelMaskinellRequest.handlaggning().id())
             .version(regelMaskinellRequest.handlaggning().version())
             .yrkande(updatedYrkande)
-            .processInstansId(regelMaskinellRequest.handlaggning().processInstansId())
+            .processInstansId(Objects.requireNonNull(regelMaskinellRequest.handlaggning().processInstansId()))
             .skapadTS(regelMaskinellRequest.handlaggning().skapadTS())
             .handlaggningspecifikationId(regelMaskinellRequest.handlaggning().handlaggningspecifikationId())
             .underlag(createUnderlagListForTest())

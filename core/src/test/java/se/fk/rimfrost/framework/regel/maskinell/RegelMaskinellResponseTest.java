@@ -6,7 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import se.fk.rimfrost.framework.regel.Utfall;
-import static se.fk.rimfrost.framework.regel.maskinell.RegelMaskinellTestdata.HANDLAGGNING_ID;
+import static se.fk.rimfrost.framework.regel.maskinell.RegelMaskinellTestData.HANDLAGGNING_ID;
 
 @QuarkusTest
 @QuarkusTestResource.List(

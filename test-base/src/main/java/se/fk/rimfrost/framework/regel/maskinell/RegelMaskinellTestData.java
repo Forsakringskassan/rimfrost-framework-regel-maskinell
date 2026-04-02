@@ -3,13 +3,12 @@ package se.fk.rimfrost.framework.regel.maskinell;
 import se.fk.rimfrost.framework.handlaggning.model.*;
 import se.fk.rimfrost.framework.regel.logic.dto.ImmutableRegelDataRequest;
 import se.fk.rimfrost.framework.regel.logic.dto.RegelDataRequest;
-
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class RegelMaskinellTestdata
+public class RegelMaskinellTestData
 {
    //
    // Test data
@@ -17,6 +16,7 @@ public class RegelMaskinellTestdata
 
    public static final String HANDLAGGNING_ID = "11111111-1111-1111-1111-111111111234";
 
+   @SuppressWarnings("unused")
    public static RegelDataRequest createRegelDataRequestForTest(String handlaggningId)
    {
       return ImmutableRegelDataRequest
@@ -98,4 +98,35 @@ public class RegelMaskinellTestdata
             .build();
    }
 
+   public static Uppgift createUppgiftForTest()
+   {
+      var uppgiftSpecifikation = ImmutableUppgiftSpecifikation.builder()
+            .id(UUID.randomUUID())
+            .version(1)
+            .build();
+      return ImmutableUppgift.builder()
+            .id(UUID.randomUUID())
+            .version(1)
+            .skapadTs(OffsetDateTime.now())
+            .uppgiftStatus(UppgiftStatus.PLANERAD)
+            .aktivitetId(UUID.randomUUID())
+            .fSSAinformation(FSSAinformation.HANDLAGGNING_PAGAR)
+            .uppgiftSpecifikation(uppgiftSpecifikation)
+            .build();
+   }
+
+   @SuppressWarnings("unused")
+   public static HandlaggningUpdate createHandlaggningUpdateForTest(String handlaggningId)
+   {
+      return ImmutableHandlaggningUpdate.builder()
+            .id(UUID.fromString(handlaggningId))
+            .version(1)
+            .yrkande(createYrkandeForTest())
+            .processInstansId(UUID.randomUUID())
+            .skapadTS(OffsetDateTime.now())
+            .handlaggningspecifikationId(UUID.randomUUID())
+            .underlag(createUnderlagListForTest())
+            .uppgift(createUppgiftForTest())
+            .build();
+   }
 }
