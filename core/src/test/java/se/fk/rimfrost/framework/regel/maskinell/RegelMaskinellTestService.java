@@ -3,6 +3,8 @@ package se.fk.rimfrost.framework.regel.maskinell;
 import io.quarkus.arc.DefaultBean;
 import jakarta.enterprise.context.ApplicationScoped;
 import se.fk.rimfrost.framework.handlaggning.model.ImmutableHandlaggningUpdate;
+import se.fk.rimfrost.framework.handlaggning.model.ImmutableUppgift;
+import se.fk.rimfrost.framework.handlaggning.model.UppgiftStatus;
 import se.fk.rimfrost.framework.regel.Utfall;
 import se.fk.rimfrost.framework.regel.maskinell.logic.RegelMaskinellServiceInterface;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.ImmutableRegelMaskinellResult;
@@ -32,6 +34,10 @@ public class RegelMaskinellTestService implements RegelMaskinellServiceInterface
             regelMaskinellRequest.handlaggning().yrkande(),
             createProduceradeResultatForTest());
 
+      var uppgiftUpdate = ImmutableUppgift.builder().from(regelMaskinellRequest.uppgift())
+            .uppgiftStatus(UppgiftStatus.AVSLUTAD)
+            .build();
+
       var handlaggningUpdate = ImmutableHandlaggningUpdate.builder()
             .id(regelMaskinellRequest.handlaggning().id())
             .version(regelMaskinellRequest.handlaggning().version())
@@ -40,7 +46,7 @@ public class RegelMaskinellTestService implements RegelMaskinellServiceInterface
             .skapadTS(regelMaskinellRequest.handlaggning().skapadTS())
             .handlaggningspecifikationId(regelMaskinellRequest.handlaggning().handlaggningspecifikationId())
             .underlag(createUnderlagListForTest())
-            .uppgift(regelMaskinellRequest.uppgift())
+            .uppgift(uppgiftUpdate)
             .build();
 
       return ImmutableRegelMaskinellResult.builder()
