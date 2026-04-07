@@ -9,13 +9,13 @@ import org.junit.jupiter.api.BeforeEach;
 import se.fk.rimfrost.framework.handlaggning.adapter.HandlaggningAdapter;
 import se.fk.rimfrost.framework.regel.RegelResponseMessagePayload;
 import se.fk.rimfrost.framework.regel.Utfall;
-import se.fk.rimfrost.framework.regel.test.RegelTest;
+import se.fk.rimfrost.framework.regel.test.AbstractRegelTest;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PutHandlaggningRequest;
 import static org.junit.Assert.assertEquals;
 import static se.fk.rimfrost.framework.regel.test.RegelTestData.newRegelRequestMessagePayload;
 
 @SuppressWarnings("SameParameterValue")
-public abstract class AbstractRegelMaskinellTest extends RegelTest
+public abstract class AbstractRegelMaskinellTest extends AbstractRegelTest
 {
 
    @SuppressWarnings("unused")
