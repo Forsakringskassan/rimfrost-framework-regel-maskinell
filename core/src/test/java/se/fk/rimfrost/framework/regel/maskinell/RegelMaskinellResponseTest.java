@@ -2,7 +2,6 @@ package se.fk.rimfrost.framework.regel.maskinell;
 
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import se.fk.rimfrost.framework.regel.Utfall;
@@ -15,12 +14,6 @@ import static se.fk.rimfrost.framework.regel.maskinell.RegelMaskinellTestData.HA
 })
 public class RegelMaskinellResponseTest extends AbstractRegelMaskinellTest
 {
-
-   @BeforeEach
-   void setup()
-   {
-      resetState();
-   }
 
    @ParameterizedTest
    @CsvSource(

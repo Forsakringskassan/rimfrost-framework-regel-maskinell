@@ -3,7 +3,6 @@ package se.fk.rimfrost.framework.regel.maskinell;
 import io.quarkus.test.common.QuarkusTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.UppgiftStatus;
 import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Yrkandestatus;
@@ -19,12 +18,6 @@ import static se.fk.rimfrost.framework.regel.maskinell.RegelMaskinellTestData.cr
 })
 public class RegelMaskinellHandlaggningTest extends AbstractRegelMaskinellTest
 {
-
-   @BeforeEach
-   void setup()
-   {
-      resetState();
-   }
 
    @Test
    void should_create_get_handlaggning()

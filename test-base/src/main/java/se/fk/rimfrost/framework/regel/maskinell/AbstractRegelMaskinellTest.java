@@ -5,6 +5,7 @@ import com.github.tomakehurst.wiremock.http.RequestMethod;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import se.fk.rimfrost.framework.handlaggning.adapter.HandlaggningAdapter;
 import se.fk.rimfrost.framework.regel.RegelResponseMessagePayload;
 import se.fk.rimfrost.framework.regel.Utfall;
@@ -21,7 +22,8 @@ public abstract class AbstractRegelMaskinellTest extends RegelTest
    @Inject
    HandlaggningAdapter handlaggningAdapter;
 
-   protected void resetState()
+   @BeforeEach
+   void resetState()
    {
       wiremockServer.resetRequests();
       inMemoryConnector.sink(regelResponsesChannel).clear();
