@@ -2,6 +2,12 @@
 
 Changelog of rimfrost-framework-regel-maskinell.
 
+## 0.0.24 (2026-04-07)
+
+### Bug Fixes
+
+-  bumpar rimfrost-framework-regel. renaming RegelTest to AbstractRegelTest ([bff8e](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/bff8e6207e14a57) Ulf Slunga)  
+
 ## 0.0.23 (2026-04-07)
 
 ### Bug Fixes
