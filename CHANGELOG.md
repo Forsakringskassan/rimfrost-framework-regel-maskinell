@@ -2,6 +2,14 @@
 
 Changelog of rimfrost-framework-regel-maskinell.
 
+## 0.0.23 (2026-04-07)
+
+### Bug Fixes
+
+-  resetState som BeforeEach flyttas till AbstractRegelMaskinellTest ([b1105](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/b110510e261a205) Ulf Slunga)  
+-  test-service uppdaterar uppgiftsstatus ([fb315](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/fb315615a65afc2) Ulf Slunga)  
+-  refactoring för re-usability av tester ([b285f](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/b285f74bc53b8ae) Ulf Slunga)  
+
 ## 0.0.22 (2026-04-02)
 
 ### Bug Fixes
