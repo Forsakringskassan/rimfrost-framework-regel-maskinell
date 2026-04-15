@@ -7,6 +7,8 @@ import se.fk.rimfrost.framework.regel.logic.RegelRequestHandlerBase;
 import se.fk.rimfrost.framework.regel.logic.dto.RegelDataRequest;
 import se.fk.rimfrost.framework.regel.logic.entity.*;
 import se.fk.rimfrost.framework.regel.presentation.kafka.RegelRequestHandlerInterface;
+import se.fk.rimfrost.framework.uppgiftstatusprovider.UppgiftStatusProvider;
+
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
@@ -19,6 +21,9 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
 
    @Inject
    private RegelMaskinellMapper maskinellMapper;
+
+   @Inject
+   UppgiftStatusProvider uppgiftStatusProvider;
 
    @Override
    public void handleRegelRequest(RegelDataRequest request)
@@ -36,9 +41,9 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
             .id(UUID.randomUUID())
             .version(1)
             .skapadTs(OffsetDateTime.now())
-            .uppgiftStatus(UppgiftStatus.TILLDELAD)
+            .uppgiftStatus(uppgiftStatusProvider.getTilldeladId())
             .aktivitetId(request.aktivitetId())
-            .fSSAinformation(FSSAinformation.HANDLAGGNING_PAGAR)
+            .fSSAinformation("HANDLAGGNING_PAGAR") // TODO: Replace with correct value once available
             .uppgiftSpecifikation(uppgiftSpecifikation)
             .build();
 

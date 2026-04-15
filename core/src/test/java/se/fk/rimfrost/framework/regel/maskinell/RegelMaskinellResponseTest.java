@@ -10,9 +10,9 @@ import static se.fk.rimfrost.framework.regel.maskinell.RegelMaskinellTestData.HA
 @QuarkusTest
 @QuarkusTestResource.List(
 {
-      @QuarkusTestResource(WireMockTestResource.class)
+      @QuarkusTestResource(WireMockRegelMaskinell.class)
 })
-public class RegelMaskinellResponseTest extends AbstractRegelMaskinellTest
+public class RegelMaskinellResponseTest extends RegelMaskinellTestBase
 {
 
    @ParameterizedTest
