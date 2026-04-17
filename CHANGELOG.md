@@ -2,6 +2,14 @@
 
 Changelog of rimfrost-framework-regel-maskinell.
 
+## 0.0.27 (2026-04-17)
+
+### Bug Fixes
+
+-  tar bort dependency till uppgift-status-provider i application.properties ([b29f4](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/b29f4c258059355) Ulf Slunga)  
+-  revertar till postconstruct av regelKafkaConnector ([46ee0](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/46ee0245717fddb) Ulf Slunga)  
+-  wiremock refactoring. fixar för uppgiftstatus provider. ([83f57](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/83f57cc809583ce) Ulf Slunga)  
+
 ## 0.0.26 (2026-04-17)
 
 ### Bug Fixes
