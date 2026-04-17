@@ -7,11 +7,9 @@ import org.junit.jupiter.api.BeforeEach;
 import se.fk.rimfrost.framework.regel.Utfall;
 import se.fk.rimfrost.framework.regel.test.AbstractRegelTest;
 import se.fk.rimfrost.framework.regel.test.RegelKafkaConnector;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static se.fk.rimfrost.framework.regel.test.RegelKafkaConnector.regelResponsesChannel;
 import static se.fk.rimfrost.framework.regel.test.WireMockHandlaggning.waitForHandlaggningRequests;
-import static se.fk.rimfrost.framework.regel.test.WireMockHandlaggning.getWireMockServer;
 
 public class RegelMaskinellTestBase extends AbstractRegelTest
 {
@@ -24,12 +22,11 @@ public class RegelMaskinellTestBase extends AbstractRegelTest
    }
 
    @BeforeEach
-   void setup()
+   void resetState()
    {
       regelKafkaConnector.clear();
 
-      var wireMockServer = getWireMockServer();
-
+      var wireMockServer = WireMockRegelMaskinell.getWireMockServer();
       if (wireMockServer != null && wireMockServer.isRunning())
       {
          wireMockServer.resetRequests();
