@@ -17,23 +17,16 @@ public class RegelMaskinellTestBase extends AbstractRegelTest
 {
    protected RegelKafkaConnector regelKafkaConnector = null;
 
-   @PostConstruct
-   void init()
-   {
-      regelKafkaConnector = new RegelKafkaConnector(inMemoryConnector);
-   }
-
    @BeforeEach
-   void setup()
+   void resetState()
    {
+      WireMockRegelMaskinell.getWireMockServer().resetRequests();
+      if (this.regelKafkaConnector == null)
+      {
+         this.regelKafkaConnector = new RegelKafkaConnector(this.inMemoryConnector);
+      }
       regelKafkaConnector.clear();
 
-      var wireMockServer = getWireMockServer();
-
-      if (wireMockServer != null && wireMockServer.isRunning())
-      {
-         wireMockServer.resetRequests();
-      }
    }
 
    //
