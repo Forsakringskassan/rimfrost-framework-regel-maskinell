@@ -2,6 +2,12 @@
 
 Changelog of rimfrost-framework-regel-maskinell.
 
+## 0.0.28 (2026-04-20)
+
+### Bug Fixes
+
+-  flyttar regelKafkaConnector till basklass ([88d81](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/88d81c78aa9f7a1) Ulf Slunga)  
+
 ## 0.0.27 (2026-04-17)
 
 ### Bug Fixes
