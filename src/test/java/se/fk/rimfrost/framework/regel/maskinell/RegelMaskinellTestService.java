@@ -11,8 +11,9 @@ import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellRequest;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellResult;
 import java.util.Objects;
 import static se.fk.rimfrost.framework.regel.logic.RegelUtils.createYrkandeWithUpdatedProduceradeResultat;
-import static se.fk.rimfrost.framework.regel.maskinell.TestData.*;
+import static se.fk.rimfrost.framework.regel.maskinell.base.RegelMaskinellTestData.*;
 
+@SuppressWarnings("unused")
 @ApplicationScoped
 @DefaultBean
 public class RegelMaskinellTestService implements RegelMaskinellServiceInterface

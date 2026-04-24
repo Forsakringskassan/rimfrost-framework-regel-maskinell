@@ -1,4 +1,4 @@
-package se.fk.rimfrost.framework.regel.maskinell;
+package se.fk.rimfrost.framework.regel.maskinell.base;
 
 import se.fk.rimfrost.framework.handlaggning.model.*;
 import java.time.OffsetDateTime;
@@ -6,8 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class TestData
+public class RegelMaskinellTestData
 {
+
    public static ArrayList<Underlag> createUnderlagListForTest()
    {
       return new ArrayList<>(List.of(
