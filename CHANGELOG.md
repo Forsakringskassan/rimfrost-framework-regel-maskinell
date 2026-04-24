@@ -2,6 +2,14 @@
 
 Changelog of rimfrost-framework-regel-maskinell.
 
+## 0.0.31 (2026-04-24)
+
+### Bug Fixes
+
+-  refactoring. återgår till single module. ([48b46](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/48b46b3145ec24b) Ulf Slunga)  
+-  tar bort TestConfig.java som ärvs från RegelTestBase ([f4c94](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/f4c940c5da28625) Ulf Slunga)  
+-  single maven module ([3478b](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/3478be097f20202) Ulf Slunga)  
+
 ## 0.0.30 (2026-04-22)
 
 ### Bug Fixes
