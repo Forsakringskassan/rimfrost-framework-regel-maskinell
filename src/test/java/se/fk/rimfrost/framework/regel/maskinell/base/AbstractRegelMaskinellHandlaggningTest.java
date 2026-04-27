@@ -140,6 +140,7 @@ public abstract class AbstractRegelMaskinellHandlaggningTest extends AbstractReg
       regelKafkaConnector.sendRegelRequest(handlaggningId);
       var handlaggningPutRequest = WireMockRegelMaskinell.getLastPutHandlaggning(handlaggningId);
       var sentUnderlag = handlaggningPutRequest.getHandlaggning().getUnderlag();
+      Assertions.assertEquals(expectedUnderlag.size(), sentUnderlag.size());
       // Assert each entry
       for (int i = 0; i < expectedUnderlag.size(); i++)
       {
