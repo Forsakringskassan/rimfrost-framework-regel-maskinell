@@ -1,20 +1,18 @@
 # rimfrost-framework-regel-maskinell
 
-Innehåller ramverkskomponenter för att implementera förmåners maskinella regler.<br>
-
 Ramverkskomponent med definitioner gemensamma för alla maskinella regler.
 Innehåller både framework-logik och hjälpklasser vid test av regler.
 
-- **`core`** – Framework-logik
-- **`test-base`** – Återanvändbara testkomponenter för implementation av maskinella reglers tester
-
 ```text
 root
-├── core
+├── src/main
 │   └── (framework implementation)
-├── test-base
-│   └── (test-klasser)
-└── pom.xml (parent)
+├── src/test
+│   └── (tester av ramverket)
+├── src/test/base
+│   └── (abstrakta testklasser)
+├── src/test/helpers
+    └── (helpers för testklasser)
 ```
 
 Baseras på [rimfrost-framework-regel](https://github.com/Forsakringskassan/rimfrost-framework-regel) som innehåller komponenter gemensamma för alla typer av regler. <br>
@@ -24,7 +22,7 @@ Baseras på [rimfrost-framework-regel](https://github.com/Forsakringskassan/rimf
 [https://github.com/Forsakringskassan/rimfrost-template-regel-maskinell](https://github.com/Forsakringskassan/rimfrost-template-regel-maskinell) <br>
 kan användas som mall för att skapa ny regel baserat på detta ramverk.
 
-# Core
+# src/main
 
 Ramverket hanterar:
 
@@ -52,23 +50,28 @@ Definierar DTO's för indata- resp. utdata för regelns processande.
 Notera att ramverket även innehållar mapper för t.ex. konvertering från _RegelMaskinellResult_ till _RegelResult_
 (det resultatformat som är gemensamt för alla typer av regler, både manuella och maskinella)
 
-## Tester
+## src/test
 
 JUnit-baserade tester i _RegelMaskinell*Test_ verifierar ramverkskomponenten genom att mocka _processRegel_ som regler implementerar.<br>
-Handläggningsdata i testerna hanteras genom wiremock och mallar i _test/resources/mappings_.
+Handläggningsdata i testerna hanteras genom wiremock och mallar i _test/resources/mappings_.<br>
 
-# test-base
+Innehåller även abstrakta testklasser som är byggda för att kunna användas och köras i den färdiga regeln.<br>
+Ramverkstestklasserna _Regel*Test.java_ extendar de abstrakta testklasserna i _src/test/base_ för att kunna köras även för verifiering av ramverket.
 
-## RegelMaskinellTestBase
+## src/test/base
+
+### AbstractRegelMaskinellTest
 
 Innehåller testkomponenter som är gemensamma för alla maskinella regler.
 Ärver komponenter från rimfrost-framework-regel.<br>
 
-## RegelMaskinellTestData
+### RegelMaskinellTestData
 
 Utility-klass som skapar testdata.
 
-## WireMockRegelMaskinell
+## src/test/helpers
 
-Utility-klass för hantering av maskinell reglers Wiremock-setup.
+### WireMockRegelMaskinell
+
+Utility-klass för hantering av maskinella reglers Wiremock-setup.
 
