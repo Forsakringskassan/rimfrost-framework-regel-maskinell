@@ -30,7 +30,7 @@ public class RegelMaskinellTestService implements RegelMaskinellServiceInterface
             createProduceradeResultatForTest());
 
       var uppgiftUpdate = ImmutableUppgift.builder().from(regelMaskinellRequest.uppgift())
-            .uppgiftStatus("AVSLUTAD")
+            .uppgiftStatus("3")
             .build();
 
       var handlaggningUpdate = ImmutableHandlaggningUpdate.builder()
