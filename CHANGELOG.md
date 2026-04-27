@@ -2,6 +2,14 @@
 
 Changelog of rimfrost-framework-regel-maskinell.
 
+## 0.0.32 (2026-04-27)
+
+### Bug Fixes
+
+-  bumpar rimfrost-framework-regel ([0ac0f](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/0ac0f50834329d6) Ulf Slunga)  
+-  assert på antal underlag ([2b7f4](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/2b7f4c3edefe751) Ulf Slunga)  
+-  test data för underlag och resultat ([9aca4](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/9aca48147d18eee) Ulf Slunga)  
+
 ## 0.0.31 (2026-04-24)
 
 ### Bug Fixes
