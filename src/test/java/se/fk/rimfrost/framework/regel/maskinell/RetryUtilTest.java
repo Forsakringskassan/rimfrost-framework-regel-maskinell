@@ -1,12 +1,11 @@
 package se.fk.rimfrost.framework.regel.maskinell;
 
 import io.quarkus.test.junit.QuarkusTest;
-import org.junit.jupiter.api.Test;
-import se.fk.rimfrost.framework.regel.maskinell.logic.helpers.RetriesExhaustedException;
-import se.fk.rimfrost.framework.regel.maskinell.logic.helpers.RetryUtil;
-
 import java.util.List;
-import java.util.Optional;
+import org.junit.jupiter.api.Test;
+import se.fk.rimfrost.framework.regel.maskinell.logic.helpers.retry.Result;
+import se.fk.rimfrost.framework.regel.maskinell.logic.helpers.retry.RetriesExhaustedException;
+import se.fk.rimfrost.framework.regel.maskinell.logic.helpers.retry.RetryUtil;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
@@ -18,7 +17,7 @@ public class RetryUtilTest
    @Test
    void get_with_retries_should_return_supplier_value() throws RetriesExhaustedException
    {
-      assertEquals(5, RetryUtil.getWithRetries(() -> Optional.of(5), List.of(5)));
+      assertEquals(5, RetryUtil.getWithRetries(() -> Result.of(5), List.of(5)));
    }
 
    @Test
@@ -31,11 +30,11 @@ public class RetryUtilTest
 
          if (count < 1)
          {
-            return Optional.empty();
+            return Result.empty();
          }
          else
          {
-            return Optional.of(3);
+            return Result.of(3);
          }
       }, List.of(1));
       assertEquals(3, val);
@@ -45,13 +44,13 @@ public class RetryUtilTest
    @Test
    void get_with_retries_should_call_supplier_one_more_than_interval_list_length() throws RetriesExhaustedException
    {
-      assertEquals(2, RetryUtil.getWithRetries(() -> Optional.of(2), List.of()));
+      assertEquals(2, RetryUtil.getWithRetries(() -> Result.of(2), List.of()));
    }
 
    @Test
    void get_with_retries_should_throw_exception_after_exhausting_retries()
    {
-      assertThrowsExactly(RetriesExhaustedException.class, () -> RetryUtil.getWithRetries(Optional::empty, List.of(1)));
+      assertThrowsExactly(RetriesExhaustedException.class, () -> RetryUtil.getWithRetries(Result::empty, List.of(1)));
    }
 
    @Test

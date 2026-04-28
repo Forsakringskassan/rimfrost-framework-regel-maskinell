@@ -11,13 +11,16 @@ import se.fk.rimfrost.framework.regel.RegelErrorInformation;
 import se.fk.rimfrost.framework.regel.RegelFelkod;
 import se.fk.rimfrost.framework.regel.logic.RegelRequestHandlerBase;
 import se.fk.rimfrost.framework.regel.logic.dto.RegelDataRequest;
-import se.fk.rimfrost.framework.regel.maskinell.logic.helpers.RetriesExhaustedException;
-import se.fk.rimfrost.framework.regel.maskinell.logic.helpers.RetryUtil;
+import se.fk.rimfrost.framework.regel.logic.entity.CloudEventData;
+import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellErrorResult;
+import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellSuccessResult;
+import se.fk.rimfrost.framework.regel.maskinell.logic.helpers.retry.Result;
+import se.fk.rimfrost.framework.regel.maskinell.logic.helpers.retry.RetriesExhaustedException;
+import se.fk.rimfrost.framework.regel.maskinell.logic.helpers.retry.RetryUtil;
 import se.fk.rimfrost.framework.regel.presentation.kafka.RegelRequestHandlerInterface;
 import se.fk.rimfrost.framework.uppgiftstatusprovider.UppgiftStatusProvider;
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @SuppressWarnings("unused")
@@ -54,11 +57,9 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
          logger.error("Failed to read handlaggning. Handlaggning id: {}, kogitoprocid: {}, aktivitetId: {}",
                request.handlaggningId(), request.kogitoprocid(), request.aktivitetId());
 
-         RegelErrorInformation errorInformation = new RegelErrorInformation();
-         errorInformation.setFelkod(RegelFelkod.HANDLAGGNING_READ_FAILURE);
-         errorInformation.setFelmeddelande("Failed to read handlaggning. Handlaggning id: " + request.handlaggningId()
-               + ", kogitoproc id: " + request.kogitoprocid() + ", aktivitet id: " + request.aktivitetId());
-         sendResponse(request.handlaggningId(), cloudevent, errorInformation);
+         sendErrorResponse(request.handlaggningId(), cloudevent, RegelFelkod.HANDLAGGNING_READ_FAILURE,
+               "Failed to read handlaggning. Handlaggning id: " + request.handlaggningId()
+                     + ", kogitoproc id: " + request.kogitoprocid() + ", aktivitet id: " + request.aktivitetId());
          return;
       }
 
@@ -81,36 +82,43 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
       var regelMaskinellRequest = maskinellMapper.toRegelMaskinellRequest(handlaggning, uppgift, request.kogitoprocinstanceid());
       var regelResult = regelService.processRegel(regelMaskinellRequest);
 
+      if (regelResult instanceof RegelMaskinellErrorResult)
+      {
+         sendErrorResponse(request.handlaggningId(), cloudevent,
+               ((RegelMaskinellErrorResult) regelResult).regelErrorInformation());
+         return;
+      }
+
+      var regelSuccessResult = (RegelMaskinellSuccessResult) regelResult;
+
       try
       {
-         RetryUtil.runWithRetries(() -> updateHandlaggning(regelResult.handlaggningUpdate()), retryIntervals);
+         RetryUtil.runWithRetries(() -> updateHandlaggning(regelSuccessResult.handlaggningUpdate()), retryIntervals);
       }
       catch (RetriesExhaustedException e)
       {
          logger.error("Failed to write handlaggning update. Handlaggning id: {}, kogitoproc id: {}, aktivitet id: {}",
                request.handlaggningId(), request.kogitoprocid(), request.aktivitetId());
 
-         RegelErrorInformation errorInformation = new RegelErrorInformation();
-         errorInformation.setFelkod(RegelFelkod.HANDLAGGNING_WRITE_FAILURE);
-         errorInformation.setFelmeddelande("Failed to write handlaggning update. Handlaggning id: " + request.handlaggningId()
-               + ", kogitoprocid: " + request.kogitoprocid() + ", aktivitetId: " + request.aktivitetId());
-         sendResponse(request.handlaggningId(), cloudevent, errorInformation);
+         sendErrorResponse(request.handlaggningId(), cloudevent, RegelFelkod.HANDLAGGNING_WRITE_FAILURE,
+               "Failed to write handlaggning update. Handlaggning id: " + request.handlaggningId()
+                     + ", kogitoprocid: " + request.kogitoprocid() + ", aktivitetId: " + request.aktivitetId());
          return;
       }
 
       // Avsluta regel
-      sendResponse(request.handlaggningId(), cloudevent, regelResult.utfall());
+      sendResponse(request.handlaggningId(), cloudevent, regelSuccessResult.utfall());
    }
 
-   private Optional<Handlaggning> getHandlaggning(UUID handlaggningId)
+   private Result<Handlaggning> getHandlaggning(UUID handlaggningId)
    {
       try
       {
-         return Optional.of(handlaggningAdapter.readHandlaggning(handlaggningId));
+         return Result.of(handlaggningAdapter.readHandlaggning(handlaggningId));
       }
       catch (WebApplicationException e)
       {
-         return Optional.empty();
+         return Result.empty();
       }
    }
 
@@ -127,5 +135,19 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
       }
 
       return false;
+   }
+
+   private void sendErrorResponse(UUID handlaggningId, CloudEventData cloudEvent, RegelFelkod regelFelkod, String meddelande)
+   {
+      RegelErrorInformation errorInformation = new RegelErrorInformation();
+      errorInformation.setFelkod(regelFelkod);
+      errorInformation.setFelmeddelande(meddelande);
+
+      sendErrorResponse(handlaggningId, cloudEvent, errorInformation);
+   }
+
+   private void sendErrorResponse(UUID handlaggningId, CloudEventData cloudEvent, RegelErrorInformation regelErrorInformation)
+   {
+      sendResponse(handlaggningId, cloudEvent, regelErrorInformation);
    }
 }

@@ -6,9 +6,10 @@ import se.fk.rimfrost.framework.handlaggning.model.ImmutableHandlaggningUpdate;
 import se.fk.rimfrost.framework.handlaggning.model.ImmutableUppgift;
 import se.fk.rimfrost.framework.regel.Utfall;
 import se.fk.rimfrost.framework.regel.maskinell.logic.RegelMaskinellServiceInterface;
-import se.fk.rimfrost.framework.regel.maskinell.logic.dto.ImmutableRegelMaskinellResult;
+import se.fk.rimfrost.framework.regel.maskinell.logic.dto.ImmutableRegelMaskinellSuccessResult;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellRequest;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellResult;
+
 import java.util.Objects;
 import static se.fk.rimfrost.framework.regel.logic.RegelUtils.createYrkandeWithUpdatedProduceradeResultat;
 import static se.fk.rimfrost.framework.regel.maskinell.base.RegelMaskinellTestData.*;
@@ -44,7 +45,7 @@ public class RegelMaskinellTestService implements RegelMaskinellServiceInterface
             .uppgift(uppgiftUpdate)
             .build();
 
-      return ImmutableRegelMaskinellResult.builder()
+      return ImmutableRegelMaskinellSuccessResult.builder()
             .handlaggningUpdate(handlaggningUpdate)
             .utfall(utfall)
             .build();
