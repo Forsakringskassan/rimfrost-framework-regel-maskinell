@@ -2,6 +2,12 @@
 
 Changelog of rimfrost-framework-regel-maskinell.
 
+## 0.0.33 (2026-04-28)
+
+### Bug Fixes
+
+-  Retry handlaggning GET/PUT-operations ([6fa58](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/6fa5837453b0b89) Lars Persson)  
+
 ## 0.0.32 (2026-04-27)
 
 ### Bug Fixes
