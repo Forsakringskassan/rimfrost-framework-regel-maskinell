@@ -2,6 +2,20 @@
 
 Changelog of rimfrost-framework-regel-maskinell.
 
+## 1.0.0 (2026-04-28)
+
+### Breaking changes
+
+-  release 1.0 ([cbb69](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/cbb69228c4489f7) Ulf Slunga)  
+
+### Features
+
+-  release 1.0 ([cbb69](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/cbb69228c4489f7) Ulf Slunga)  
+
+### Bug Fixes
+
+-  released versions ([c16d3](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/c16d3eefaabcf67) Ulf Slunga)  
+
 ## 0.0.33 (2026-04-28)
 
 ### Bug Fixes
