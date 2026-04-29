@@ -2,6 +2,12 @@
 
 Changelog of rimfrost-framework-regel-maskinell.
 
+## 1.0.1 (2026-04-29)
+
+### Bug Fixes
+
+-  Add support for error result being returned from processRegel method ([585be](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/585be6ebf870d99) Lars Persson)  
+
 ## 1.0.0 (2026-04-28)
 
 ### Breaking changes
