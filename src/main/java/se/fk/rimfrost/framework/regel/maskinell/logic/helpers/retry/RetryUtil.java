@@ -1,4 +1,4 @@
-package se.fk.rimfrost.framework.regel.maskinell.logic.helpers;
+package se.fk.rimfrost.framework.regel.maskinell.logic.helpers.retry;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,13 +11,13 @@ public class RetryUtil
     * Automatically retries the provided supplier if an empty result is returned.
     * The supplier is called at most retryIntervals.size() + 1 times.
     *
-    * @param supplier Supplies an optional containing the value returned from the method. If an empty optional is returned the supplier will be called again after a delay.
+    * @param supplier Supplies a result containing the value returned from the method. If an empty result is returned the supplier will be called again after a delay.
     * @param retryIntervals The list of retry intervals used for waiting between each attempt. The list is assumed to contain positive integer values representing the intervals in seconds.
-    * @return The value contained in the first non-empty optional returned from the supplier.
+    * @return The value contained in the first non-empty result returned from the supplier.
     * @param <T> The type of the value returned from the supplier.
     * @throws RetriesExhaustedException Thrown if no non-empty result was returned within retryIntervals.size() + 1 attempts of calling the supplier.
     */
-   public static <T> T getWithRetries(Supplier<Optional<T>> supplier, List<Integer> retryIntervals)
+   public static <T> T getWithRetries(Supplier<Result<T>> supplier, List<Integer> retryIntervals)
          throws RetriesExhaustedException
    {
       int i = 0;
@@ -25,7 +25,7 @@ public class RetryUtil
       {
          var result = supplier.get();
 
-         if (result.isPresent())
+         if (!result.isEmpty())
          {
             return result.get();
          }
