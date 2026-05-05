@@ -56,19 +56,19 @@
     <dependency>
       <groupId>se.fk.rimfrost.framework.regel</groupId>
       <artifactId>rimfrost-framework-regel</artifactId>
-      <version>1.0.0</version>
+      <version>1.0.1</version>
     </dependency>
     <dependency>
       <groupId>se.fk.rimfrost.framework.regel</groupId>
       <artifactId>rimfrost-framework-regel</artifactId>
-      <version>1.0.0</version>
+      <version>1.0.1</version>
       <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>se.fk.rimfrost.framework.handlaggning</groupId>
       <artifactId>rimfrost-framework-handlaggning-adapter</artifactId>
-      <version>1.0.0</version>
+      <version>1.0.1</version>
     </dependency>
     <dependency>
       <groupId>se.fk.rimfrost.framework.uppgiftstatusprovider</groupId>
