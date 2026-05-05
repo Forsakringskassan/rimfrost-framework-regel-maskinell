@@ -2,6 +2,12 @@
 
 Changelog of rimfrost-framework-regel-maskinell.
 
+## 1.0.2 (2026-05-05)
+
+### Bug Fixes
+
+-  Logg all errors in handleRegelRequest ([45fe9](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/45fe9b133029a30) Lars Persson)  
+
 ## 1.0.1 (2026-04-29)
 
 ### Bug Fixes
