@@ -2,6 +2,12 @@
 
 Changelog of rimfrost-framework-regel-maskinell.
 
+## 1.0.4 (2026-05-12)
+
+### Bug Fixes
+
+-  Use rimfrost-framework-regel-error-codes constants ([6434c](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/6434c229bbc3276) Lars Persson)  
+
 ## 1.0.3 (2026-05-05)
 
 ### Bug Fixes
