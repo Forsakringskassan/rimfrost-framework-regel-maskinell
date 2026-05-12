@@ -105,14 +105,14 @@ public abstract class AbstractRegelMaskinellHandlaggningTest extends AbstractReg
    @ParameterizedTest
    @CsvSource(
    {
-         "11111111-1111-1111-1111-111111111234, 3"
+         "11111111-1111-1111-1111-111111111234"
    })
-   void should_put_handlaggning_request_with_uppgiftstatus(String handlaggningId, String uppgiftStatus)
+   void should_put_handlaggning_request_with_null_uppgiftstatus(String handlaggningId)
          throws JsonProcessingException
    {
       regelKafkaConnector.sendRegelRequest(handlaggningId);
       var handlaggningPutRequest = WireMockRegelMaskinell.getLastPutHandlaggning(handlaggningId);
-      Assertions.assertEquals(uppgiftStatus, handlaggningPutRequest.getHandlaggning().getUppgift().getUppgiftStatus());
+      Assertions.assertNull(handlaggningPutRequest.getHandlaggning().getUppgift().getUppgiftStatus());
    }
 
    @ParameterizedTest
