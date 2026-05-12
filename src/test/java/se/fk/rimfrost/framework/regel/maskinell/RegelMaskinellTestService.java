@@ -30,10 +30,6 @@ public class RegelMaskinellTestService implements RegelMaskinellServiceInterface
             regelMaskinellRequest.handlaggning().yrkande(),
             createProduceradeResultatForTest());
 
-      var uppgiftUpdate = ImmutableUppgift.builder().from(regelMaskinellRequest.uppgift())
-            .uppgiftStatus("3")
-            .build();
-
       var handlaggningUpdate = ImmutableHandlaggningUpdate.builder()
             .id(regelMaskinellRequest.handlaggning().id())
             .version(regelMaskinellRequest.handlaggning().version())
@@ -42,7 +38,7 @@ public class RegelMaskinellTestService implements RegelMaskinellServiceInterface
             .skapadTS(regelMaskinellRequest.handlaggning().skapadTS())
             .handlaggningspecifikationId(regelMaskinellRequest.handlaggning().handlaggningspecifikationId())
             .underlag(createUnderlagListForTest())
-            .uppgift(uppgiftUpdate)
+            .uppgift(regelMaskinellRequest.uppgift())
             .build();
 
       return ImmutableRegelMaskinellSuccessResult.builder()

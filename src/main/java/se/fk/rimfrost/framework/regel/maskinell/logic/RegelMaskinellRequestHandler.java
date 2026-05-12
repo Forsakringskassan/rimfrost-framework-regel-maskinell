@@ -1,5 +1,6 @@
 package se.fk.rimfrost.framework.regel.maskinell.logic;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -19,7 +20,6 @@ import se.fk.rimfrost.framework.regel.maskinell.logic.helpers.retry.Result;
 import se.fk.rimfrost.framework.regel.maskinell.logic.helpers.retry.RetriesExhaustedException;
 import se.fk.rimfrost.framework.regel.maskinell.logic.helpers.retry.RetryUtil;
 import se.fk.rimfrost.framework.regel.presentation.kafka.RegelRequestHandlerInterface;
-import se.fk.rimfrost.framework.uppgiftstatusprovider.UppgiftStatusProvider;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -33,9 +33,6 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
 
    @Inject
    private RegelMaskinellMapper maskinellMapper;
-
-   @Inject
-   UppgiftStatusProvider uppgiftStatusProvider;
 
    @ConfigProperty(name = "rimfrost.framework.regel.maskinell.retry.intervals")
    List<Integer> retryIntervals;
@@ -78,20 +75,7 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
             return;
          }
 
-         var uppgiftSpecifikation = ImmutableUppgiftSpecifikation.builder()
-               .id(regelConfig.getSpecifikation().getId())
-               .version(regelConfig.getSpecifikation().getVersion())
-               .build();
-
-         var uppgift = ImmutableUppgift.builder()
-               .id(UUID.randomUUID())
-               .version(1)
-               .skapadTs(OffsetDateTime.now())
-               .uppgiftStatus(uppgiftStatusProvider.getTilldeladId())
-               .aktivitetId(request.aktivitetId())
-               .fSSAinformation("HANDLAGGNING_PAGAR") // TODO: Replace with correct value once available
-               .uppgiftSpecifikation(uppgiftSpecifikation)
-               .build();
+         var uppgift = createUppgift(request.aktivitetId());
 
          // Uppdatera handläggningsinformation
          var regelMaskinellRequest = maskinellMapper.toRegelMaskinellRequest(handlaggning, uppgift,
@@ -203,5 +187,24 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
       }
 
       sendResponse(handlaggningId, cloudEvent, regelErrorInformation);
+   }
+
+   @SuppressFBWarnings(value = "NP_NONNULL_PARAM_VIOLATION", justification = "False positive for uppgiftStatus field. UppgiftStatus field is marked as nullable.")
+   private Uppgift createUppgift(UUID aktivitetId)
+   {
+      var uppgiftSpecifikation = ImmutableUppgiftSpecifikation.builder()
+            .id(regelConfig.getSpecifikation().getId())
+            .version(regelConfig.getSpecifikation().getVersion())
+            .build();
+
+      return ImmutableUppgift.builder()
+            .id(UUID.randomUUID())
+            .version(1)
+            .skapadTs(OffsetDateTime.now())
+            .uppgiftStatus(null) // Intentionally set to null since machine rules does not have any OUL status
+            .aktivitetId(aktivitetId)
+            .fSSAinformation("HANDLAGGNING_PAGAR") // TODO: Replace with correct value once available
+            .uppgiftSpecifikation(uppgiftSpecifikation)
+            .build();
    }
 }
