@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import se.fk.rimfrost.framework.handlaggning.exception.HandlaggningException;
 import se.fk.rimfrost.framework.handlaggning.model.*;
 import se.fk.rimfrost.framework.regel.RegelErrorInformation;
-import se.fk.rimfrost.framework.regel.RegelFelkod;
+import se.fk.rimfrost.framework.regel.error.RegelFelkod;
 import se.fk.rimfrost.framework.regel.logic.RegelRequestHandlerBase;
 import se.fk.rimfrost.framework.regel.logic.dto.RegelDataRequest;
 import se.fk.rimfrost.framework.regel.logic.entity.CloudEventData;
@@ -71,7 +71,7 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
             logger.error("Failed to read handlaggning. Handlaggning id: {}, kogitoproc instance id: {}, aktivitet id: {}",
                   request.handlaggningId(), request.kogitoprocinstanceid(), request.aktivitetId());
 
-            sendErrorResponse(request.handlaggningId(), cloudevent, RegelFelkod.HANDLAGGNING_READ_FAILURE,
+            sendErrorResponse(request.handlaggningId(), cloudevent, RegelFelkod.RIMFROST_HANDLAGGNING_READ_FAILURE,
                   "Failed to read handlaggning. Handlaggning id: " + request.handlaggningId()
                         + ", kogitoproc instance id: " + request.kogitoprocinstanceid() + ", aktivitet id: "
                         + request.aktivitetId());
@@ -107,7 +107,7 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
             logger.error("Failed to process regel request. Handlaggning id: {}, kogitoproc instance id: {}, aktivitet id: {}",
                   request.handlaggningId(), request.kogitoprocinstanceid(), request.aktivitetId(), e);
 
-            sendErrorResponse(request.handlaggningId(), cloudevent, RegelFelkod.OTHER,
+            sendErrorResponse(request.handlaggningId(), cloudevent, RegelFelkod.RIMFROST_OTHER,
                   "Failed to process regel request. Handlaggning id: " + request.handlaggningId()
                         + ", kogitoproc instance id: " + request.kogitoprocinstanceid() + ", aktivitet id: "
                         + request.aktivitetId());
@@ -132,7 +132,7 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
             logger.error("Failed to write handlaggning update. Handlaggning id: {}, kogitoproc instance id: {}, aktivitet id: {}",
                   request.handlaggningId(), request.kogitoprocinstanceid(), request.aktivitetId());
 
-            sendErrorResponse(request.handlaggningId(), cloudevent, RegelFelkod.HANDLAGGNING_WRITE_FAILURE,
+            sendErrorResponse(request.handlaggningId(), cloudevent, RegelFelkod.RIMFROST_HANDLAGGNING_WRITE_FAILURE,
                   "Failed to write handlaggning update. Handlaggning id: " + request.handlaggningId()
                         + ", kogitoproc instance id: " + request.kogitoprocinstanceid() + ", aktivitet id: "
                         + request.aktivitetId());
@@ -148,7 +148,7 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
                "Failed to handle regel data request for handlaggning due to unexpected error. Handlaggning id: {}, kogitoproc instance id: {}, aktivitet id: {}",
                request.handlaggningId(), request.kogitoprocinstanceid(), request.aktivitetId(), e);
 
-         sendErrorResponse(request.handlaggningId(), cloudevent, RegelFelkod.OTHER,
+         sendErrorResponse(request.handlaggningId(), cloudevent, RegelFelkod.RIMFROST_OTHER,
                "Failed to handle regel data request for handlaggning due to unexpected error. Handlaggning id: "
                      + request.handlaggningId() + ", kogitoproc instance id: " + request.kogitoprocinstanceid()
                      + ", aktivitet id: " + request.aktivitetId());
@@ -183,7 +183,7 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
       return false;
    }
 
-   private void sendErrorResponse(UUID handlaggningId, CloudEventData cloudEvent, RegelFelkod regelFelkod, String meddelande)
+   private void sendErrorResponse(UUID handlaggningId, CloudEventData cloudEvent, String regelFelkod, String meddelande)
    {
       RegelErrorInformation errorInformation = new RegelErrorInformation();
       errorInformation.setFelkod(regelFelkod);
