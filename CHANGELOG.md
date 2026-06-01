@@ -2,6 +2,20 @@
 
 Changelog of rimfrost-framework-regel-maskinell.
 
+## 1.0.5 (2026-06-01)
+
+### Bug Fixes
+
+-  bump framework-regel version to 1.0.6 ([30c73](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/30c7360ac62527b) Nils Elveros)  
+-  Set uppgiftStatus to null since machine rules does not have any OUL status ([2eaab](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/2eaab3944d7c71e) Lars Persson)  
+
+### Dependency updates
+
+- update dependency org.immutables:value-processor to v2.12.2 ([7ea79](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/7ea79f418a8011d) renovate[bot])  
+- update dependency org.awaitility:awaitility to v4.3.0 ([335c8](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/335c8ac27964f62) renovate[bot])  
+- update dependency org.apache.maven.plugins:maven-jar-plugin to v3.5.0 ([ca71d](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/ca71da081140d5a) renovate[bot])  
+- update dependency org.apache.maven.plugins:maven-compiler-plugin to v3.15.0 ([48625](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/48625f835e04358) renovate[bot])  
+- add renovate.json ([af3bd](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/af3bdb52ec3de7f) renovate[bot])  
 ## 1.0.4 (2026-05-12)
 
 ### Bug Fixes
