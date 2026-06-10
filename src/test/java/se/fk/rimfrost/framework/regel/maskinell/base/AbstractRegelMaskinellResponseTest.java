@@ -1,5 +1,6 @@
 package se.fk.rimfrost.framework.regel.maskinell.base;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -9,7 +10,6 @@ import se.fk.rimfrost.framework.regel.Utfall;
 @Disabled("Base test class - not executable")
 public abstract class AbstractRegelMaskinellResponseTest extends AbstractRegelMaskinellTest
 {
-
    @ParameterizedTest
    @CsvSource(
    {
@@ -18,7 +18,7 @@ public abstract class AbstractRegelMaskinellResponseTest extends AbstractRegelMa
    void should_return_correct_regel_response(String handlaggningId, String expectedUtfallString)
    {
       var expectedUtfall = Utfall.valueOf(expectedUtfallString);
-      regelKafkaConnector.sendRegelRequest(handlaggningId);
+      regelKafkaConnector.sendRegelRequest(handlaggningId, responsesTopic);
       var regelResponse = regelKafkaConnector.waitForRegelResponse();
       Assertions.assertEquals(handlaggningId, regelResponse.getData().getHandlaggningId());
       Assertions.assertEquals(expectedUtfall, regelResponse.getData().getUtfall());

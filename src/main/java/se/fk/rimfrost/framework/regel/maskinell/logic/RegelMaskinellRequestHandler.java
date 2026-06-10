@@ -29,10 +29,10 @@ import java.util.UUID;
 public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implements RegelRequestHandlerInterface
 {
    @Inject
-   private RegelMaskinellServiceInterface regelService;
+   RegelMaskinellServiceInterface regelService;
 
    @Inject
-   private RegelMaskinellMapper maskinellMapper;
+   RegelMaskinellMapper maskinellMapper;
 
    @ConfigProperty(name = "rimfrost.framework.regel.maskinell.retry.intervals")
    List<Integer> retryIntervals;
@@ -71,7 +71,8 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
             sendErrorResponse(request.handlaggningId(), cloudevent, RegelFelkod.RIMFROST_HANDLAGGNING_READ_FAILURE,
                   "Failed to read handlaggning. Handlaggning id: " + request.handlaggningId()
                         + ", kogitoproc instance id: " + request.kogitoprocinstanceid() + ", aktivitet id: "
-                        + request.aktivitetId());
+                        + request.aktivitetId(),
+                  request.replyTo());
             return;
          }
 
@@ -94,14 +95,15 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
             sendErrorResponse(request.handlaggningId(), cloudevent, RegelFelkod.RIMFROST_OTHER,
                   "Failed to process regel request. Handlaggning id: " + request.handlaggningId()
                         + ", kogitoproc instance id: " + request.kogitoprocinstanceid() + ", aktivitet id: "
-                        + request.aktivitetId());
+                        + request.aktivitetId(),
+                  request.replyTo());
             return;
          }
 
          if (regelResult instanceof RegelMaskinellErrorResult)
          {
             sendErrorResponse(request.handlaggningId(), cloudevent,
-                  ((RegelMaskinellErrorResult) regelResult).regelErrorInformation());
+                  ((RegelMaskinellErrorResult) regelResult).regelErrorInformation(), request.replyTo());
             return;
          }
 
@@ -119,12 +121,13 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
             sendErrorResponse(request.handlaggningId(), cloudevent, RegelFelkod.RIMFROST_HANDLAGGNING_WRITE_FAILURE,
                   "Failed to write handlaggning update. Handlaggning id: " + request.handlaggningId()
                         + ", kogitoproc instance id: " + request.kogitoprocinstanceid() + ", aktivitet id: "
-                        + request.aktivitetId());
+                        + request.aktivitetId(),
+                  request.replyTo());
             return;
          }
 
          // Avsluta regel
-         sendResponse(request.handlaggningId(), cloudevent, regelSuccessResult.utfall());
+         sendResponse(request.handlaggningId(), cloudevent, regelSuccessResult.utfall(), request.replyTo());
       }
       catch (Exception e)
       {
@@ -135,7 +138,8 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
          sendErrorResponse(request.handlaggningId(), cloudevent, RegelFelkod.RIMFROST_OTHER,
                "Failed to handle regel data request for handlaggning due to unexpected error. Handlaggning id: "
                      + request.handlaggningId() + ", kogitoproc instance id: " + request.kogitoprocinstanceid()
-                     + ", aktivitet id: " + request.aktivitetId());
+                     + ", aktivitet id: " + request.aktivitetId(),
+               request.replyTo());
          return;
       }
    }
@@ -167,16 +171,18 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
       return false;
    }
 
-   private void sendErrorResponse(UUID handlaggningId, CloudEventData cloudEvent, String regelFelkod, String meddelande)
+   private void sendErrorResponse(UUID handlaggningId, CloudEventData cloudEvent, String regelFelkod, String meddelande,
+         String replyTo)
    {
       RegelErrorInformation errorInformation = new RegelErrorInformation();
       errorInformation.setFelkod(regelFelkod);
       errorInformation.setFelmeddelande(meddelande);
 
-      sendErrorResponse(handlaggningId, cloudEvent, errorInformation);
+      sendErrorResponse(handlaggningId, cloudEvent, errorInformation, replyTo);
    }
 
-   private void sendErrorResponse(UUID handlaggningId, CloudEventData cloudEvent, RegelErrorInformation regelErrorInformation)
+   private void sendErrorResponse(UUID handlaggningId, CloudEventData cloudEvent, RegelErrorInformation regelErrorInformation,
+         String replyTo)
    {
       if (handlaggningId == null || cloudEvent == null)
       {
@@ -186,7 +192,7 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
          return;
       }
 
-      sendResponse(handlaggningId, cloudEvent, regelErrorInformation);
+      sendResponse(handlaggningId, cloudEvent, regelErrorInformation, replyTo);
    }
 
    @SuppressFBWarnings(value = "NP_NONNULL_PARAM_VIOLATION", justification = "False positive for uppgiftStatus field. UppgiftStatus field is marked as nullable.")

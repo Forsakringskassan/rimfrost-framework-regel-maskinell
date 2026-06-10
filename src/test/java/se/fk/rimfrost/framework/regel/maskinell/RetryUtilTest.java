@@ -74,14 +74,7 @@ public class RetryUtilTest
          var count = counter.getCount();
          counter.increment();
 
-         if (count < 1)
-         {
-            return false;
-         }
-         else
-         {
-            return true;
-         }
+         return count >= 1;
       }, List.of(1));
       assertEquals(2, counter.getCount());
    }
