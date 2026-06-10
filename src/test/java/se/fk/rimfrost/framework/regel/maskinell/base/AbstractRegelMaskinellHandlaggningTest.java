@@ -2,6 +2,7 @@ package se.fk.rimfrost.framework.regel.maskinell.base;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.tomakehurst.wiremock.http.RequestMethod;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -34,7 +35,6 @@ import java.util.List;
 @Disabled("Base test class - not executable")
 public abstract class AbstractRegelMaskinellHandlaggningTest extends AbstractRegelMaskinellTest
 {
-
    /**
     * Provides the expected Underlag entries used in
     * {@code should_put_handlaggning_request_with_underlag}.
@@ -84,7 +84,7 @@ public abstract class AbstractRegelMaskinellHandlaggningTest extends AbstractReg
    })
    void should_create_initial_handlaggning_request(String handlaggningId)
    {
-      regelKafkaConnector.sendRegelRequest(handlaggningId);
+      regelKafkaConnector.sendRegelRequest(handlaggningId, responsesTopic);
       var handlaggningRequests = WireMockRegelMaskinell.waitForHandlaggningRequests(handlaggningId, RequestMethod.GET, 1);
       Assertions.assertEquals(1, handlaggningRequests.size());
    }
@@ -97,7 +97,7 @@ public abstract class AbstractRegelMaskinellHandlaggningTest extends AbstractReg
    void should_put_handlaggning_request_with_yrkandestatus(String handlaggningId, String yrkandeStatus)
          throws JsonProcessingException
    {
-      regelKafkaConnector.sendRegelRequest(handlaggningId);
+      regelKafkaConnector.sendRegelRequest(handlaggningId, responsesTopic);
       var handlaggningPutRequest = WireMockRegelMaskinell.getLastPutHandlaggning(handlaggningId);
       Assertions.assertEquals(yrkandeStatus, handlaggningPutRequest.getHandlaggning().getYrkande().getYrkandestatus());
    }
@@ -110,7 +110,7 @@ public abstract class AbstractRegelMaskinellHandlaggningTest extends AbstractReg
    void should_put_handlaggning_request_with_null_uppgiftstatus(String handlaggningId)
          throws JsonProcessingException
    {
-      regelKafkaConnector.sendRegelRequest(handlaggningId);
+      regelKafkaConnector.sendRegelRequest(handlaggningId, responsesTopic);
       var handlaggningPutRequest = WireMockRegelMaskinell.getLastPutHandlaggning(handlaggningId);
       Assertions.assertNull(handlaggningPutRequest.getHandlaggning().getUppgift().getUppgiftStatus());
    }
@@ -123,7 +123,7 @@ public abstract class AbstractRegelMaskinellHandlaggningTest extends AbstractReg
    void should_put_handlaggning_request_with_uppgiftspecifikation_id(String handlaggningId, String uppgiftspecifikationId)
          throws JsonProcessingException
    {
-      regelKafkaConnector.sendRegelRequest(handlaggningId);
+      regelKafkaConnector.sendRegelRequest(handlaggningId, responsesTopic);
       var handlaggningPutRequest = WireMockRegelMaskinell.getLastPutHandlaggning(handlaggningId);
       Assertions.assertEquals(uppgiftspecifikationId,
             handlaggningPutRequest.getHandlaggning().getUppgift().getUppgiftspecifikation().getId().toString());
@@ -137,7 +137,7 @@ public abstract class AbstractRegelMaskinellHandlaggningTest extends AbstractReg
    void should_put_handlaggning_request_with_underlag(String handlaggningId) throws JsonProcessingException
    {
       var expectedUnderlag = createExpectedUnderlag();
-      regelKafkaConnector.sendRegelRequest(handlaggningId);
+      regelKafkaConnector.sendRegelRequest(handlaggningId, responsesTopic);
       var handlaggningPutRequest = WireMockRegelMaskinell.getLastPutHandlaggning(handlaggningId);
       var sentUnderlag = handlaggningPutRequest.getHandlaggning().getUnderlag();
       Assertions.assertEquals(expectedUnderlag.size(), sentUnderlag.size());
@@ -164,7 +164,7 @@ public abstract class AbstractRegelMaskinellHandlaggningTest extends AbstractReg
 
       List<ProduceratResultat> expected = createExpectedProduceradeResultat();
 
-      this.regelKafkaConnector.sendRegelRequest(handlaggningId);
+      this.regelKafkaConnector.sendRegelRequest(handlaggningId, responsesTopic);
 
       PutHandlaggningRequest handlaggningPutRequest = WireMockRegelMaskinell.getLastPutHandlaggning(handlaggningId);
 

@@ -19,7 +19,7 @@ public abstract class AbstractRegelMaskinellSequenceTest extends AbstractRegelMa
    })
    void smoke_test_maskinell_sequence(String handlaggningId)
    {
-      regelKafkaConnector.sendRegelRequest(handlaggningId);
+      regelKafkaConnector.sendRegelRequest(handlaggningId, responsesTopic);
       var handlaggningGetRequests = waitForHandlaggningRequests(handlaggningId, RequestMethod.GET, 1);
       Assertions.assertEquals(1, handlaggningGetRequests.size());
       var handlaggningPutRequests = waitForHandlaggningRequests(handlaggningId, RequestMethod.PUT, 1);
