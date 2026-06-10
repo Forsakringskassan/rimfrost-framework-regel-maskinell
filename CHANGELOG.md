@@ -2,7 +2,14 @@
 
 Changelog of rimfrost-framework-regel-maskinell.
 
-## 1.0.7 (2026-06-04)
+## 1.1.1 (2026-06-10)
+
+### Bug Fixes
+
+-  Add support for replyTo ([4eff8](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/4eff880f99beb45) Lars Persson)  
+-  **deps**  update dependency org.yaml:snakeyaml to v2.6 ([f002c](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/f002cb36e2251cc) renovate[bot])  
+
+## rimfrost-1.1 (2026-06-04)
 
 ### Bug Fixes
 
