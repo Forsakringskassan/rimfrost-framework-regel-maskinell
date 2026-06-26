@@ -8,21 +8,21 @@ root
 ├── src/main
 │   └── (framework implementation)
 ├── src/test
-│   └── (tester av ramverket)
-├── src/test/base
-│   └── (abstrakta testklasser)
-├── src/test/helpers
-    └── (helpers för testklasser)
+│   ├── (tester av ramverket)
+│   ├── base
+│   │   └── (abstrakta testklasser)
+│   └── helpers
+│       └── (helpers för testklasser)
 ```
 
-Baseras på [rimfrost-framework-regel](https://github.com/Forsakringskassan/rimfrost-framework-regel) som innehåller komponenter gemensamma för alla typer av regler. <br>
+Baseras på [rimfrost-framework-regel](https://github.com/Forsakringskassan/rimfrost-framework-regel) som innehåller komponenter gemensamma för alla typer av regler.
 
 ## Mall
 
-[https://github.com/Forsakringskassan/rimfrost-template-regel-maskinell](https://github.com/Forsakringskassan/rimfrost-template-regel-maskinell) <br>
+[https://github.com/Forsakringskassan/rimfrost-template-regel-maskinell](https://github.com/Forsakringskassan/rimfrost-template-regel-maskinell)
 kan användas som mall för att skapa ny regel baserat på detta ramverk.
 
-# src/main
+## src/main
 
 Ramverket hanterar:
 
@@ -31,7 +31,7 @@ Ramverket hanterar:
 - Initial uppläsning av handläggningsinfo
 - Avslutande uppdatering av ersättningar och underlag till handläggningsinfo
 
-Ramverket definierar ett interface _RegelMaskinellServiceInterface_ som implementeras av alla maskinella regler.<br>
+Ramverket definierar ett interface _RegelMaskinellServiceInterface_ som implementeras av alla maskinella regler.
 Reglerna implementerar
 
 ```
@@ -47,15 +47,15 @@ vilket är den regel-specifika logik som producerar ett regel-resultat baserat p
 
 Definierar DTO's för indata- resp. utdata för regelns processande.
 
-Notera att ramverket även innehållar mapper för t.ex. konvertering från _RegelMaskinellResult_ till _RegelResult_
-(det resultatformat som är gemensamt för alla typer av regler, både manuella och maskinella)
+Notera att ramverket även innehåller mapper för t.ex. konvertering från _RegelMaskinellResult_ till _HandlaggningUpdate_.
+Konverteringen från regelresultat till det gemensamma _RegelResult_-formatet hanteras av det underliggande ramverket _rimfrost-framework-regel_.
 
 ## src/test
 
-JUnit-baserade tester i _RegelMaskinell*Test_ verifierar ramverkskomponenten genom att mocka _processRegel_ som regler implementerar.<br>
-Handläggningsdata i testerna hanteras genom wiremock och mallar i _test/resources/mappings_.<br>
+JUnit-baserade tester i _RegelMaskinell*Test_ verifierar ramverkskomponenten genom att mocka _processRegel_ som regler implementerar.
+Handläggningsdata i testerna hanteras genom wiremock och mallar i _test/resources/mappings_.
 
-Innehåller även abstrakta testklasser som är byggda för att kunna användas och köras i den färdiga regeln.<br>
+Innehåller även abstrakta testklasser som är byggda för att kunna användas och köras i den färdiga regeln.
 Ramverkstestklasserna _Regel*Test.java_ extendar de abstrakta testklasserna i _src/test/base_ för att kunna köras även för verifiering av ramverket.
 
 ## src/test/base
@@ -63,7 +63,19 @@ Ramverkstestklasserna _Regel*Test.java_ extendar de abstrakta testklasserna i _s
 ### AbstractRegelMaskinellTest
 
 Innehåller testkomponenter som är gemensamma för alla maskinella regler.
-Ärver komponenter från rimfrost-framework-regel.<br>
+Ärver komponenter från rimfrost-framework-regel.
+
+### AbstractRegelMaskinellHandlaggningTest
+
+Abstrakt testklass för verifiering av handläggningsuppdateringar.
+
+### AbstractRegelMaskinellResponseTest
+
+Abstrakt testklass för verifiering av regel-responses.
+
+### AbstractRegelMaskinellSequenceTest
+
+Abstrakt testklass för verifiering av sekvenshantering.
 
 ### RegelMaskinellTestData
 
