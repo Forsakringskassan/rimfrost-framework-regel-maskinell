@@ -1,89 +1,151 @@
 # rimfrost-framework-regel-maskinell
 
-Ramverkskomponent med definitioner gemensamma för alla maskinella regler.
-Innehåller både framework-logik och hjälpklasser vid test av regler.
+Återanvändbart ramverksbibliotek för implementering av maskinella regler.
+Ramverket hanterar den gemensamma infrastrukturen för att ta emot regelförfrågningar, hämta
+handläggningsdata, anropa regellogik och publicera regelresultat – och delegerar den
+regelspecifika affärslogiken till konkreta regelimplementationer. Syftet är att säkerställa ett
+enhetligt och tillförlitligt mönster för alla maskinella regler i systemet.
 
-```text
-root
-├── src/main
-│   └── (framework implementation)
-├── src/test
-│   ├── (tester av ramverket)
-│   ├── base
-│   │   └── (abstrakta testklasser)
-│   └── helpers
-│       └── (helpers för testklasser)
+Baseras på [rimfrost-framework-regel](https://github.com/Forsakringskassan/rimfrost-framework-regel)
+som innehåller komponenter gemensamma för alla typer av regler.
+
+## Aktörer
+
+| Aktör | Roll |
+|---|---|
+| Kundbehovsflödet | Initierar regelkörningen via Kafka och tar emot regelsvaret |
+| Regelimplementationer | Bygger vidare på detta ramverk och implementerar regelspecifik logik |
+| Handläggningstjänsten | Tillhandahåller och tar emot handläggningsdata |
+
+## Struktur
+
+```
+se.fk.rimfrost.framework.regel.maskinell/
+├── logic/
+│   ├── RegelMaskinellServiceInterface   # Implementeras av konkreta regler
+│   ├── RegelMaskinellRequestHandler     # Orkestrerare: läser, kör, skriver, svarar
+│   ├── RegelMaskinellMapper             # Konverterar regelresultat till HandlaggningUpdate
+│   └── dto/                             # In- och utdatatyper för processRegel()
+└── helpers/retry/                       # Generisk återförsöksmekanism med konfigurerbart intervall
+
+src/test/java/.../
+├── AbstractRegelMaskinellTest           # Basklass med WireMock + in-memory Kafka
+├── AbstractRegelMaskinellResponseTest   # Testar Kafka-svar
+├── AbstractRegelMaskinellHandlaggningTest # Testar handläggningsuppdatering
+├── AbstractRegelMaskinellSequenceTest   # End-to-end-flöde
+└── helpers/WireMockRegelMaskinell       # HTTP-mocking mot Handläggning API
 ```
 
-Baseras på [rimfrost-framework-regel](https://github.com/Forsakringskassan/rimfrost-framework-regel) som innehåller komponenter gemensamma för alla typer av regler.
+---
 
 ## Mall
 
 [https://github.com/Forsakringskassan/rimfrost-template-regel-maskinell](https://github.com/Forsakringskassan/rimfrost-template-regel-maskinell)
-kan användas som mall för att skapa ny regel baserat på detta ramverk.
+kan användas som mall för att skapa en ny regel baserad på detta ramverk.
 
-## src/main
+---
 
-Ramverket hanterar:
+## Implementera en maskinell regel
 
-- Konsumption av _regel request_ kafka-meddelanden
-- Produktion av _regel response_ kafka-meddelanden
-- Initial uppläsning av handläggningsinfo
-- Avslutande uppdatering av ersättningar och underlag till handläggningsinfo
+En regelimplementation behöver tillhandahålla två saker:
 
-Ramverket definierar ett interface _RegelMaskinellServiceInterface_ som implementeras av alla maskinella regler.
-Reglerna implementerar
+### 1. Serviceklass
 
+Implementera `RegelMaskinellServiceInterface` och annotera klassen med `@ApplicationScoped`.
+
+```java
+@ApplicationScoped
+public class MinRegelService implements RegelMaskinellServiceInterface {
+
+    @Override
+    public RegelMaskinellResult processRegel(RegelMaskinellRequest request) {
+        // Implementera regelspecifik logik här.
+        // Returnera RegelMaskinellSuccessResult med HandlaggningUpdate och utfall,
+        // eller RegelMaskinellErrorResult med felinformation.
+    }
+}
 ```
-RegelMaskinellResult processRegel(RegelMaskinellRequest regelMaskinellRequest)
+
+`processRegel()` anropas av ramverket med handläggning, uppgift och processinstans-ID.
+Vid ett lyckat resultat uppdaterar ramverket handläggningen och publicerar regelsvaret.
+Kastas en exception fångas den av ramverket och ett felsvar med felkod `RIMFROST_OTHER` publiceras.
+
+### 2. Konfiguration
+
+```properties
+# Kafka
+mp.messaging.incoming.regel-requests.topic=<topic>
+mp.messaging.outgoing.regel-responses.topic=<topic>
+
+# Handläggningstjänsten
+handlaggning.api.base-url=https://<handlaggning-host>
+
+# Sökväg till YAML-fil med uppgiftsspecifikation
+application.config.path=src/main/resources/config.yaml
+
+# Återförsöksintervall i sekunder (valfritt — standardvärde används annars)
+rimfrost.framework.regel.maskinell.retry.intervals=15,30,60,120,240,480,960,1920,3840,7680,15360,30720
 ```
 
-vilket är den regel-specifika logik som producerar ett regel-resultat baserat på indata som hämtas från handläggningsinformation.
+YAML-filen med uppgiftsspecifikation anger regelns namn, beskrivning, verksamhetslogik och roll:
 
-## DTOs
+```yaml
+uppgift:
+  version: 1
+  path: /regel/<regel-name>
+  aktivitet: "<Uppgift aktivitet>"
 
-- RegelMaskinellRequest
-- RegelMaskinellResult
+specifikation:
+  id: <uuid>
+  version: 1
+  namn: "<Uppgift specifikation namn>"
+  uppgiftbeskrivning: "<Uppgift beskrivning>"
+  verksamhetslogik: <värde>
+  roll: ANSVARIG_HANDLAGGARE
+  applikationsId: <id>
+  applikationsversion: <version>
+```
 
-Definierar DTO's för indata- resp. utdata för regelns processande.
+---
 
-Notera att ramverket även innehåller mapper för t.ex. konvertering från _RegelMaskinellResult_ till _HandlaggningUpdate_.
-Konverteringen från regelresultat till det gemensamma _RegelResult_-formatet hanteras av det underliggande ramverket _rimfrost-framework-regel_.
+## Kafka
 
-## src/test
+Ramverket hanterar följande Kafka-kanaler:
 
-JUnit-baserade tester i _RegelMaskinell*Test_ verifierar ramverkskomponenten genom att mocka _processRegel_ som regler implementerar.
-Handläggningsdata i testerna hanteras genom wiremock och mallar i _test/resources/mappings_.
+| Kanal | Riktning | Trigger |
+|---|---|---|
+| `regel-requests` | Inkommande | Regelförfrågan från kundbehovsflödet |
+| `regel-responses` | Utgående | Regelbehandling klar (lyckat eller misslyckat) |
 
-Innehåller även abstrakta testklasser som är byggda för att kunna användas och köras i den färdiga regeln.
-Ramverkstestklasserna _Regel*Test.java_ extendar de abstrakta testklasserna i _src/test/base_ för att kunna köras även för verifiering av ramverket.
+Ramverket stödjer `replyTo`-fältet i inkommande meddelanden för dynamisk dirigering av svar.
+Meddelandescheman definieras i **rimfrost-framework-regel-asyncapi**.
 
-## src/test/base
+---
 
-### AbstractRegelMaskinellTest
+## Test-JAR
 
-Innehåller testkomponenter som är gemensamma för alla maskinella regler.
-Ärver komponenter från rimfrost-framework-regel.
+Ramverket levererar en test-JAR med abstrakta basklasser och hjälpklasser för
+regelimplementationernas tester.
 
-### AbstractRegelMaskinellHandlaggningTest
+### Abstrakta basklasser
 
-Abstrakt testklass för verifiering av handläggningsuppdateringar.
+| Klass | Täcker |
+|---|---|
+| `AbstractRegelMaskinellTest` | Grundkonfiguration med in-memory Kafka och WireMock |
+| `AbstractRegelMaskinellResponseTest` | Verifiering av regelresultat |
+| `AbstractRegelMaskinellHandlaggningTest` | Verifiering av handläggningsuppdateringar |
+| `AbstractRegelMaskinellSequenceTest` | End-to-end-flöde |
 
-### AbstractRegelMaskinellResponseTest
+```java
+@QuarkusTest
+@QuarkusTestResource(WireMockRegelMaskinell.class)
+public class MinRegelHandlaggningTest extends AbstractRegelMaskinellHandlaggningTest {
+}
+```
 
-Abstrakt testklass för verifiering av regel-responses.
+### Hjälpklasser
 
-### AbstractRegelMaskinellSequenceTest
-
-Abstrakt testklass för verifiering av sekvenshantering.
-
-### RegelMaskinellTestData
-
-Utility-klass som skapar testdata.
-
-## src/test/helpers
-
-### WireMockRegelMaskinell
-
-Utility-klass för hantering av maskinella reglers Wiremock-setup.
-
+| Klass | Användning |
+|---|---|
+| `RegelMaskinellTestData` | Metoder för att skapa testdata |
+| `WireMockRegelMaskinell` | WireMock-setup för Handläggningstjänsten |

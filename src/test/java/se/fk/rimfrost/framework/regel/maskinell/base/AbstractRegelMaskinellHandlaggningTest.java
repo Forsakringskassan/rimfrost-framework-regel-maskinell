@@ -5,6 +5,7 @@ import com.github.tomakehurst.wiremock.http.RequestMethod;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import se.fk.rimfrost.framework.handlaggning.model.Underlag;
@@ -82,6 +83,7 @@ public abstract class AbstractRegelMaskinellHandlaggningTest extends AbstractReg
    {
          "11111111-1111-1111-1111-111111111234"
    })
+   @DisplayName("FRMASK-FR-02.1: GET-anrop skickas till Handläggning API för att hämta handläggningsdata")
    void should_create_initial_handlaggning_request(String handlaggningId)
    {
       regelKafkaConnector.sendRegelRequest(handlaggningId, responsesTopic);
@@ -94,6 +96,7 @@ public abstract class AbstractRegelMaskinellHandlaggningTest extends AbstractReg
    {
          "11111111-1111-1111-1111-111111111234, YRKAT"
    })
+   @DisplayName("FRMASK-FR-05.1: PUT-anrop uppdaterar handläggning med korrekt yrkandestatus")
    void should_put_handlaggning_request_with_yrkandestatus(String handlaggningId, String yrkandeStatus)
          throws JsonProcessingException
    {
@@ -107,6 +110,7 @@ public abstract class AbstractRegelMaskinellHandlaggningTest extends AbstractReg
    {
          "11111111-1111-1111-1111-111111111234"
    })
+   @DisplayName("FRMASK-FR-03.2, FRMASK-FR-05.1: Uppgiftsstatus är null i handläggningsuppdateringen")
    void should_put_handlaggning_request_with_null_uppgiftstatus(String handlaggningId)
          throws JsonProcessingException
    {
@@ -120,6 +124,7 @@ public abstract class AbstractRegelMaskinellHandlaggningTest extends AbstractReg
    {
          "11111111-1111-1111-1111-111111111234, a42ffaed-2f20-47e8-8499-f2f79ae2f45f"
    })
+   @DisplayName("FRMASK-FR-03.1, FRMASK-FR-05.1: Uppgiftsspecifikations-ID från YAML-konfiguration inkluderas i handläggningsuppdateringen")
    void should_put_handlaggning_request_with_uppgiftspecifikation_id(String handlaggningId, String uppgiftspecifikationId)
          throws JsonProcessingException
    {
@@ -134,6 +139,7 @@ public abstract class AbstractRegelMaskinellHandlaggningTest extends AbstractReg
    {
          "11111111-1111-1111-1111-111111111234"
    })
+   @DisplayName("FRMASK-FR-05.1: PUT-anrop innehåller förväntade underlag med korrekt typ, version och data")
    void should_put_handlaggning_request_with_underlag(String handlaggningId) throws JsonProcessingException
    {
       var expectedUnderlag = createExpectedUnderlag();
@@ -158,6 +164,7 @@ public abstract class AbstractRegelMaskinellHandlaggningTest extends AbstractReg
    {
          "11111111-1111-1111-1111-111111111234"
    })
+   @DisplayName("FRMASK-FR-05.1: PUT-anrop innehåller förväntade producerade resultat med korrekt ID och yrkandestatus")
    void should_put_handlaggning_request_with_producerade_resultat(String handlaggningId)
          throws JsonProcessingException
    {
