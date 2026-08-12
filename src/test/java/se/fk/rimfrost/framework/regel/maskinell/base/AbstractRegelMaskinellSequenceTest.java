@@ -3,6 +3,7 @@ package se.fk.rimfrost.framework.regel.maskinell.base;
 import com.github.tomakehurst.wiremock.http.RequestMethod;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import static se.fk.rimfrost.framework.regel.RegelKafkaConnector.regelResponsesChannel;
@@ -17,6 +18,7 @@ public abstract class AbstractRegelMaskinellSequenceTest extends AbstractRegelMa
    {
          "11111111-1111-1111-1111-111111111234"
    })
+   @DisplayName("FRMASK-FR-01.1, FRMASK-FR-02.1, FRMASK-FR-05.1, FRMASK-FR-06.1: Fullständigt regelflöde från Kafka-förfrågan via GET/PUT till regelresultat verifieras")
    void smoke_test_maskinell_sequence(String handlaggningId)
    {
       regelKafkaConnector.sendRegelRequest(handlaggningId, responsesTopic);

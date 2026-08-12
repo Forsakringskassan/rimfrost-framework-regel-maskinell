@@ -3,6 +3,7 @@ package se.fk.rimfrost.framework.regel.maskinell.base;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import se.fk.rimfrost.framework.regel.Utfall;
@@ -15,6 +16,7 @@ public abstract class AbstractRegelMaskinellResponseTest extends AbstractRegelMa
    {
          "11111111-1111-1111-1111-111111111234, JA"
    })
+   @DisplayName("FRMASK-FR-06.1, FRMASK-FR-06.2: Regelresultat publiceras på Kafka-topic med korrekt handläggnings-ID och utfall")
    void should_return_correct_regel_response(String handlaggningId, String expectedUtfallString)
    {
       var expectedUtfall = Utfall.valueOf(expectedUtfallString);
