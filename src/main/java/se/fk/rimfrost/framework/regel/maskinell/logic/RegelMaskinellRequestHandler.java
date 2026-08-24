@@ -8,18 +8,33 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.fk.rimfrost.framework.handlaggning.exception.HandlaggningException;
 import se.fk.rimfrost.framework.handlaggning.model.*;
+import se.fk.rimfrost.framework.oul.adapter.OulAdapter;
+import se.fk.rimfrost.framework.oul.exception.OulException;
+import se.fk.rimfrost.framework.oul.model.CreateOperativUppgiftRequest;
+import se.fk.rimfrost.framework.oul.model.Erbjudande;
+import se.fk.rimfrost.framework.oul.model.ImmutableCreateOperativUppgiftRequest;
+import se.fk.rimfrost.framework.oul.model.ImmutableErbjudande;
+import se.fk.rimfrost.framework.oul.model.ImmutableProcessInfo;
+import se.fk.rimfrost.framework.oul.model.OperativUppgift;
+import se.fk.rimfrost.framework.referensdata.ErbjudandeReferensdataInterface;
 import se.fk.rimfrost.framework.regel.RegelErrorInformation;
 import se.fk.rimfrost.framework.regel.error.RegelFelkod;
 import se.fk.rimfrost.framework.regel.logic.RegelRequestHandlerBase;
 import se.fk.rimfrost.framework.regel.logic.dto.RegelDataRequest;
 import se.fk.rimfrost.framework.regel.logic.entity.CloudEventData;
+import se.fk.rimfrost.framework.regel.logic.entity.ImmutableCloudEventData;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellErrorResult;
+import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellRequest;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellResult;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellSuccessResult;
 import se.fk.rimfrost.framework.regel.maskinell.logic.helpers.retry.Result;
 import se.fk.rimfrost.framework.regel.maskinell.logic.helpers.retry.RetriesExhaustedException;
 import se.fk.rimfrost.framework.regel.maskinell.logic.helpers.retry.RetryUtil;
 import se.fk.rimfrost.framework.regel.presentation.kafka.RegelRequestHandlerInterface;
+import se.fk.rimfrost.framework.regel.storage.entity.ImmutableProcessTopicInfo;
+import se.fk.rimfrost.framework.regel.storage.entity.ProcessTopicInfo;
+import se.fk.rimfrost.framework.regel.logic.KompletteringKontrollInterface;
+
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -32,7 +47,13 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
    RegelMaskinellServiceInterface regelService;
 
    @Inject
+   KompletteringKontrollInterface kompletteringKontroll;
+
+   @Inject
    RegelMaskinellMapper maskinellMapper;
+
+   @Inject
+   ErbjudandeReferensdataInterface erbjudandeReferensdata;
 
    @ConfigProperty(name = "rimfrost.framework.regel.maskinell.retry.intervals")
    List<Integer> retryIntervals;
@@ -44,6 +65,8 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
    {
       // Hämta handläggningsinformation
       CloudEventData cloudevent;
+      OperativUppgift operativUppgift = null;
+      ProcessTopicInfo processTopicInfo = null;
       try
       {
          cloudevent = createCloudEvent(request);
@@ -67,20 +90,28 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
          {
             logger.error("Failed to read handlaggning. Handlaggning id: {}, kogitoproc instance id: {}, aktivitet id: {}",
                   request.handlaggningId(), request.kogitoprocinstanceid(), request.aktivitetId());
-
-            sendErrorResponse(request.handlaggningId(), cloudevent, RegelFelkod.RIMFROST_HANDLAGGNING_READ_FAILURE,
+            var regelErrorInfo = createRegelErrorInformation(RegelFelkod.RIMFROST_HANDLAGGNING_READ_FAILURE,
                   "Failed to read handlaggning. Handlaggning id: " + request.handlaggningId()
                         + ", kogitoproc instance id: " + request.kogitoprocinstanceid() + ", aktivitet id: "
-                        + request.aktivitetId(),
-                  request.replyTo());
+                        + request.aktivitetId());
+            sendErrorResponse(request.handlaggningId(), cloudevent, regelErrorInfo, request.replyTo());
             return;
          }
 
-         var uppgift = createUppgift(request.aktivitetId());
+         var uppgift = createUppgift(request.aktivitetId(), null);
 
          // Uppdatera handläggningsinformation
          var regelMaskinellRequest = maskinellMapper.toRegelMaskinellRequest(handlaggning, uppgift,
                request.kogitoprocinstanceid());
+
+         if (!kompletteringKontroll.checkKomplettering(regelMaskinellRequest.handlaggning()).isEmpty())
+         {
+            var operativUppgiftRequest = createOperativUppgiftRequest(request, regelMaskinellRequest);
+            createOperativUppgift(operativUppgiftRequest, cloudevent);
+            processTopicInfo = ImmutableProcessTopicInfo.builder().replyTopic(request.replyTo()).build();
+            writeProcessTopicInfo(request.handlaggningId(), processTopicInfo);
+            return;
+         }
 
          RegelMaskinellResult regelResult;
          try
@@ -91,12 +122,11 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
          {
             logger.error("Failed to process regel request. Handlaggning id: {}, kogitoproc instance id: {}, aktivitet id: {}",
                   request.handlaggningId(), request.kogitoprocinstanceid(), request.aktivitetId(), e);
-
-            sendErrorResponse(request.handlaggningId(), cloudevent, RegelFelkod.RIMFROST_OTHER,
+            var regelErrorInfo = createRegelErrorInformation(RegelFelkod.RIMFROST_OTHER,
                   "Failed to process regel request. Handlaggning id: " + request.handlaggningId()
                         + ", kogitoproc instance id: " + request.kogitoprocinstanceid() + ", aktivitet id: "
-                        + request.aktivitetId(),
-                  request.replyTo());
+                        + request.aktivitetId());
+            sendErrorResponse(request.handlaggningId(), cloudevent, regelErrorInfo, request.replyTo());
             return;
          }
 
@@ -118,11 +148,11 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
             logger.error("Failed to write handlaggning update. Handlaggning id: {}, kogitoproc instance id: {}, aktivitet id: {}",
                   request.handlaggningId(), request.kogitoprocinstanceid(), request.aktivitetId());
 
-            sendErrorResponse(request.handlaggningId(), cloudevent, RegelFelkod.RIMFROST_HANDLAGGNING_WRITE_FAILURE,
+            var regelErrorInfo = createRegelErrorInformation(RegelFelkod.RIMFROST_HANDLAGGNING_WRITE_FAILURE,
                   "Failed to write handlaggning update. Handlaggning id: " + request.handlaggningId()
                         + ", kogitoproc instance id: " + request.kogitoprocinstanceid() + ", aktivitet id: "
-                        + request.aktivitetId(),
-                  request.replyTo());
+                        + request.aktivitetId());
+            sendErrorResponse(request.handlaggningId(), cloudevent, regelErrorInfo, request.replyTo());
             return;
          }
 
@@ -135,11 +165,26 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
                "Failed to handle regel data request for handlaggning due to unexpected error. Handlaggning id: {}, kogitoproc instance id: {}, aktivitet id: {}",
                request.handlaggningId(), request.kogitoprocinstanceid(), request.aktivitetId(), e);
 
-         sendErrorResponse(request.handlaggningId(), cloudevent, RegelFelkod.RIMFROST_OTHER,
+         if (operativUppgift != null)
+         {
+            tryEndOperativUppgift(operativUppgift.getUppgiftId(), "Internal error");
+         }
+
+         if (cloudevent != null)
+         {
+            tryDeleteCloudEventData(request.handlaggningId());
+         }
+
+         if (processTopicInfo != null)
+         {
+            tryDeleteProcessTopicInfo(request.handlaggningId());
+         }
+
+         var regelErrorInfo = createRegelErrorInformation(RegelFelkod.RIMFROST_OTHER,
                "Failed to handle regel data request for handlaggning due to unexpected error. Handlaggning id: "
                      + request.handlaggningId() + ", kogitoproc instance id: " + request.kogitoprocinstanceid()
-                     + ", aktivitet id: " + request.aktivitetId(),
-               request.replyTo());
+                     + ", aktivitet id: " + request.aktivitetId());
+         sendErrorResponse(request.handlaggningId(), cloudevent, regelErrorInfo, request.replyTo());
          return;
       }
    }
@@ -171,46 +216,27 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
       return false;
    }
 
-   private void sendErrorResponse(UUID handlaggningId, CloudEventData cloudEvent, String regelFelkod, String meddelande,
-         String replyTo)
+   private CreateOperativUppgiftRequest createOperativUppgiftRequest(RegelDataRequest request,
+         RegelMaskinellRequest regelMaskinellRequest)
    {
-      RegelErrorInformation errorInformation = new RegelErrorInformation();
-      errorInformation.setFelkod(regelFelkod);
-      errorInformation.setFelmeddelande(meddelande);
 
-      sendErrorResponse(handlaggningId, cloudEvent, errorInformation, replyTo);
-   }
-
-   private void sendErrorResponse(UUID handlaggningId, CloudEventData cloudEvent, RegelErrorInformation regelErrorInformation,
-         String replyTo)
-   {
-      if (handlaggningId == null || cloudEvent == null)
-      {
-         logger.error(
-               "Could not send error response. Missing one or more required parameters. handlaggningId: {}, cloudEventData: {}, regelErrorInformation: {}",
-               handlaggningId, cloudEvent, regelErrorInformation);
-         return;
-      }
-
-      sendResponse(handlaggningId, cloudEvent, regelErrorInformation, replyTo);
-   }
-
-   @SuppressFBWarnings(value = "NP_NONNULL_PARAM_VIOLATION", justification = "False positive for uppgiftStatus field. UppgiftStatus field is marked as nullable.")
-   private Uppgift createUppgift(UUID aktivitetId)
-   {
-      var uppgiftSpecifikation = ImmutableUppgiftSpecifikation.builder()
-            .id(regelConfig.getSpecifikation().getId())
-            .version(regelConfig.getSpecifikation().getVersion())
-            .build();
-
-      return ImmutableUppgift.builder()
-            .id(UUID.randomUUID())
-            .version(1)
-            .skapadTs(OffsetDateTime.now())
-            .uppgiftStatus(null) // Intentionally set to null since machine rules does not have any OUL status
-            .aktivitetId(aktivitetId)
-            .fSSAinformation("HANDLAGGNING_PAGAR") // TODO: Replace with correct value once available
-            .uppgiftSpecifikation(uppgiftSpecifikation)
+      var erbjudandeNamn = erbjudandeReferensdata
+            .getErbjudandeNamn(regelMaskinellRequest.handlaggning().yrkande().erbjudandeId());
+      var cloudevent = createCloudEvent(request);
+      return ImmutableCreateOperativUppgiftRequest.builder()
+            .handlaggningId(regelMaskinellRequest.handlaggning().id())
+            .version("1")
+            .regel(regelConfig.getSpecifikation().getNamn())
+            .beskrivning(regelConfig.getSpecifikation().getUppgiftbeskrivning())
+            .verksamhetslogik(regelConfig.getSpecifikation().getVerksamhetslogik())
+            .roll(regelConfig.getSpecifikation().getRoll())
+            .url(regelConfig.getUppgift().getPath())
+            .subTopic(oulReplyToSubTopic)
+            .erbjudande(createErbjudande(regelMaskinellRequest.handlaggning().yrkande().erbjudandeId(), erbjudandeNamn))
+            .processInfo(ImmutableProcessInfo.builder()
+                  .replyTopic(request.replyTo())
+                  .cloudeventAttributes(CloudEventAttributesMapper.toAttributes(cloudevent))
+                  .build())
             .build();
    }
 }
