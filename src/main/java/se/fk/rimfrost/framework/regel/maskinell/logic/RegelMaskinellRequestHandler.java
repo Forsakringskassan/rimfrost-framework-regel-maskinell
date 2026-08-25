@@ -33,6 +33,7 @@ import se.fk.rimfrost.framework.regel.maskinell.logic.helpers.retry.RetryUtil;
 import se.fk.rimfrost.framework.regel.presentation.kafka.RegelRequestHandlerInterface;
 import se.fk.rimfrost.framework.regel.storage.entity.ImmutableProcessTopicInfo;
 import se.fk.rimfrost.framework.regel.storage.entity.ProcessTopicInfo;
+import se.fk.rimfrost.framework.regel.logic.CloudEventAttributesMapper;
 import se.fk.rimfrost.framework.regel.logic.KompletteringKontrollInterface;
 
 import java.time.OffsetDateTime;
