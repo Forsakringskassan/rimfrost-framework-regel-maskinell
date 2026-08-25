@@ -2,6 +2,22 @@
 
 Changelog of rimfrost-framework-regel-maskinell.
 
+## 1.1.3 (2026-08-25)
+
+### Bug Fixes
+
+-  only create cloudeventdata once ([602a4](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/602a45c24efe6e2) Nils Elveros)  
+-  revmoed duplicate cloudeventattributemapper ([ca763](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/ca76384957150af) Nils Elveros)  
+-  fix violation ([7caf3](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/7caf3f85716b7a7) Nils Elveros)  
+-  update to use new framework version ([3c024](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/3c0246423f81698) Nils Elveros)  
+-  add tests for all FRMASK gaps and refine requirements ([7d041](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/7d04199019b2bef) Ulf Slunga)  
+-  **deps**  update dependency se.fk.rimfrost.framework.regel:rimfrost-framework-regel to v1.2.4 ([771c0](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/771c02fb10ec5d2) renovate[bot])  
+-  correct and expand README documentation ([2045f](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/2045fb3f7d971fb) Ulf Slunga)  
+-  **deps**  update dependency se.fk.rimfrost.framework.regel:rimfrost-framework-regel to v1.1.4 ([b1fac](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/b1fac74bfacb84f) renovate[bot])  
+
+### Dependency updates
+
+- update dependency org.apache.maven.plugins:maven-jar-plugin to v3.5.1 ([31a7d](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/31a7d77b8060dc1) renovate[bot])  
 ## 1.1.2 (2026-06-15)
 
 ### Bug Fixes
