@@ -107,7 +107,7 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
          if (!kompletteringKontroll.checkKomplettering(regelMaskinellRequest.handlaggning()).isEmpty())
          {
             var operativUppgiftRequest = createOperativUppgiftRequest(request, regelMaskinellRequest);
-            createOperativUppgift(operativUppgiftRequest, cloudevent);
+            operativUppgift = createOperativUppgift(operativUppgiftRequest, cloudevent);
             processTopicInfo = ImmutableProcessTopicInfo.builder().replyTopic(request.replyTo()).build();
             writeProcessTopicInfo(request.handlaggningId(), processTopicInfo);
             return;
