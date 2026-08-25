@@ -107,7 +107,7 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
 
          if (!kompletteringKontroll.checkKomplettering(regelMaskinellRequest.handlaggning()).isEmpty())
          {
-            var operativUppgiftRequest = createOperativUppgiftRequest(request, regelMaskinellRequest);
+            var operativUppgiftRequest = createOperativUppgiftRequest(request, regelMaskinellRequest, cloudevent);
             operativUppgift = createOperativUppgift(operativUppgiftRequest, cloudevent);
             processTopicInfo = ImmutableProcessTopicInfo.builder().replyTopic(request.replyTo()).build();
             writeProcessTopicInfo(request.handlaggningId(), processTopicInfo);
@@ -218,12 +218,11 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
    }
 
    private CreateOperativUppgiftRequest createOperativUppgiftRequest(RegelDataRequest request,
-         RegelMaskinellRequest regelMaskinellRequest)
+         RegelMaskinellRequest regelMaskinellRequest, CloudEventData cloudevent)
    {
 
       var erbjudandeNamn = erbjudandeReferensdata
             .getErbjudandeNamn(regelMaskinellRequest.handlaggning().yrkande().erbjudandeId());
-      var cloudevent = createCloudEvent(request);
       return ImmutableCreateOperativUppgiftRequest.builder()
             .handlaggningId(regelMaskinellRequest.handlaggning().id())
             .version("1")
