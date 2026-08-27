@@ -2,6 +2,23 @@
 
 Changelog of rimfrost-framework-regel-maskinell.
 
+## 1.1.4 (2026-08-27)
+
+### Bug Fixes
+
+-  minor javadoc update ([135c1](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/135c1a6e5c7d811) Nils Elveros)  
+-  build issue in pom ([d6e0a](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/d6e0a786e7a800a) Nils Elveros)  
+-  update to new framework version and fix test ([3aa3c](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/3aa3cf3c98144d2) Nils Elveros)  
+
+### Other changes
+
+**Update pom.xml**
+
+* Co-authored-by: Ulf Slunga &lt;98820233+UlfSlunga-Sinetiq@users.noreply.github.com&gt; 
+
+[9597d](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/9597dcada680d8d) NilsElveros *2026-08-27 12:36:49*
+
+
 ## 1.1.3 (2026-08-25)
 
 ### Bug Fixes
