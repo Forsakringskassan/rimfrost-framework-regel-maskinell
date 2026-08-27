@@ -1,0 +1,17 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/erbjudande/.+"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "id": "33333333-3333-3333-3333-333333331234",
+      "kod": "TEST",
+      "namn": "Test erbjudande"
+    }
+  }
+}

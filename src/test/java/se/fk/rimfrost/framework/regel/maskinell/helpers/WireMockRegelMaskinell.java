@@ -21,8 +21,7 @@ public class WireMockRegelMaskinell extends WireMockHandlaggning
    protected Map<String, String> wiremockMapping(WireMockServer server)
    {
       Map<String, String> map = new HashMap<>(super.wiremockMapping(server));
-      // Add more mappings if machine rules need to define extra mappings
-      // map.put("something", "value");
+      map.put("referensdata.api.base-url", server.baseUrl());
       return map;
    }
 }
