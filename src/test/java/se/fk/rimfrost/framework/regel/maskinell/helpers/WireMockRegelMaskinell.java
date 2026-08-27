@@ -16,7 +16,6 @@ public class WireMockRegelMaskinell extends WireMockHandlaggning
     * @param server active WireMock server
     * @return property mappings
     */
-   @SuppressWarnings("UnnecessaryLocalVariable")
    @Override
    protected Map<String, String> wiremockMapping(WireMockServer server)
    {
