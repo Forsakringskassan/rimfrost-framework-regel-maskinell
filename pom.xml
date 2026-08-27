@@ -65,11 +65,16 @@
     </dependency>
     <dependency>
       <groupId>se.fk.rimfrost.referensdata</groupId>
+    <dependency>
+      <groupId>se.fk.rimfrost.referensdata</groupId>
       <artifactId>rimfrost-referensdata-erbjudande</artifactId>
       <version>0.0.2</version>
     </dependency>
     <dependency>
-      <groupId>org.wiremock</groupId>
+      <groupId>se.fk.rimfrost.adapter.referensdata</groupId>
+      <artifactId>rimfrost-adapter-referensdata</artifactId>
+      <version>1.0.2</version>
+    </dependency>
       <artifactId>wiremock</artifactId>
       <version>3.13.2</version>
       <scope>test</scope>
