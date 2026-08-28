@@ -2,6 +2,12 @@
 
 Changelog of rimfrost-framework-regel-maskinell.
 
+## 1.1.5 (2026-08-28)
+
+### Bug Fixes
+
+-  dependency injection for referensdata ([7c4e0](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/7c4e0dccd6e2ef1) Nils Elveros)  
+
 ## 1.1.4 (2026-08-27)
 
 ### Bug Fixes
