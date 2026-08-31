@@ -40,6 +40,11 @@
 - **FRMASK-FR-07.1** Ramverket ska tillhandahålla ett gränssnitt (`RegelMaskinellServiceInterface`) som konkreta regelimplementationer implementerar.
 - **FRMASK-FR-07.2** Implementationen ska returnera antingen ett lyckat resultat med uppdaterad handläggning och utfall, eller ett felresultat med felinformation.
 
+### FRMASK-FR-08 — Kompletteringskontroll
+
+- **FRMASK-FR-08.1** När `checkKomplettering()` returnerar en icke-tom lista ska ramverket delegera till `KompletteringOulHandler.initiate()` för att skapa kompletteringsuppgiften. Inget regelsvar ska skickas.
+- **FRMASK-FR-08.2** Om `initiate()` kastar `OulException` ska ramverket skicka ett felsvar med felkod `RIMFROST_OTHER`.
+
 ## 2. Statusmodell
 
 Maskinella regler producerar ett utfall per regelkörning. Det finns ingen intern statuslivscykel i ramverket; utfallet är alltid slutgiltigt vid publicering.
