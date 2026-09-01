@@ -8,17 +8,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.fk.rimfrost.framework.handlaggning.exception.HandlaggningException;
 import se.fk.rimfrost.framework.handlaggning.model.*;
-import se.fk.rimfrost.framework.oul.adapter.OulAdapter;
 import se.fk.rimfrost.framework.oul.exception.OulException;
-import se.fk.rimfrost.framework.oul.model.CreateOperativUppgiftRequest;
 import se.fk.rimfrost.framework.oul.model.Erbjudande;
-import se.fk.rimfrost.framework.oul.model.ImmutableCreateOperativUppgiftRequest;
-import se.fk.rimfrost.framework.oul.model.ImmutableErbjudande;
-import se.fk.rimfrost.framework.oul.model.ImmutableProcessInfo;
-import se.fk.rimfrost.framework.oul.model.OperativUppgift;
 import se.fk.rimfrost.framework.referensdata.ErbjudandeReferensdataInterface;
 import se.fk.rimfrost.framework.regel.RegelErrorInformation;
 import se.fk.rimfrost.framework.regel.error.RegelFelkod;
+import se.fk.rimfrost.framework.regel.logic.CloudEventAttributesMapper;
+import se.fk.rimfrost.framework.regel.logic.KompletteringKontrollInterface;
+import se.fk.rimfrost.framework.regel.logic.KompletteringOulHandler;
 import se.fk.rimfrost.framework.regel.logic.RegelRequestHandlerBase;
 import se.fk.rimfrost.framework.regel.logic.dto.RegelDataRequest;
 import se.fk.rimfrost.framework.regel.logic.entity.CloudEventData;
@@ -31,11 +28,6 @@ import se.fk.rimfrost.framework.regel.maskinell.logic.helpers.retry.Result;
 import se.fk.rimfrost.framework.regel.maskinell.logic.helpers.retry.RetriesExhaustedException;
 import se.fk.rimfrost.framework.regel.maskinell.logic.helpers.retry.RetryUtil;
 import se.fk.rimfrost.framework.regel.presentation.kafka.RegelRequestHandlerInterface;
-import se.fk.rimfrost.framework.regel.storage.entity.ImmutableProcessTopicInfo;
-import se.fk.rimfrost.framework.regel.storage.entity.ProcessTopicInfo;
-import se.fk.rimfrost.framework.regel.logic.CloudEventAttributesMapper;
-import se.fk.rimfrost.framework.regel.logic.KompletteringKontrollInterface;
-
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -49,6 +41,9 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
 
    @Inject
    KompletteringKontrollInterface kompletteringKontroll;
+
+   @Inject
+   KompletteringOulHandler kompletteringOulHandler;
 
    @Inject
    RegelMaskinellMapper maskinellMapper;
@@ -66,8 +61,6 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
    {
       // Hämta handläggningsinformation
       CloudEventData cloudevent;
-      OperativUppgift operativUppgift = null;
-      ProcessTopicInfo processTopicInfo = null;
       try
       {
          cloudevent = createCloudEvent(request);
@@ -107,10 +100,24 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
 
          if (!kompletteringKontroll.checkKomplettering(regelMaskinellRequest.handlaggning()).isEmpty())
          {
-            var operativUppgiftRequest = createOperativUppgiftRequest(request, regelMaskinellRequest, cloudevent);
-            operativUppgift = createOperativUppgift(operativUppgiftRequest, cloudevent);
-            processTopicInfo = ImmutableProcessTopicInfo.builder().replyTopic(request.replyTo()).build();
-            writeProcessTopicInfo(request.handlaggningId(), processTopicInfo);
+            var erbjudandeId = regelMaskinellRequest.handlaggning().yrkande().erbjudandeId();
+            var erbjudande = createErbjudande(erbjudandeId, erbjudandeReferensdata.getErbjudandeNamn(erbjudandeId));
+            try
+            {
+               kompletteringOulHandler.initiate(
+                     request,
+                     CloudEventAttributesMapper.toAttributes(cloudevent),
+                     regelConfig,
+                     erbjudande);
+            }
+            catch (OulException e)
+            {
+               var regelErrorInfo = createRegelErrorInformation(RegelFelkod.RIMFROST_OTHER,
+                     "Failed to initiate komplettering. Handlaggning id: " + request.handlaggningId()
+                           + ", kogitoproc instance id: " + request.kogitoprocinstanceid() + ", aktivitet id: "
+                           + request.aktivitetId());
+               sendErrorResponse(request.handlaggningId(), cloudevent, regelErrorInfo, request.replyTo());
+            }
             return;
          }
 
@@ -166,19 +173,9 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
                "Failed to handle regel data request for handlaggning due to unexpected error. Handlaggning id: {}, kogitoproc instance id: {}, aktivitet id: {}",
                request.handlaggningId(), request.kogitoprocinstanceid(), request.aktivitetId(), e);
 
-         if (operativUppgift != null)
-         {
-            tryEndOperativUppgift(operativUppgift.getUppgiftId(), "Internal error");
-         }
-
          if (cloudevent != null)
          {
             tryDeleteCloudEventData(request.handlaggningId());
-         }
-
-         if (processTopicInfo != null)
-         {
-            tryDeleteProcessTopicInfo(request.handlaggningId());
          }
 
          var regelErrorInfo = createRegelErrorInformation(RegelFelkod.RIMFROST_OTHER,
@@ -215,28 +212,5 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
       }
 
       return false;
-   }
-
-   private CreateOperativUppgiftRequest createOperativUppgiftRequest(RegelDataRequest request,
-         RegelMaskinellRequest regelMaskinellRequest, CloudEventData cloudevent)
-   {
-
-      var erbjudandeNamn = erbjudandeReferensdata
-            .getErbjudandeNamn(regelMaskinellRequest.handlaggning().yrkande().erbjudandeId());
-      return ImmutableCreateOperativUppgiftRequest.builder()
-            .handlaggningId(regelMaskinellRequest.handlaggning().id())
-            .version("1")
-            .regel(regelConfig.getSpecifikation().getNamn())
-            .beskrivning(regelConfig.getSpecifikation().getUppgiftbeskrivning())
-            .verksamhetslogik(regelConfig.getSpecifikation().getVerksamhetslogik())
-            .roll(regelConfig.getSpecifikation().getRoll())
-            .url(regelConfig.getUppgift().getPath())
-            .subTopic(oulReplyToSubTopic)
-            .erbjudande(createErbjudande(regelMaskinellRequest.handlaggning().yrkande().erbjudandeId(), erbjudandeNamn))
-            .processInfo(ImmutableProcessInfo.builder()
-                  .replyTopic(request.replyTo())
-                  .cloudeventAttributes(CloudEventAttributesMapper.toAttributes(cloudevent))
-                  .build())
-            .build();
    }
 }
