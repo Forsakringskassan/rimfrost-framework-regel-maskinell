@@ -16,6 +16,7 @@
 
 - **FRMASK-FR-03.1** Ramverket ska skapa ett uppgiftsobjekt utifrån uppgiftsspecifikation konfigurerad i en extern YAML-fil.
 - **FRMASK-FR-03.2** Uppgiftsstatus ska alltid sättas till `null` för maskinella regler (ingen OUL-uppföljning).
+- **FRMASK-FR-03.3** Erbjudandenamn ska slås upp från referensdata via `ErbjudandeReferensdataInterface` och inkluderas i uppgiftsobjektet när en kompletteringsuppgift skapas via OUL.
 
 ### FRMASK-FR-04 — Anrop av regellogik
 

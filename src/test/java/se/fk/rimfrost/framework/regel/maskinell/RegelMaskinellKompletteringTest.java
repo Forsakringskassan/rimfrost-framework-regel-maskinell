@@ -4,8 +4,11 @@ import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import se.fk.rimfrost.framework.oul.exception.OulException;
+import se.fk.rimfrost.framework.oul.model.Erbjudande;
+import se.fk.rimfrost.framework.regel.ErbjudandeReferensdataTestService;
 import se.fk.rimfrost.framework.regel.RegelKafkaConnector;
 import se.fk.rimfrost.framework.regel.Utfall;
 import se.fk.rimfrost.framework.regel.error.RegelFelkod;
@@ -74,5 +77,31 @@ public class RegelMaskinellKompletteringTest extends AbstractRegelMaskinellTest
 
       assertEquals(Utfall.ERROR, regelResponse.getData().getUtfall());
       assertEquals(RegelFelkod.RIMFROST_OTHER, regelResponse.getData().getError().getFelkod());
+   }
+
+   /**
+    * Verifies that the erbjudande name looked up via {@link
+    * se.fk.rimfrost.framework.referensdata.ErbjudandeReferensdataInterface} is passed to
+    * {@code KompletteringOulHandler.initiate()} when a komplettering task is created.
+    */
+   @Test
+   @DisplayName("FRMASK-FR-03.3: Erbjudandenamn slås upp från referensdata och inkluderas i OUL-skapandeanropet")
+   void should_include_erbjudande_from_referensdata_in_oul_create_request() throws Exception
+   {
+      Mockito.when(kompletteringKontroll.checkKomplettering(Mockito.any()))
+            .thenReturn(List.of(ImmutableKompletteringUnderlag.builder()
+                  .underlagTyp("TEST_TYP")
+                  .beskrivning("Saknas")
+                  .build()));
+
+      var handlaggningId = "11111111-1111-1111-1111-111111111234";
+      regelKafkaConnector.sendRegelRequest(handlaggningId, responsesTopic);
+
+      var erbjudandeCaptor = ArgumentCaptor.forClass(Erbjudande.class);
+      Mockito.verify(kompletteringOulHandler, Mockito.timeout(5000))
+            .initiate(Mockito.any(), Mockito.any(), Mockito.any(), erbjudandeCaptor.capture());
+
+      assertEquals(ErbjudandeReferensdataTestService.DEFAULT_ERBJUDANDE_NAMN,
+            erbjudandeCaptor.getValue().getNamn());
    }
 }
