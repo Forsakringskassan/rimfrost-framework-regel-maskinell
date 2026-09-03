@@ -1,6 +1,5 @@
 package se.fk.rimfrost.framework.regel.maskinell.logic;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -8,27 +7,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.fk.rimfrost.framework.handlaggning.exception.HandlaggningException;
 import se.fk.rimfrost.framework.handlaggning.model.*;
-import se.fk.rimfrost.framework.oul.exception.OulException;
-import se.fk.rimfrost.framework.oul.model.Erbjudande;
-import se.fk.rimfrost.framework.referensdata.ErbjudandeReferensdataInterface;
-import se.fk.rimfrost.framework.regel.RegelErrorInformation;
 import se.fk.rimfrost.framework.regel.error.RegelFelkod;
-import se.fk.rimfrost.framework.regel.logic.CloudEventAttributesMapper;
-import se.fk.rimfrost.framework.regel.logic.KompletteringKontrollInterface;
-import se.fk.rimfrost.framework.regel.logic.KompletteringOulHandler;
 import se.fk.rimfrost.framework.regel.logic.RegelRequestHandlerBase;
 import se.fk.rimfrost.framework.regel.logic.dto.RegelDataRequest;
 import se.fk.rimfrost.framework.regel.logic.entity.CloudEventData;
-import se.fk.rimfrost.framework.regel.logic.entity.ImmutableCloudEventData;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellErrorResult;
-import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellRequest;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellResult;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellSuccessResult;
 import se.fk.rimfrost.framework.regel.maskinell.logic.helpers.retry.Result;
 import se.fk.rimfrost.framework.regel.maskinell.logic.helpers.retry.RetriesExhaustedException;
 import se.fk.rimfrost.framework.regel.maskinell.logic.helpers.retry.RetryUtil;
 import se.fk.rimfrost.framework.regel.presentation.kafka.RegelRequestHandlerInterface;
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,16 +29,7 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
    RegelMaskinellServiceInterface regelService;
 
    @Inject
-   KompletteringKontrollInterface kompletteringKontroll;
-
-   @Inject
-   KompletteringOulHandler kompletteringOulHandler;
-
-   @Inject
    RegelMaskinellMapper maskinellMapper;
-
-   @Inject
-   ErbjudandeReferensdataInterface erbjudandeReferensdata;
 
    @ConfigProperty(name = "rimfrost.framework.regel.maskinell.retry.intervals")
    List<Integer> retryIntervals;
@@ -97,29 +77,6 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
          // Uppdatera handläggningsinformation
          var regelMaskinellRequest = maskinellMapper.toRegelMaskinellRequest(handlaggning, uppgift,
                request.kogitoprocinstanceid());
-
-         if (!kompletteringKontroll.checkKomplettering(regelMaskinellRequest.handlaggning()).isEmpty())
-         {
-            var erbjudandeId = regelMaskinellRequest.handlaggning().yrkande().erbjudandeId();
-            var erbjudande = createErbjudande(erbjudandeId, erbjudandeReferensdata.getErbjudandeNamn(erbjudandeId));
-            try
-            {
-               kompletteringOulHandler.initiate(
-                     request,
-                     CloudEventAttributesMapper.toAttributes(cloudevent),
-                     regelConfig,
-                     erbjudande);
-            }
-            catch (OulException e)
-            {
-               var regelErrorInfo = createRegelErrorInformation(RegelFelkod.RIMFROST_OTHER,
-                     "Failed to initiate komplettering. Handlaggning id: " + request.handlaggningId()
-                           + ", kogitoproc instance id: " + request.kogitoprocinstanceid() + ", aktivitet id: "
-                           + request.aktivitetId());
-               sendErrorResponse(request.handlaggningId(), cloudevent, regelErrorInfo, request.replyTo());
-            }
-            return;
-         }
 
          RegelMaskinellResult regelResult;
          try
@@ -172,11 +129,6 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
          logger.error(
                "Failed to handle regel data request for handlaggning due to unexpected error. Handlaggning id: {}, kogitoproc instance id: {}, aktivitet id: {}",
                request.handlaggningId(), request.kogitoprocinstanceid(), request.aktivitetId(), e);
-
-         if (cloudevent != null)
-         {
-            tryDeleteCloudEventData(request.handlaggningId());
-         }
 
          var regelErrorInfo = createRegelErrorInformation(RegelFelkod.RIMFROST_OTHER,
                "Failed to handle regel data request for handlaggning due to unexpected error. Handlaggning id: "
