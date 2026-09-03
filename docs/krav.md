@@ -1,10 +1,9 @@
 # Krav — rimfrost-framework-regel-maskinell
 
+Kraven här beskriver endast det som är implementerat i detta ramverk. Ärvda krav från
+underliggande ramverk upprepas inte.
+
 ## 1. Funktionella krav
-
-### FRMASK-FR-01 — Mottagning av regelförfrågan
-
-- **FRMASK-FR-01.1** Ramverket ska konsumera regelförfrågningar från en konfigurerad Kafka-topic.
 
 ### FRMASK-FR-02 — Hämtning av handläggningsdata
 
@@ -16,7 +15,6 @@
 
 - **FRMASK-FR-03.1** Ramverket ska skapa ett uppgiftsobjekt utifrån uppgiftsspecifikation konfigurerad i en extern YAML-fil.
 - **FRMASK-FR-03.2** Uppgiftsstatus ska alltid sättas till `null` för maskinella regler (ingen OUL-uppföljning).
-- **FRMASK-FR-03.3** Erbjudandenamn ska slås upp från referensdata via `ErbjudandeReferensdataInterface` och inkluderas i uppgiftsobjektet när en kompletteringsuppgift skapas via OUL.
 
 ### FRMASK-FR-04 — Anrop av regellogik
 
@@ -29,22 +27,10 @@
 - **FRMASK-FR-05.2** Uppdateringen ska utföras med konfigurerbara retries på samma sätt som vid hämtning.
 - **FRMASK-FR-05.3** Om alla retries är uttömda ska ett felsvar med felkod `RIMFROST_HANDLAGGNING_WRITE_FAILURE` publiceras.
 
-### FRMASK-FR-06 — Publicering av regelresultat
-
-- **FRMASK-FR-06.1** Ramverket ska publicera ett regelresultat till en konfigurerad Kafka-topic efter varje behandlad förfrågan.
-- **FRMASK-FR-06.2** Resultatet ska innehålla handläggnings-ID och utfall (`JA`, `NEJ`, `UTREDNING` eller `ERROR`).
-- **FRMASK-FR-06.3** Vid felsvar ska resultatet även innehålla felkod och felmeddelande.
-- **FRMASK-FR-06.4** Ramverket ska stödja `replyTo`-fältet i Kafka-meddelanden för dirigering av svar.
-
 ### FRMASK-FR-07 — Regelresultatgränssnitt
 
 - **FRMASK-FR-07.1** Ramverket ska tillhandahålla ett gränssnitt (`RegelMaskinellServiceInterface`) som konkreta regelimplementationer implementerar.
 - **FRMASK-FR-07.2** Implementationen ska returnera antingen ett lyckat resultat med uppdaterad handläggning och utfall, eller ett felresultat med felinformation.
-
-### FRMASK-FR-08 — Kompletteringskontroll
-
-- **FRMASK-FR-08.1** När `checkKomplettering()` returnerar en icke-tom lista ska ramverket delegera till `KompletteringOulHandler.initiate()` för att skapa kompletteringsuppgiften. Inget regelsvar ska skickas.
-- **FRMASK-FR-08.2** Om `initiate()` kastar `OulException` ska ramverket skicka ett felsvar med felkod `RIMFROST_OTHER`.
 
 ## 2. Statusmodell
 
