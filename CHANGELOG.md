@@ -2,6 +2,19 @@
 
 Changelog of rimfrost-framework-regel-maskinell.
 
+## 1.1.6 (2026-09-03)
+
+### Bug Fixes
+
+-  Bump rimfrost-framework-regel version ([ef1d9](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/ef1d94520502e4c) Lars Persson)  
+-  prune inherited and removed requirements from krav.md (FKPOC-970) ([812ca](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/812cada94f54c24) Ulf Slunga)  
+-  Remove komplettering functionality from rimfrost-framework-regel-maskinell ([a7e0f](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/a7e0fd255da5f68) Lars Persson)  
+-  use shared ErbjudandeReferensdataTestService and add coverage (FKPOC-963) ([06d27](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/06d2752fd7e14f4) Ulf Slunga)  
+-  **deps**  update rimfrost-framework-regel to 1.3.3 ([07d04](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/07d040a6ae723cd) Ulf Slunga)  
+-  align maskinell komplettering initiation with KompletteringOulHandler.initiate() (FKPOC-959) ([d80fa](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/d80fad89c3d9f92) Ulf Slunga)  
+-  move RegelConfigLoadingTest to rimfrost-framework-regel (FKPOC-949) ([fe666](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/fe666e10c0bb6e5) Ulf Slunga)  
+-  **deps**  update dependency se.fk.rimfrost.referensdata:rimfrost-referensdata-erbjudande to v0.0.3 ([a5104](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/a5104b1a6ea1ea1) renovate[bot])  
+
 ## 1.1.5 (2026-08-28)
 
 ### Bug Fixes
