@@ -71,7 +71,7 @@
     <dependency>
       <groupId>se.fk.rimfrost.adapter.referensdata</groupId>
       <artifactId>rimfrost-adapter-referensdata</artifactId>
-      <version>1.0.2</version>
+      <version>1.1.1</version>
     </dependency>
     <dependency>
       <groupId>org.wiremock</groupId>
