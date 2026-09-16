@@ -108,6 +108,20 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
          {
             RetryUtil.runWithRetries(() -> updateHandlaggning(regelSuccessResult.handlaggningUpdate()), retryIntervals);
          }
+         catch (HandlaggningUpdateConflictException e)
+         {
+            logger.error(
+                  "Failed to write handlaggning update due to version conflict. Regel service programming fault? Handlaggning id: {}, kogitoproc instance id: {}, aktivitet id: {}",
+                  request.handlaggningId(), request.kogitoprocinstanceid(), request.aktivitetId());
+
+            var regelErrorInfo = createRegelErrorInformation(RegelFelkod.RIMFROST_HANDLAGGNING_WRITE_FAILURE,
+                  "Failed to write handlaggning update due to version conflict. Regel service programming fault? Handlaggning id: "
+                        + request.handlaggningId()
+                        + ", kogitoproc instance id: " + request.kogitoprocinstanceid() + ", aktivitet id: "
+                        + request.aktivitetId());
+            sendErrorResponse(request.handlaggningId(), cloudevent, regelErrorInfo, request.replyTo());
+            return;
+         }
          catch (RetriesExhaustedException e)
          {
             logger.error("Failed to write handlaggning update. Handlaggning id: {}, kogitoproc instance id: {}, aktivitet id: {}",
@@ -160,7 +174,10 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
       }
       catch (HandlaggningException e)
       {
-         // NOOP
+         if (e.getErrorType() == HandlaggningException.ErrorType.CONFLICT)
+         {
+            throw new HandlaggningUpdateConflictException();
+         }
       }
 
       return false;

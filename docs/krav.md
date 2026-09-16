@@ -26,6 +26,7 @@ underliggande ramverk upprepas inte.
 - **FRMASK-FR-05.1** Vid ett lyckat regelresultat ska ramverket uppdatera handläggningsdata via Handläggning API.
 - **FRMASK-FR-05.2** Uppdateringen ska utföras med konfigurerbara retries på samma sätt som vid hämtning.
 - **FRMASK-FR-05.3** Om alla retries är uttömda ska ett felsvar med felkod `RIMFROST_HANDLAGGNING_WRITE_FAILURE` publiceras.
+- **FRMASK-FR-05.4** Vid konflikt fel under uppdatering ska ett felsvar med felkod `RIMFROST_HANDLAGGNING_WRITE_FAILURE` publiceras.
 
 ### FRMASK-FR-07 — Regelresultatgränssnitt
 

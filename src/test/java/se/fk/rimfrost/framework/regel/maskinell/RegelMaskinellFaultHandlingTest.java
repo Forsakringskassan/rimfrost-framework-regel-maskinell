@@ -110,6 +110,30 @@ public class RegelMaskinellFaultHandlingTest extends AbstractRegelMaskinellTest
    }
 
    @Test
+   @DisplayName("FRMASK-FR-05.4: Konflikt fel vid uppdatering av handläggning publiceras med felkod RIMFROST_HANDLAGGNING_WRITE_FAILURE")
+   public void should_send_error_response_on_handlaggning_adapter_write_conflict_failure() throws HandlaggningException
+   {
+      var regelSuccessResponse = ImmutableRegelMaskinellSuccessResult.builder()
+            .handlaggningUpdate(Mockito.mock(HandlaggningUpdate.class))
+            .utfall(Utfall.JA)
+            .build();
+
+      Mockito.when(handlaggningAdapter.readHandlaggning(Mockito.any())).thenReturn(Mockito.mock(Handlaggning.class));
+      Mockito.when(handlaggningAdapter.updateHandlaggning(Mockito.any()))
+            .thenThrow(new HandlaggningException(HandlaggningException.ErrorType.CONFLICT, "Test"));
+      Mockito.when(regelMaskinellService.processRegel(Mockito.any())).thenReturn(regelSuccessResponse);
+
+      var handlaggningId = "11111111-1111-1111-1111-111111111234";
+      regelKafkaConnector.sendRegelRequest(handlaggningId, responsesTopic);
+      var regelResponse = regelKafkaConnector.waitForRegelResponse();
+
+      assertEquals(Utfall.ERROR, regelResponse.getData().getUtfall());
+      assertEquals(RegelFelkod.RIMFROST_HANDLAGGNING_WRITE_FAILURE, regelResponse.getData().getError().getFelkod());
+      assertTrue(regelResponse.getData().getError().getFelmeddelande().matches("(?i).*conflict.*"));
+      assertTrue(regelResponse.getData().getError().getFelmeddelande().matches("(?i).*programming fault.*"));
+   }
+
+   @Test
    @DisplayName("FRMASK-FR-02.2: Ramverket gör retry vid misslyckat GET och lyckas om nästa försök returnerar handläggningsdata")
    public void should_retry_handlaggning_read_on_transient_failure() throws HandlaggningException
    {
