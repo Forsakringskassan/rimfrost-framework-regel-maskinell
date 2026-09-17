@@ -2,6 +2,16 @@
 
 Changelog of rimfrost-framework-regel-maskinell.
 
+## 1.1.7 (2026-09-17)
+
+### Bug Fixes
+
+-  Use dedicated conflict faults ([2871f](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/2871f68a25f6697) Lars Persson)  
+
+### Dependency updates
+
+- update dependency org.apache.maven.plugins:maven-compiler-plugin to v3.16.0 ([eb354](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/eb35422a3c7508f) renovate[bot])  
+- pin forsakringskassan/.github action to d1349e6 ([d7de2](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/d7de2ede0b98423) renovate[bot])  
 ## 1.1.6 (2026-09-03)
 
 ### Bug Fixes
