@@ -138,10 +138,41 @@ public abstract class AbstractRegelMaskinellHandlaggningTest extends AbstractReg
    @DisplayName("FRMASK-FR-05.1: PUT-anrop innehåller förväntade underlag på uppgiften med korrekt typ och innehåll")
    void should_put_handlaggning_request_with_underlag(String handlaggningId) throws JsonProcessingException
    {
-      var expectedUnderlag=createExpectedUnderlag();regelKafkaConnector.sendRegelRequest(handlaggningId,responsesTopic);var sentUnderlag=WireMockRegelMaskinell.getUppgiftFromLastPutHandlaggning(handlaggningId).getUnderlag();Assertions.assertEquals(expectedUnderlag.size(),sentUnderlag.size());
+      var expectedUnderlag = createExpectedUnderlag();
+
+      regelKafkaConnector.sendRegelRequest(handlaggningId, responsesTopic);
+
+      var sentUnderlag = WireMockRegelMaskinell.getUppgiftFromLastPutHandlaggning(handlaggningId).getUnderlag();
+
+      Assertions.assertEquals(expectedUnderlag.size(), sentUnderlag.size());
 
       // Assert each entry
-      for(int i=0;i<expectedUnderlag.size();i++){var actual=sentUnderlag.get(i);switch(expectedUnderlag.get(i)){case Uppgiftsdatakopia expected->{var actualKopia=Assertions.assertInstanceOf(se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Uppgiftsdatakopia.class,actual);Assertions.assertEquals(expected.informationsobjekttyp(),actualKopia.getInformationsobjekttyp());Assertions.assertEquals(expected.data(),actualKopia.getData());}case Uppgiftsdatakoppling expected->{var actualKoppling=Assertions.assertInstanceOf(se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Uppgiftsdatakoppling.class,actual);Assertions.assertEquals(expected.informationsobjektId(),actualKoppling.getInformationsobjektId());Assertions.assertEquals(expected.informationsobjektversion(),actualKoppling.getInformationsobjektversion());}}}
+      for (int i = 0; i < expectedUnderlag.size(); i++)
+      {
+         var expected = expectedUnderlag.get(i);
+         var actual = sentUnderlag.get(i);
+         if (expected instanceof Uppgiftsdatakopia)
+         {
+            var expectedKopia = (Uppgiftsdatakopia) expected;
+            var actualKopia = Assertions.assertInstanceOf(
+                  se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Uppgiftsdatakopia.class, actual);
+            Assertions.assertEquals(expectedKopia.informationsobjekttyp(), actualKopia.getInformationsobjekttyp());
+            Assertions.assertEquals(expectedKopia.data(), actualKopia.getData());
+         }
+         else if (expected instanceof Uppgiftsdatakoppling)
+         {
+            var expectedKoppling = (Uppgiftsdatakoppling) expected;
+            var actualKoppling = Assertions.assertInstanceOf(
+                  se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Uppgiftsdatakoppling.class, actual);
+            Assertions.assertEquals(expectedKoppling.informationsobjektId(), actualKoppling.getInformationsobjektId());
+            Assertions.assertEquals(expectedKoppling.informationsobjektversion(),
+                  actualKoppling.getInformationsobjektversion());
+         }
+         else
+         {
+            Assertions.fail("Unexpected underlag type: " + expected.getClass().getName());
+         }
+      }
    }
 
    @ParameterizedTest
