@@ -2,31 +2,29 @@ package se.fk.rimfrost.framework.regel.maskinell.base;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.tomakehurst.wiremock.http.RequestMethod;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import se.fk.rimfrost.framework.handlaggning.model.Underlag;
+import se.fk.rimfrost.framework.handlaggning.model.Uppgiftsdata;
+import se.fk.rimfrost.framework.handlaggning.model.Uppgiftsdatakopia;
+import se.fk.rimfrost.framework.handlaggning.model.Uppgiftsdatakoppling;
 import se.fk.rimfrost.framework.regel.maskinell.helpers.WireMockRegelMaskinell;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.ProduceratResultat;
-import se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.PutHandlaggningRequest;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Base test class for verifying Regel Maskinell handläggning flows.
  *
  * <p>This class contains common tests that assert how a
- * PutHandlaggningRequest is produced and sent. It is intended to be
+ * HandlaggningUpdate is produced and sent. It is intended to be
  * extended by downstream test classes that may customize expected data.</p>
  *
  * <p><b>Extension points:</b></p>
  * <ul>
  *   <li>{@link #createExpectedUnderlag()} – override to control expected underlag data</li>
- *   <li>{@link #createExpectedProduceradeResultat()} – override to control expected producerade resultat</li>
+ *   <li>{@link #createExpectedResultat()} – override to control expected resultat</li>
  * </ul>
  *
  * <p>By default, expected data is sourced from {@code RegelMaskinellTestData}, and used by framework tests.
@@ -37,45 +35,45 @@ import java.util.List;
 public abstract class AbstractRegelMaskinellHandlaggningTest extends AbstractRegelMaskinellTest
 {
    /**
-    * Provides the expected Underlag entries used in
+    * Provides the expected underlag entries on the uppgift, used in
     * {@code should_put_handlaggning_request_with_underlag}.
     *
     * <p>Subclasses may override this method to:</p>
     * <ul>
     *   <li>Change the expected entries</li>
-    *   <li>Modify content (typ, version, data)</li>
+    *   <li>Mix {@link Uppgiftsdatakopia} and {@link Uppgiftsdatakoppling} entries</li>
     *   <li>Adapt expectations for specific rules</li>
     * </ul>
     *
-    * <p>The returned list is compared index-by-index with the actual response,
+    * <p>The returned list is compared index-by-index with the actual request,
     * so ordering must match the system under test.</p>
     *
-    * @return list of expected {@link Underlag}
+    * @return list of expected {@link Uppgiftsdata}
     */
-   protected ArrayList<Underlag> createExpectedUnderlag()
+   protected List<Uppgiftsdata> createExpectedUnderlag()
    {
       return RegelMaskinellTestData.createUnderlagListForTest();
    }
 
    /**
-    * Provides the expected ProduceratResultat entries used in
-    * {@code should_put_handlaggning_request_with_producerade_resultat}.
+    * Provides the expected resultat entries on the uppgift, used in
+    * {@code should_put_handlaggning_request_with_resultat}.
     *
     * <p>Subclasses may override this method to:</p>
     * <ul>
     *   <li>Change the expected results</li>
-    *   <li>Customize IDs and yrkandestatus values</li>
+    *   <li>Customize informationsobjekt IDs and versions</li>
     *   <li>Adapt expectations for different rules</li>
     * </ul>
     *
-    * <p>The returned list is compared index-by-index with the actual response,
+    * <p>The returned list is compared index-by-index with the actual request,
     * so ordering must match the system under test.</p>
     *
-    * @return list of expected {@link ProduceratResultat}
+    * @return list of expected {@link Uppgiftsdatakoppling}
     */
-   protected List<ProduceratResultat> createExpectedProduceradeResultat()
+   protected List<Uppgiftsdatakoppling> createExpectedResultat()
    {
-      return RegelMaskinellTestData.createExpectedProduceradeResultat();
+      return RegelMaskinellTestData.createResultatForTest();
    }
 
    @ParameterizedTest
@@ -98,11 +96,10 @@ public abstract class AbstractRegelMaskinellHandlaggningTest extends AbstractReg
    })
    @DisplayName("FRMASK-FR-05.1: PUT-anrop uppdaterar handläggning med korrekt yrkandestatus")
    void should_put_handlaggning_request_with_yrkandestatus(String handlaggningId, String yrkandeStatus)
-         throws JsonProcessingException
    {
       regelKafkaConnector.sendRegelRequest(handlaggningId, responsesTopic);
-      var handlaggningPutRequest = WireMockRegelMaskinell.getLastPutHandlaggning(handlaggningId);
-      Assertions.assertEquals(yrkandeStatus, handlaggningPutRequest.getHandlaggning().getYrkande().getYrkandestatus());
+      var handlaggningUpdate = WireMockRegelMaskinell.getLastPutHandlaggningUpdate(handlaggningId);
+      Assertions.assertEquals(yrkandeStatus, handlaggningUpdate.getHandlaggning().getYrkande().getYrkandestatus());
    }
 
    @ParameterizedTest
@@ -115,8 +112,8 @@ public abstract class AbstractRegelMaskinellHandlaggningTest extends AbstractReg
          throws JsonProcessingException
    {
       regelKafkaConnector.sendRegelRequest(handlaggningId, responsesTopic);
-      var handlaggningPutRequest = WireMockRegelMaskinell.getLastPutHandlaggning(handlaggningId);
-      Assertions.assertNull(handlaggningPutRequest.getHandlaggning().getUppgift().getUppgiftStatus());
+      var uppgift = WireMockRegelMaskinell.getUppgiftFromLastPutHandlaggning(handlaggningId);
+      Assertions.assertNull(uppgift.getUppgiftStatus());
    }
 
    @ParameterizedTest
@@ -129,9 +126,8 @@ public abstract class AbstractRegelMaskinellHandlaggningTest extends AbstractReg
          throws JsonProcessingException
    {
       regelKafkaConnector.sendRegelRequest(handlaggningId, responsesTopic);
-      var handlaggningPutRequest = WireMockRegelMaskinell.getLastPutHandlaggning(handlaggningId);
-      Assertions.assertEquals(uppgiftspecifikationId,
-            handlaggningPutRequest.getHandlaggning().getUppgift().getUppgiftspecifikation().getId().toString());
+      var uppgift = WireMockRegelMaskinell.getUppgiftFromLastPutHandlaggning(handlaggningId);
+      Assertions.assertEquals(uppgiftspecifikationId, uppgift.getUppgiftspecifikation().getId().toString());
    }
 
    @ParameterizedTest
@@ -139,23 +135,43 @@ public abstract class AbstractRegelMaskinellHandlaggningTest extends AbstractReg
    {
          "11111111-1111-1111-1111-111111111234"
    })
-   @DisplayName("FRMASK-FR-05.1: PUT-anrop innehåller förväntade underlag med korrekt typ, version och data")
+   @DisplayName("FRMASK-FR-05.1: PUT-anrop innehåller förväntade underlag på uppgiften med korrekt typ och innehåll")
    void should_put_handlaggning_request_with_underlag(String handlaggningId) throws JsonProcessingException
    {
       var expectedUnderlag = createExpectedUnderlag();
+
       regelKafkaConnector.sendRegelRequest(handlaggningId, responsesTopic);
-      var handlaggningPutRequest = WireMockRegelMaskinell.getLastPutHandlaggning(handlaggningId);
-      var sentUnderlag = handlaggningPutRequest.getHandlaggning().getUnderlag();
+
+      var sentUnderlag = WireMockRegelMaskinell.getUppgiftFromLastPutHandlaggning(handlaggningId).getUnderlag();
+
       Assertions.assertEquals(expectedUnderlag.size(), sentUnderlag.size());
+
       // Assert each entry
       for (int i = 0; i < expectedUnderlag.size(); i++)
       {
-         Underlag expected = expectedUnderlag.get(i);
+         var expected = expectedUnderlag.get(i);
          var actual = sentUnderlag.get(i);
-
-         Assertions.assertEquals(expected.typ(), actual.getTyp());
-         Assertions.assertEquals(expected.version(), actual.getVersion());
-         Assertions.assertEquals(expected.data(), actual.getData());
+         if (expected instanceof Uppgiftsdatakopia)
+         {
+            var expectedKopia = (Uppgiftsdatakopia) expected;
+            var actualKopia = Assertions.assertInstanceOf(
+                  se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Uppgiftsdatakopia.class, actual);
+            Assertions.assertEquals(expectedKopia.informationsobjekttyp(), actualKopia.getInformationsobjekttyp());
+            Assertions.assertEquals(expectedKopia.data(), actualKopia.getData());
+         }
+         else if (expected instanceof Uppgiftsdatakoppling)
+         {
+            var expectedKoppling = (Uppgiftsdatakoppling) expected;
+            var actualKoppling = Assertions.assertInstanceOf(
+                  se.fk.rimfrost.jaxrsspec.controllers.generatedsource.model.Uppgiftsdatakoppling.class, actual);
+            Assertions.assertEquals(expectedKoppling.informationsobjektId(), actualKoppling.getInformationsobjektId());
+            Assertions.assertEquals(expectedKoppling.informationsobjektversion(),
+                  actualKoppling.getInformationsobjektversion());
+         }
+         else
+         {
+            Assertions.fail("Unexpected underlag type: " + expected.getClass().getName());
+         }
       }
    }
 
@@ -164,30 +180,25 @@ public abstract class AbstractRegelMaskinellHandlaggningTest extends AbstractReg
    {
          "11111111-1111-1111-1111-111111111234"
    })
-   @DisplayName("FRMASK-FR-05.1: PUT-anrop innehåller förväntade producerade resultat med korrekt ID och yrkandestatus")
-   void should_put_handlaggning_request_with_producerade_resultat(String handlaggningId)
+   @DisplayName("FRMASK-FR-05.1: PUT-anrop innehåller förväntade resultat på uppgiften med korrekt informationsobjekt-ID och version")
+   void should_put_handlaggning_request_with_resultat(String handlaggningId)
          throws JsonProcessingException
    {
+      var expected = createExpectedResultat();
 
-      List<ProduceratResultat> expected = createExpectedProduceradeResultat();
+      regelKafkaConnector.sendRegelRequest(handlaggningId, responsesTopic);
 
-      this.regelKafkaConnector.sendRegelRequest(handlaggningId, responsesTopic);
-
-      PutHandlaggningRequest handlaggningPutRequest = WireMockRegelMaskinell.getLastPutHandlaggning(handlaggningId);
-
-      List<ProduceratResultat> actual = handlaggningPutRequest.getHandlaggning()
-            .getYrkande()
-            .getProduceradeResultat();
+      var actual = WireMockRegelMaskinell.getUppgiftFromLastPutHandlaggning(handlaggningId).getResultat();
 
       Assertions.assertEquals(expected.size(), actual.size());
 
       for (int i = 0; i < expected.size(); i++)
       {
-         ProduceratResultat exp = expected.get(i);
-         ProduceratResultat act = actual.get(i);
+         var exp = expected.get(i);
+         var act = actual.get(i);
 
-         Assertions.assertEquals(exp.getId(), act.getId());
-         Assertions.assertEquals(exp.getYrkandestatus(), act.getYrkandestatus());
+         Assertions.assertEquals(exp.informationsobjektId(), act.getInformationsobjektId());
+         Assertions.assertEquals(exp.informationsobjektversion(), act.getInformationsobjektversion());
       }
    }
 }
