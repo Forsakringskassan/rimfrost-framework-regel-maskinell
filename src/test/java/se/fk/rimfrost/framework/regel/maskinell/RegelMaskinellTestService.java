@@ -10,8 +10,6 @@ import se.fk.rimfrost.framework.regel.maskinell.logic.dto.ImmutableRegelMaskinel
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellRequest;
 import se.fk.rimfrost.framework.regel.maskinell.logic.dto.RegelMaskinellResult;
 
-import java.util.Objects;
-import static se.fk.rimfrost.framework.regel.logic.RegelUtils.createYrkandeWithUpdatedProduceradeResultat;
 import static se.fk.rimfrost.framework.regel.maskinell.base.RegelMaskinellTestData.*;
 
 @SuppressWarnings("unused")
@@ -25,20 +23,15 @@ public class RegelMaskinellTestService implements RegelMaskinellServiceInterface
    @Override
    public RegelMaskinellResult processRegel(RegelMaskinellRequest regelMaskinellRequest)
    {
-
-      var updatedYrkande = createYrkandeWithUpdatedProduceradeResultat(
-            regelMaskinellRequest.handlaggning().yrkande(),
-            createProduceradeResultatForTest());
+      var uppgift = ImmutableUppgift.builder()
+            .from(regelMaskinellRequest.uppgift())
+            .underlag(createUnderlagListForTest())
+            .resultat(createResultatForTest())
+            .build();
 
       var handlaggningUpdate = ImmutableHandlaggningUpdate.builder()
-            .id(regelMaskinellRequest.handlaggning().id())
-            .version(regelMaskinellRequest.handlaggning().version())
-            .yrkande(updatedYrkande)
-            .processInstansId(Objects.requireNonNull(regelMaskinellRequest.handlaggning().processInstansId()))
-            .skapadTS(regelMaskinellRequest.handlaggning().skapadTS())
-            .handlaggningspecifikationId(regelMaskinellRequest.handlaggning().handlaggningspecifikationId())
-            .underlag(createUnderlagListForTest())
-            .uppgift(regelMaskinellRequest.uppgift())
+            .handlaggning(regelMaskinellRequest.handlaggning())
+            .uppgift(uppgift)
             .build();
 
       return ImmutableRegelMaskinellSuccessResult.builder()

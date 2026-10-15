@@ -1,6 +1,5 @@
 package se.fk.rimfrost.framework.regel.maskinell.logic;
 
-import java.util.List;
 import java.util.UUID;
 import jakarta.enterprise.context.ApplicationScoped;
 import se.fk.rimfrost.framework.handlaggning.model.*;
@@ -20,21 +19,10 @@ public class RegelMaskinellMapper
             .build();
    }
 
-   public HandlaggningUpdate toHandlaggningUpdate(Handlaggning handlaggning,
-         List<Underlag> underlag,
-         Yrkande yrkande,
-         Uppgift uppgift,
-         UUID processinstanceId)
+   public HandlaggningUpdate toHandlaggningUpdate(Handlaggning handlaggning, Uppgift uppgift)
    {
       return ImmutableHandlaggningUpdate.builder()
-            .id(handlaggning.id())
-            .version(handlaggning.version())
-            .yrkande(yrkande)
-            .processInstansId(processinstanceId)
-            .skapadTS(handlaggning.skapadTS())
-            .avslutadTS(handlaggning.avslutadTS())
-            .handlaggningspecifikationId(handlaggning.handlaggningspecifikationId())
-            .underlag(underlag)
+            .handlaggning(handlaggning)
             .uppgift(uppgift)
             .build();
    }
