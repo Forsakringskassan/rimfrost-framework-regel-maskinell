@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20240513/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20230324/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/" xmlns:kie="https://kie.org/dmn/extensions/1.0" xmlns:feel="https://www.omg.org/spec/DMN/20240513/FEEL/" expressionLanguage="https://www.omg.org/spec/DMN/20240513/FEEL/" namespace="https://se.fk/github/testdmnservice" id="_32B63752-A3D2-4905-9BE1-B117FB2FB6A9" name="TestDecisionModel">
+  <decision name="utfall" id="_A1806D3F-AA7C-45C2-8D3A-F55634EF3A3D">
+    <variable name="utfall" id="_2ABEE96F-8D44-4812-8F9D-7789A435CA55" typeRef="string" />
+    <informationRequirement id="_B12461EC-0592-46F5-9836-BCFE3B326978">
+      <requiredInput href="#_678CCBDB-5D66-49F9-B6D1-4955EBDE5A0B" />
+    </informationRequirement>
+    <informationRequirement id="_360C14CA-3484-416F-A1EE-55D089D0400D">
+      <requiredInput href="#_12D10B75-1FEE-41C6-AA21-4C8DD1F3FB15" />
+    </informationRequirement>
+    <decisionTable id="_CA09F883-3966-417F-BE5F-625C9259ADA5" typeRef="string" hitPolicy="UNIQUE" label="utfall">
+      <input id="_551B2CCD-BC9F-4610-81F0-EB0E4FC16049">
+        <inputExpression id="_A29C2ACB-90E5-44D5-B7B2-82320E4C4F96" typeRef="boolean">
+          <text>folkbokford</text>
+        </inputExpression>
+      </input>
+      <input id="_AFBC7F85-4DAB-4899-9DE9-CA7E4E907E99">
+        <inputExpression id="_0B0E41B5-72D4-4A9E-B380-0E2C8E7D6322" typeRef="boolean">
+          <text>harAnstallning</text>
+        </inputExpression>
+      </input>
+      <output id="_9FEC4B99-23DC-4706-B106-F007C253BE02" />
+      <annotation name="Annotations" />
+      <rule id="_89818A06-6C68-4767-8D20-7CDACA46FD42">
+        <inputEntry id="_97DECD1D-03A7-40F1-8449-49DDE83FA9A2">
+          <text>true</text>
+        </inputEntry>
+        <inputEntry id="_F6953293-E85D-4625-98CB-70311BD65FA3">
+          <text>true</text>
+        </inputEntry>
+        <outputEntry id="_DC0A5F63-77FA-4357-A457-28154985334B">
+          <text>&quot;JA&quot;</text>
+        </outputEntry>
+        <annotationEntry>
+          <text></text>
+        </annotationEntry>
+      </rule>
+      <rule id="_322CF9E3-ACB3-4F3F-B2F9-3EEA98441644">
+        <inputEntry id="_DA642C35-8BF3-4F49-A16E-D18B6C30AD40">
+          <text>false</text>
+        </inputEntry>
+        <inputEntry id="_887560CD-5432-4BC5-A77A-37D8D5253DC4">
+          <text>true</text>
+        </inputEntry>
+        <outputEntry id="_3F01F3A3-59E9-407E-92D1-17EA74B998F2">
+          <text>&quot;UTREDNING&quot;</text>
+        </outputEntry>
+        <annotationEntry>
+          <text></text>
+        </annotationEntry>
+      </rule>
+      <rule id="_BE3CA266-D4EA-44BD-84AA-5C6C285E6D72">
+        <inputEntry id="_550564F2-ADA6-449D-8F1D-CC7382D3CD0F">
+          <text>true</text>
+        </inputEntry>
+        <inputEntry id="_49718AFB-993D-49E7-BFBA-112616A84A90">
+          <text>false</text>
+        </inputEntry>
+        <outputEntry id="_AE7F8B7B-CE46-4501-B49B-50BA6E03270F">
+          <text>&quot;JA&quot;</text>
+        </outputEntry>
+        <annotationEntry>
+          <text></text>
+        </annotationEntry>
+      </rule>
+      <rule id="_39A5670C-2EFF-42DB-97CE-75A9F80DB6B6">
+        <inputEntry id="_446C733A-C0A7-4B94-9AA5-6C7463066439">
+          <text>false</text>
+        </inputEntry>
+        <inputEntry id="_1DEB6F45-6837-4D1A-AC2D-28679A86AF28">
+          <text>false</text>
+        </inputEntry>
+        <outputEntry id="_F6A3C15D-39BA-4EBF-8502-D099F005954B">
+          <text>&quot;NEJ&quot;</text>
+        </outputEntry>
+        <annotationEntry>
+          <text></text>
+        </annotationEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <inputData name="folkbokford" id="_678CCBDB-5D66-49F9-B6D1-4955EBDE5A0B">
+    <variable name="folkbokford" id="_9848B5DF-7147-4E21-BE17-A140C4EABA4D" typeRef="boolean" />
+  </inputData>
+  <inputData name="harAnstallning" id="_12D10B75-1FEE-41C6-AA21-4C8DD1F3FB15">
+    <variable name="harAnstallning" id="_2F9A815D-6DD5-4E03-A7E7-1D65699BD2B3" typeRef="boolean" />
+  </inputData>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram id="_03F48D45-FBB3-46B2-943A-B227EB3BC027" name="TestDecisionModel" useAlternativeInputDataShape="false">
+      <di:extension>
+        <kie:ComponentsWidthsExtension>
+          <kie:ComponentWidths dmnElementRef="_CA09F883-3966-417F-BE5F-625C9259ADA5">
+            <kie:width>100</kie:width>
+            <kie:width>165</kie:width>
+            <kie:width>234</kie:width>
+            <kie:width>319</kie:width>
+            <kie:width>366</kie:width>
+          </kie:ComponentWidths>
+        </kie:ComponentsWidthsExtension>
+      </di:extension>
+      <dmndi:DMNShape id="_2E701FFE-869F-4E4F-BCD0-EC1E832B29A7" dmnElementRef="_A1806D3F-AA7C-45C2-8D3A-F55634EF3A3D" isCollapsed="false">
+        <dc:Bounds x="112" y="112" width="160" height="80" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="_FAE94F9C-76C9-44C3-B0B6-B9FD19E7D4BE" dmnElementRef="_678CCBDB-5D66-49F9-B6D1-4955EBDE5A0B" isCollapsed="false" isListedInputData="false">
+        <dc:Bounds x="-180" y="60" width="160" height="80" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="_10251F97-F3EB-400E-8E50-3E8F7B44E659" dmnElementRef="_12D10B75-1FEE-41C6-AA21-4C8DD1F3FB15" isCollapsed="false" isListedInputData="false">
+        <dc:Bounds x="-180" y="180" width="160" height="80" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="_31A49751-C7E3-4467-885B-87CC9129D490" dmnElementRef="_B12461EC-0592-46F5-9836-BCFE3B326978" sourceElement="_FAE94F9C-76C9-44C3-B0B6-B9FD19E7D4BE" targetElement="_2E701FFE-869F-4E4F-BCD0-EC1E832B29A7">
+        <di:waypoint x="-100" y="100" />
+        <di:waypoint x="112" y="152" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNEdge id="_8BBEE7D1-E955-4CCF-80EA-FE9D9F945424" dmnElementRef="_360C14CA-3484-416F-A1EE-55D089D0400D" sourceElement="_10251F97-F3EB-400E-8E50-3E8F7B44E659" targetElement="_2E701FFE-869F-4E4F-BCD0-EC1E832B29A7">
+        <di:waypoint x="-100" y="220" />
+        <di:waypoint x="112" y="152" />
+      </dmndi:DMNEdge>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>
