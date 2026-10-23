@@ -36,7 +36,8 @@ public class DmnServiceTest
    }
 
    @ParameterizedTest
-   @CsvSource({
+   @CsvSource(
+   {
          "true,  true,  JA",
          "false, true,  UTREDNING",
          "true,  false, JA",
