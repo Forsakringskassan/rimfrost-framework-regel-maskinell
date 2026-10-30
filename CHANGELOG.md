@@ -2,6 +2,26 @@
 
 Changelog of rimfrost-framework-regel-maskinell.
 
+## 1.1.9 (2026-10-30)
+
+### Bug Fixes
+
+-  update workflows ([d4402](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/d440208210364b4) Nils Elveros)  
+-  update pom versions ([79c6b](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/79c6b50b4635908) Nils Elveros)  
+-  spotless ([065af](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/065af9178451531) Nils Elveros)  
+-  add DmnService to framework ([518e2](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/518e291d955ef53) Nils Elveros)  
+-  **deps**  update dependency org.immutables:value to v2.12.3 ([f2686](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/f2686921510cfe7) renovate[bot])  
+-  fix formating ([3501e](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/3501ebbb93db0f7) Nils Elveros)  
+-  update with new framework version ([15979](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/15979ab6c7f7817) Nils Elveros)  
+-  **deps**  update dependency org.yaml:snakeyaml to v2.7 ([e6783](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/e67835b7d67cf4d) renovate[bot])  
+
+### Dependency updates
+
+- update dependency org.immutables:value-processor to v2.12.3 ([3398f](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/3398f18c0ff085c) renovate[bot])  
+- update forsakringskassan/.github digest to cbd74f1 ([2216d](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/2216dcc9af2e9ac) renovate[bot])  
+- update forsakringskassan/.github digest to bfb01f7 ([699f6](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/699f6cd9c78f810) renovate[bot])  
+## rimfrost-1_2 (2026-09-23)
+
 ## 1.1.8 (2026-09-23)
 
 ### Bug Fixes
