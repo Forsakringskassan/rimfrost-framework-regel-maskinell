@@ -50,7 +50,7 @@ public class RegelMaskinellFaultHandlingTest extends AbstractRegelMaskinellTest
       Mockito.when(regelMaskinellService.processRegel(Mockito.any())).thenReturn(regelErrorResponse);
 
       var handlaggningId = "11111111-1111-1111-1111-111111111234";
-      regelKafkaConnector.sendRegelRequest(handlaggningId, responsesTopic);
+      regelKafkaConnector.sendRegelRequest(handlaggningId);
       var regelResponse = regelKafkaConnector.waitForRegelResponse();
 
       assertEquals(Utfall.ERROR, regelResponse.getData().getUtfall());
@@ -65,7 +65,7 @@ public class RegelMaskinellFaultHandlingTest extends AbstractRegelMaskinellTest
       Mockito.when(regelMaskinellService.processRegel(Mockito.any())).thenThrow(new RuntimeException());
 
       var handlaggningId = "11111111-1111-1111-1111-111111111234";
-      regelKafkaConnector.sendRegelRequest(handlaggningId, responsesTopic);
+      regelKafkaConnector.sendRegelRequest(handlaggningId);
       var regelResponse = regelKafkaConnector.waitForRegelResponse();
 
       assertEquals(Utfall.ERROR, regelResponse.getData().getUtfall());
@@ -80,7 +80,7 @@ public class RegelMaskinellFaultHandlingTest extends AbstractRegelMaskinellTest
             .thenThrow(new HandlaggningException(HandlaggningException.ErrorType.UNEXPECTED_ERROR, "Test"));
 
       var handlaggningId = "11111111-1111-1111-1111-111111111234";
-      regelKafkaConnector.sendRegelRequest(handlaggningId, responsesTopic);
+      regelKafkaConnector.sendRegelRequest(handlaggningId);
       var regelResponse = regelKafkaConnector.waitForRegelResponse();
 
       assertEquals(Utfall.ERROR, regelResponse.getData().getUtfall());
@@ -102,7 +102,7 @@ public class RegelMaskinellFaultHandlingTest extends AbstractRegelMaskinellTest
       Mockito.when(regelMaskinellService.processRegel(Mockito.any())).thenReturn(regelSuccessResponse);
 
       var handlaggningId = "11111111-1111-1111-1111-111111111234";
-      regelKafkaConnector.sendRegelRequest(handlaggningId, responsesTopic);
+      regelKafkaConnector.sendRegelRequest(handlaggningId);
       var regelResponse = regelKafkaConnector.waitForRegelResponse();
 
       assertEquals(Utfall.ERROR, regelResponse.getData().getUtfall());
@@ -124,7 +124,7 @@ public class RegelMaskinellFaultHandlingTest extends AbstractRegelMaskinellTest
       Mockito.when(regelMaskinellService.processRegel(Mockito.any())).thenReturn(regelSuccessResponse);
 
       var handlaggningId = "11111111-1111-1111-1111-111111111234";
-      regelKafkaConnector.sendRegelRequest(handlaggningId, responsesTopic);
+      regelKafkaConnector.sendRegelRequest(handlaggningId);
       var regelResponse = regelKafkaConnector.waitForRegelResponse();
 
       assertEquals(Utfall.ERROR, regelResponse.getData().getUtfall());
@@ -148,7 +148,7 @@ public class RegelMaskinellFaultHandlingTest extends AbstractRegelMaskinellTest
       Mockito.when(regelMaskinellService.processRegel(Mockito.any())).thenReturn(regelSuccessResponse);
 
       var handlaggningId = "11111111-1111-1111-1111-111111111234";
-      regelKafkaConnector.sendRegelRequest(handlaggningId, responsesTopic);
+      regelKafkaConnector.sendRegelRequest(handlaggningId);
       var regelResponse = regelKafkaConnector.waitForRegelResponse();
 
       assertEquals(Utfall.JA, regelResponse.getData().getUtfall());
@@ -171,7 +171,7 @@ public class RegelMaskinellFaultHandlingTest extends AbstractRegelMaskinellTest
             .thenReturn(null);
 
       var handlaggningId = "11111111-1111-1111-1111-111111111234";
-      regelKafkaConnector.sendRegelRequest(handlaggningId, responsesTopic);
+      regelKafkaConnector.sendRegelRequest(handlaggningId);
       var regelResponse = regelKafkaConnector.waitForRegelResponse();
 
       assertEquals(Utfall.JA, regelResponse.getData().getUtfall());
@@ -191,7 +191,7 @@ public class RegelMaskinellFaultHandlingTest extends AbstractRegelMaskinellTest
       Mockito.when(regelMaskinellService.processRegel(Mockito.any())).thenReturn(regelSuccessResponse);
 
       var handlaggningId = "11111111-1111-1111-1111-111111111234";
-      regelKafkaConnector.sendRegelRequest(handlaggningId, responsesTopic);
+      regelKafkaConnector.sendRegelRequest(handlaggningId);
       regelKafkaConnector.waitForRegelResponse();
 
       var captor = ArgumentCaptor.forClass(RegelMaskinellRequest.class);
@@ -209,34 +209,11 @@ public class RegelMaskinellFaultHandlingTest extends AbstractRegelMaskinellTest
       Mockito.when(handlaggningAdapter.readHandlaggning(Mockito.any())).thenThrow(new RuntimeException());
 
       var handlaggningId = "11111111-1111-1111-1111-111111111234";
-      regelKafkaConnector.sendRegelRequest(handlaggningId, responsesTopic);
+      regelKafkaConnector.sendRegelRequest(handlaggningId);
       var regelResponse = regelKafkaConnector.waitForRegelResponse();
 
       assertEquals(Utfall.ERROR, regelResponse.getData().getUtfall());
       assertEquals(RegelFelkod.RIMFROST_OTHER, regelResponse.getData().getError().getFelkod());
       assertTrue(regelResponse.getData().getError().getFelmeddelande().matches("(?i)^.*unexpected error.*"));
-   }
-
-   @Test
-   @DisplayName("FRMASK-FR-06.4: replyTo-fältet i inkommande Kafka-meddelanden styr vilket topic regelsvaret skickas till")
-   public void should_route_response_to_reply_to_topic() throws HandlaggningException
-   {
-      var regelSuccessResponse = ImmutableRegelMaskinellSuccessResult.builder()
-            .handlaggningUpdate(Mockito.mock(HandlaggningUpdate.class))
-            .utfall(Utfall.JA)
-            .build();
-
-      Mockito.when(handlaggningAdapter.readHandlaggning(Mockito.any())).thenReturn(Mockito.mock(Handlaggning.class));
-      Mockito.when(regelMaskinellService.processRegel(Mockito.any())).thenReturn(regelSuccessResponse);
-
-      var handlaggningId = "11111111-1111-1111-1111-111111111234";
-      var customReplyTopic = "custom-reply-topic";
-      regelKafkaConnector.sendRegelRequest(handlaggningId, customReplyTopic);
-      var messages = regelKafkaConnector.waitForMessages(RegelKafkaConnector.regelResponsesChannel);
-
-      assertEquals(1, messages.size());
-      var meta = messages.getFirst().getMetadata(OutgoingKafkaRecordMetadata.class);
-      assertTrue(meta.isPresent(), "OutgoingKafkaRecordMetadata should be present on the response message");
-      assertEquals(customReplyTopic, meta.get().getTopic());
    }
 }

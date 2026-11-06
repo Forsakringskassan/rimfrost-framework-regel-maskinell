@@ -117,7 +117,6 @@ Ramverket hanterar följande Kafka-kanaler:
 | `regel-requests` | Inkommande | Regelförfrågan från kundbehovsflödet |
 | `regel-responses` | Utgående | Regelbehandling klar (lyckat eller misslyckat) |
 
-Ramverket stödjer `replyTo`-fältet i inkommande meddelanden för dynamisk dirigering av svar.
 Meddelandescheman definieras i **rimfrost-framework-regel-asyncapi**.
 
 ---

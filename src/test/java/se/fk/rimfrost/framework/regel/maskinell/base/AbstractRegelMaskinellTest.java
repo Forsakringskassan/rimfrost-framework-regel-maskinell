@@ -26,10 +26,6 @@ import se.fk.rimfrost.framework.regel.maskinell.helpers.WireMockRegelMaskinell;
 @Disabled("Base test class - not executable")
 public abstract class AbstractRegelMaskinellTest extends RegelTestBase
 {
-
-   @ConfigProperty(name = "mp.messaging.outgoing.regel-responses.topic")
-   protected String responsesTopic;
-
    /**
     * Adapter for handling case/handling operations in test scenarios.
     */
