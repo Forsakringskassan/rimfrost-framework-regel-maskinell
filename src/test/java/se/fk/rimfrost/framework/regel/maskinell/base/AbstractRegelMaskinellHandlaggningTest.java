@@ -84,7 +84,7 @@ public abstract class AbstractRegelMaskinellHandlaggningTest extends AbstractReg
    @DisplayName("FRMASK-FR-02.1: GET-anrop skickas till Handläggning API för att hämta handläggningsdata")
    void should_create_initial_handlaggning_request(String handlaggningId)
    {
-      regelKafkaConnector.sendRegelRequest(handlaggningId, responsesTopic);
+      regelKafkaConnector.sendRegelRequest(handlaggningId);
       var handlaggningRequests = WireMockRegelMaskinell.waitForHandlaggningRequests(handlaggningId, RequestMethod.GET, 1);
       Assertions.assertEquals(1, handlaggningRequests.size());
    }
@@ -97,7 +97,7 @@ public abstract class AbstractRegelMaskinellHandlaggningTest extends AbstractReg
    @DisplayName("FRMASK-FR-05.1: PUT-anrop uppdaterar handläggning med korrekt yrkandestatus")
    void should_put_handlaggning_request_with_yrkandestatus(String handlaggningId, String yrkandeStatus)
    {
-      regelKafkaConnector.sendRegelRequest(handlaggningId, responsesTopic);
+      regelKafkaConnector.sendRegelRequest(handlaggningId);
       var handlaggningUpdate = WireMockRegelMaskinell.getLastPutHandlaggningUpdate(handlaggningId);
       Assertions.assertEquals(yrkandeStatus, handlaggningUpdate.getHandlaggning().getYrkande().getYrkandestatus());
    }
@@ -111,7 +111,7 @@ public abstract class AbstractRegelMaskinellHandlaggningTest extends AbstractReg
    void should_put_handlaggning_request_with_null_uppgiftstatus(String handlaggningId)
          throws JsonProcessingException
    {
-      regelKafkaConnector.sendRegelRequest(handlaggningId, responsesTopic);
+      regelKafkaConnector.sendRegelRequest(handlaggningId);
       var uppgift = WireMockRegelMaskinell.getUppgiftFromLastPutHandlaggning(handlaggningId);
       Assertions.assertNull(uppgift.getUppgiftStatus());
    }
@@ -125,7 +125,7 @@ public abstract class AbstractRegelMaskinellHandlaggningTest extends AbstractReg
    void should_put_handlaggning_request_with_uppgiftspecifikation_id(String handlaggningId, String uppgiftspecifikationId)
          throws JsonProcessingException
    {
-      regelKafkaConnector.sendRegelRequest(handlaggningId, responsesTopic);
+      regelKafkaConnector.sendRegelRequest(handlaggningId);
       var uppgift = WireMockRegelMaskinell.getUppgiftFromLastPutHandlaggning(handlaggningId);
       Assertions.assertEquals(uppgiftspecifikationId, uppgift.getUppgiftspecifikation().getId().toString());
    }
@@ -140,7 +140,7 @@ public abstract class AbstractRegelMaskinellHandlaggningTest extends AbstractReg
    {
       var expectedUnderlag = createExpectedUnderlag();
 
-      regelKafkaConnector.sendRegelRequest(handlaggningId, responsesTopic);
+      regelKafkaConnector.sendRegelRequest(handlaggningId);
 
       var sentUnderlag = WireMockRegelMaskinell.getUppgiftFromLastPutHandlaggning(handlaggningId).getUnderlag();
 
@@ -186,7 +186,7 @@ public abstract class AbstractRegelMaskinellHandlaggningTest extends AbstractReg
    {
       var expected = createExpectedResultat();
 
-      regelKafkaConnector.sendRegelRequest(handlaggningId, responsesTopic);
+      regelKafkaConnector.sendRegelRequest(handlaggningId);
 
       var actual = WireMockRegelMaskinell.getUppgiftFromLastPutHandlaggning(handlaggningId).getResultat();
 

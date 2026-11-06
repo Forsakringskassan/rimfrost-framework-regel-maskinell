@@ -20,7 +20,7 @@ public abstract class AbstractRegelMaskinellResponseTest extends AbstractRegelMa
    void should_return_correct_regel_response(String handlaggningId, String expectedUtfallString)
    {
       var expectedUtfall = Utfall.valueOf(expectedUtfallString);
-      regelKafkaConnector.sendRegelRequest(handlaggningId, responsesTopic);
+      regelKafkaConnector.sendRegelRequest(handlaggningId);
       var regelResponse = regelKafkaConnector.waitForRegelResponse();
       Assertions.assertEquals(handlaggningId, regelResponse.getData().getHandlaggningId());
       Assertions.assertEquals(expectedUtfall, regelResponse.getData().getUtfall());

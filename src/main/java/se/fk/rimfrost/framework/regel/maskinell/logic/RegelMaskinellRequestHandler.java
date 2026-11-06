@@ -68,7 +68,7 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
                   "Failed to read handlaggning. Handlaggning id: " + request.handlaggningId()
                         + ", kogitoproc instance id: " + request.kogitoprocinstanceid() + ", aktivitet id: "
                         + request.aktivitetId());
-            sendErrorResponse(request.handlaggningId(), cloudevent, regelErrorInfo, request.replyTo());
+            sendErrorResponse(request.handlaggningId(), cloudevent, regelErrorInfo);
             return;
          }
 
@@ -91,14 +91,14 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
                   "Failed to process regel request. Handlaggning id: " + request.handlaggningId()
                         + ", kogitoproc instance id: " + request.kogitoprocinstanceid() + ", aktivitet id: "
                         + request.aktivitetId());
-            sendErrorResponse(request.handlaggningId(), cloudevent, regelErrorInfo, request.replyTo());
+            sendErrorResponse(request.handlaggningId(), cloudevent, regelErrorInfo);
             return;
          }
 
          if (regelResult instanceof RegelMaskinellErrorResult)
          {
             sendErrorResponse(request.handlaggningId(), cloudevent,
-                  ((RegelMaskinellErrorResult) regelResult).regelErrorInformation(), request.replyTo());
+                  ((RegelMaskinellErrorResult) regelResult).regelErrorInformation());
             return;
          }
 
@@ -119,7 +119,7 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
                         + request.handlaggningId()
                         + ", kogitoproc instance id: " + request.kogitoprocinstanceid() + ", aktivitet id: "
                         + request.aktivitetId());
-            sendErrorResponse(request.handlaggningId(), cloudevent, regelErrorInfo, request.replyTo());
+            sendErrorResponse(request.handlaggningId(), cloudevent, regelErrorInfo);
             return;
          }
          catch (RetriesExhaustedException e)
@@ -131,12 +131,12 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
                   "Failed to write handlaggning update. Handlaggning id: " + request.handlaggningId()
                         + ", kogitoproc instance id: " + request.kogitoprocinstanceid() + ", aktivitet id: "
                         + request.aktivitetId());
-            sendErrorResponse(request.handlaggningId(), cloudevent, regelErrorInfo, request.replyTo());
+            sendErrorResponse(request.handlaggningId(), cloudevent, regelErrorInfo);
             return;
          }
 
          // Avsluta regel
-         sendResponse(request.handlaggningId(), cloudevent, regelSuccessResult.utfall(), request.replyTo());
+         sendResponse(request.handlaggningId(), cloudevent, regelSuccessResult.utfall());
       }
       catch (Exception e)
       {
@@ -148,7 +148,7 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
                "Failed to handle regel data request for handlaggning due to unexpected error. Handlaggning id: "
                      + request.handlaggningId() + ", kogitoproc instance id: " + request.kogitoprocinstanceid()
                      + ", aktivitet id: " + request.aktivitetId());
-         sendErrorResponse(request.handlaggningId(), cloudevent, regelErrorInfo, request.replyTo());
+         sendErrorResponse(request.handlaggningId(), cloudevent, regelErrorInfo);
          return;
       }
    }

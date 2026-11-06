@@ -21,7 +21,7 @@ public abstract class AbstractRegelMaskinellSequenceTest extends AbstractRegelMa
    @DisplayName("FRMASK-FR-01.1, FRMASK-FR-02.1, FRMASK-FR-05.1, FRMASK-FR-06.1: Fullständigt regelflöde från Kafka-förfrågan via GET/PUT till regelresultat verifieras")
    void smoke_test_maskinell_sequence(String handlaggningId)
    {
-      regelKafkaConnector.sendRegelRequest(handlaggningId, responsesTopic);
+      regelKafkaConnector.sendRegelRequest(handlaggningId);
       var handlaggningGetRequests = waitForHandlaggningRequests(handlaggningId, RequestMethod.GET, 1);
       Assertions.assertEquals(1, handlaggningGetRequests.size());
       var handlaggningPutRequests = waitForHandlaggningRequests(handlaggningId, RequestMethod.PUT, 1);
