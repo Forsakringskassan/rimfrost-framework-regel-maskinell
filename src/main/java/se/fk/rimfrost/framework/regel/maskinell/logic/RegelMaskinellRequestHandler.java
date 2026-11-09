@@ -106,7 +106,8 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
 
          try
          {
-            RetryUtil.runWithRetries(() -> updateHandlaggning(regelSuccessResult.handlaggningUpdate()), retryIntervals);
+            RetryUtil.runWithRetries(() -> updateHandlaggning(regelSuccessResult.handlaggningUpdate(), request.handlaggningId()),
+                  retryIntervals);
          }
          catch (HandlaggningUpdateConflictException e)
          {
@@ -161,11 +162,13 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
       }
       catch (HandlaggningException e)
       {
+         logger.warn("Failed to read handlaggning for handlaggning id: {}", handlaggningId, e);
+
          return Result.empty();
       }
    }
 
-   private boolean updateHandlaggning(HandlaggningUpdate handlaggning)
+   private boolean updateHandlaggning(HandlaggningUpdate handlaggning, UUID handlaggningId)
    {
       try
       {
@@ -174,6 +177,8 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
       }
       catch (HandlaggningException e)
       {
+         logger.warn("Failed to update handlaggning for handlaggning id: {}", handlaggningId, e);
+
          if (e.getErrorType() == HandlaggningException.ErrorType.CONFLICT)
          {
             throw new HandlaggningUpdateConflictException();
