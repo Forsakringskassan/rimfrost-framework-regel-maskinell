@@ -2,6 +2,16 @@
 
 Changelog of rimfrost-framework-regel-maskinell.
 
+## 1.2.1 (2026-11-09)
+
+### Bug Fixes
+
+-  Add logging for handlaggning GET/PUT retry path ([439c4](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/439c439422d14ee) Lars Persson)  
+-  **deps**  update dependency se.fk.rimfrost.framework.regel:rimfrost-framework-regel to v1.6.1 ([abde5](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/abde50e3e78ca1b) renovate[bot])  
+
+### Dependency updates
+
+- update forsakringskassan/.github digest to cbc0db8 ([cab0f](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/cab0f2000b21036) renovate[bot])  
 ## 1.2.0 (2026-11-06)
 
 ### Features
