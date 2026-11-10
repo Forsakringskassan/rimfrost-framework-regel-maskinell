@@ -33,6 +33,10 @@ underliggande ramverk upprepas inte.
 - **FRMASK-FR-07.1** Ramverket ska tillhandahålla ett gränssnitt (`RegelMaskinellServiceInterface`) som konkreta regelimplementationer implementerar.
 - **FRMASK-FR-07.2** Implementationen ska returnera antingen ett lyckat resultat med uppdaterad handläggning och utfall, eller ett felresultat med felinformation.
 
+### FRMASK-FR-08 — Felhantering vid regelsvar
+
+- **FRMASK-FR-08.1** Om ett fel uppstår vid sändning av regelsvar så ska ramverket logga felet inom ramen för `RegelMaskinellRequestHandler.handleRegelRequest`. Inget ytterligare regelsvar ska skickas och inget fel ska propageras vidare uppåt i anropskedjan.
+
 ## 2. Statusmodell
 
 Maskinella regler producerar ett utfall per regelkörning. Det finns ingen intern statuslivscykel i ramverket; utfallet är alltid slutgiltigt vid publicering.
