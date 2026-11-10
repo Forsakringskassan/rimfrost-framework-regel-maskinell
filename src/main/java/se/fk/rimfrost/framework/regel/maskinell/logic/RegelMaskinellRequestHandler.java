@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.fk.rimfrost.framework.handlaggning.exception.HandlaggningException;
 import se.fk.rimfrost.framework.handlaggning.model.*;
+import se.fk.rimfrost.framework.regel.RegelErrorInformation;
+import se.fk.rimfrost.framework.regel.Utfall;
 import se.fk.rimfrost.framework.regel.error.RegelFelkod;
 import se.fk.rimfrost.framework.regel.logic.RegelRequestHandlerBase;
 import se.fk.rimfrost.framework.regel.logic.dto.RegelDataRequest;
@@ -68,7 +70,7 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
                   "Failed to read handlaggning. Handlaggning id: " + request.handlaggningId()
                         + ", kogitoproc instance id: " + request.kogitoprocinstanceid() + ", aktivitet id: "
                         + request.aktivitetId());
-            sendErrorResponse(request.handlaggningId(), cloudevent, regelErrorInfo);
+            trySendErrorResponse(request.handlaggningId(), cloudevent, regelErrorInfo);
             return;
          }
 
@@ -91,13 +93,13 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
                   "Failed to process regel request. Handlaggning id: " + request.handlaggningId()
                         + ", kogitoproc instance id: " + request.kogitoprocinstanceid() + ", aktivitet id: "
                         + request.aktivitetId());
-            sendErrorResponse(request.handlaggningId(), cloudevent, regelErrorInfo);
+            trySendErrorResponse(request.handlaggningId(), cloudevent, regelErrorInfo);
             return;
          }
 
          if (regelResult instanceof RegelMaskinellErrorResult)
          {
-            sendErrorResponse(request.handlaggningId(), cloudevent,
+            trySendErrorResponse(request.handlaggningId(), cloudevent,
                   ((RegelMaskinellErrorResult) regelResult).regelErrorInformation());
             return;
          }
@@ -120,7 +122,7 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
                         + request.handlaggningId()
                         + ", kogitoproc instance id: " + request.kogitoprocinstanceid() + ", aktivitet id: "
                         + request.aktivitetId());
-            sendErrorResponse(request.handlaggningId(), cloudevent, regelErrorInfo);
+            trySendErrorResponse(request.handlaggningId(), cloudevent, regelErrorInfo);
             return;
          }
          catch (RetriesExhaustedException e)
@@ -132,12 +134,12 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
                   "Failed to write handlaggning update. Handlaggning id: " + request.handlaggningId()
                         + ", kogitoproc instance id: " + request.kogitoprocinstanceid() + ", aktivitet id: "
                         + request.aktivitetId());
-            sendErrorResponse(request.handlaggningId(), cloudevent, regelErrorInfo);
+            trySendErrorResponse(request.handlaggningId(), cloudevent, regelErrorInfo);
             return;
          }
 
          // Avsluta regel
-         sendResponse(request.handlaggningId(), cloudevent, regelSuccessResult.utfall());
+         trySendRegelResponse(request.handlaggningId(), cloudevent, regelSuccessResult.utfall());
       }
       catch (Exception e)
       {
@@ -149,7 +151,7 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
                "Failed to handle regel data request for handlaggning due to unexpected error. Handlaggning id: "
                      + request.handlaggningId() + ", kogitoproc instance id: " + request.kogitoprocinstanceid()
                      + ", aktivitet id: " + request.aktivitetId());
-         sendErrorResponse(request.handlaggningId(), cloudevent, regelErrorInfo);
+         trySendErrorResponse(request.handlaggningId(), cloudevent, regelErrorInfo);
          return;
       }
    }
@@ -186,5 +188,29 @@ public class RegelMaskinellRequestHandler extends RegelRequestHandlerBase implem
       }
 
       return false;
+   }
+
+   private void trySendRegelResponse(UUID handlaggningId, CloudEventData cloudEventData, Utfall utfall)
+   {
+      try
+      {
+         sendResponse(handlaggningId, cloudEventData, utfall);
+      }
+      catch (Exception e)
+      {
+         logger.error("Failed to send regel response for handlaggning with id: {}", handlaggningId, e);
+      }
+   }
+
+   private void trySendErrorResponse(UUID handlaggningId, CloudEventData cloudEventData, RegelErrorInformation regelErrorInfo)
+   {
+      try
+      {
+         sendErrorResponse(handlaggningId, cloudEventData, regelErrorInfo);
+      }
+      catch (Exception e)
+      {
+         logger.error("Failed to send regel error response for handlaggning with id: {}", handlaggningId, e);
+      }
    }
 }
