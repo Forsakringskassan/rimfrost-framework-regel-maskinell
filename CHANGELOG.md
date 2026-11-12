@@ -2,6 +2,12 @@
 
 Changelog of rimfrost-framework-regel-maskinell.
 
+## 1.2.2 (2026-11-10)
+
+### Bug Fixes
+
+-  Handle kafka send faults after rimfrost-framework-regel 1.6.1 change ([8e80f](https://github.com/Forsakringskassan/rimfrost-framework-regel-maskinell/commit/8e80fd94f2163af) Lars Persson)  
+
 ## 1.2.1 (2026-11-09)
 
 ### Bug Fixes
